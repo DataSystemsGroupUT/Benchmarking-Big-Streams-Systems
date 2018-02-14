@@ -12,10 +12,10 @@ GIT=${GIT:-git}
 MAKE=${MAKE:-make}
 
 KAFKA_VERSION=${KAFKA_VERSION:-"0.11.0.2"}
-REDIS_VERSION=${REDIS_VERSION:-"stable"}
-SCALA_BIN_VERSION=${SCALA_BIN_VERSION:-"2.12"}
-SCALA_SUB_VERSION=${SCALA_SUB_VERSION:-"4"}
-STORM_VERSION=${STORM_VERSION:-"1.1.1"}
+REDIS_VERSION=${REDIS_VERSION:-"4.0.8"}
+SCALA_BIN_VERSION=${SCALA_BIN_VERSION:-"2.11"}
+SCALA_SUB_VERSION=${SCALA_SUB_VERSION:-"11"}
+STORM_VERSION=${STORM_VERSION:-"1.2.0"}
 FLINK_VERSION=${FLINK_VERSION:-"1.4.0"}
 SPARK_VERSION=${SPARK_VERSION:-"2.2.1"}
 HERON_VERSION=${HERON_VERSION:-"0.17.4"}
@@ -89,7 +89,7 @@ fetch_untar_file() {
     echo "Using cached File $FILE"
   else
 	mkdir -p download-cache/
-    WGET=`whereis wget`
+    WGET=`which wget`
     CURL=`whereis curl`
     if [ -n "$WGET" ];
     then
@@ -102,7 +102,13 @@ fetch_untar_file() {
       exit 1
     fi
   fi
-  tar -xzvf "$FILE"
+
+  if [[ ${FILE} = *"heron"* ]];then
+    tar -xzvf ${FILE} -C ${HERON_DIR}
+  else
+    tar -xzvf "$FILE"
+  fi
+
 }
 
 create_kafka_topic() {
@@ -138,22 +144,18 @@ run() {
 	echo 'storm.ackers: 2' >> $CONF_FILE
 	echo 'spark.batchtime: 2000' >> $CONF_FILE
 	
-    $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION" -Dheron.version="$HERON_VERSION"
+#    $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION" -Dheron.version="$HERON_VERSION"
 
     #Fetch and build Redis
-    REDIS_FILE="$REDIS_DIR.tar.gz"
-    fetch_untar_file "$REDIS_FILE" "http://download.redis.io/releases/$REDIS_FILE"
-
-    cd $REDIS_DIR
-    $MAKE
-    cd ..
+#    REDIS_FILE="$REDIS_DIR.tar.gz"
+#    fetch_untar_file "$REDIS_FILE" "http://download.redis.io/releases/$REDIS_FILE"
+#    cd $REDIS_DIR
+#    $MAKE
+#    cd ..
 
     #Fetch Heron
     HERON_FILE="$HERON_DIR.tgz.gz"
     fetch_untar_file "$HERON_FILE" "https://github.com/twitter/heron/releases/download/$HERON_VERSION/heron-$HERON_VERSION-ubuntu.tar.gz"
-    cd $HERON_DIR
-    $MVN clean install -DskipTests
-    cd ..
 
     #Fetch Kafka
     KAFKA_FILE="$KAFKA_DIR.tgz"
