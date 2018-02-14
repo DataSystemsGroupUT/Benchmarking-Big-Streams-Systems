@@ -104,6 +104,7 @@ fetch_untar_file() {
   fi
 
   if [[ ${FILE} = *"heron"* ]];then
+    mkdir -p ${HERON_DIR}
     tar -xzvf ${FILE} -C ${HERON_DIR}
   else
     tar -xzvf "$FILE"
@@ -144,14 +145,14 @@ run() {
 	echo 'storm.ackers: 2' >> $CONF_FILE
 	echo 'spark.batchtime: 2000' >> $CONF_FILE
 	
-#    $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION" -Dheron.version="$HERON_VERSION"
+    $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION" -Dheron.version="$HERON_VERSION"
 
     #Fetch and build Redis
-#    REDIS_FILE="$REDIS_DIR.tar.gz"
-#    fetch_untar_file "$REDIS_FILE" "http://download.redis.io/releases/$REDIS_FILE"
-#    cd $REDIS_DIR
-#    $MAKE
-#    cd ..
+    REDIS_FILE="$REDIS_DIR.tar.gz"
+    fetch_untar_file "$REDIS_FILE" "http://download.redis.io/releases/$REDIS_FILE"
+    cd $REDIS_DIR
+    $MAKE
+    cd ..
 
     #Fetch Heron
     HERON_FILE="$HERON_DIR.tgz.gz"
