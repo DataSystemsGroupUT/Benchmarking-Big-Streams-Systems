@@ -126,7 +126,7 @@ run() {
   OPERATION=$1
   if [ "SETUP" = "$OPERATION" ];
   then
-    $GIT clean -fd
+
     run "INFO"
     run "SETUP_BENCHMARK"
 	run "SETUP_REDIS"
@@ -138,6 +138,7 @@ run() {
 
   elif [ "INFO" = "$OPERATION" ];
   then
+    $GIT clean -fd
     echo 'kafka.brokers:' > $CONF_FILE
     echo '    - "localhost"' >> $CONF_FILE
     echo >> $CONF_FILE
