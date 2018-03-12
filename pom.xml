@@ -18,7 +18,7 @@ Licensed under the terms of the Apache License 2.0. Please see LICENSE file in t
         <spark.version>2.2.1</spark.version>
         <kafka.version>0.11.0.2</kafka.version>
         <flink.version>1.4.0</flink.version>
-        <storm.version>1.2.0</storm.version>
+        <storm.version>1.2.1</storm.version>
         <scala.binary.version>2.11</scala.binary.version>
         <scala.version>2.11.11</scala.version>
         <json.version>20140107</json.version>
