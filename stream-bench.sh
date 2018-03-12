@@ -127,7 +127,17 @@ run() {
   if [ "SETUP" = "$OPERATION" ];
   then
     $GIT clean -fd
+    run "INFO"
+    run "SETUP_BENCHMARK"
+	run "SETUP_REDIS"
+    run "SETUP_KAFKA"
+    run "SETUP_HERON"
+    run "SETUP_STORM"
+    run "SETUP_FLINK"
+    run "SETUP_SPARK"
 
+  elif [ "INFO" = "$OPERATION" ];
+  then
     echo 'kafka.brokers:' > $CONF_FILE
     echo '    - "localhost"' >> $CONF_FILE
     echo >> $CONF_FILE
@@ -144,36 +154,49 @@ run() {
 	echo 'storm.workers: 1' >> $CONF_FILE
 	echo 'storm.ackers: 2' >> $CONF_FILE
 	echo 'spark.batchtime: 2000' >> $CONF_FILE
-	
+  elif [ "SETUP_BENCHMARK" = "$OPERATION" ];
+  then
+    run "INFO"
     $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION" -Dheron.version="$HERON_VERSION"
-
+  elif [ "SETUP_REDIS" = "$OPERATION" ];
+  then
+    run "INFO"
     #Fetch and build Redis
     REDIS_FILE="$REDIS_DIR.tar.gz"
     fetch_untar_file "$REDIS_FILE" "http://download.redis.io/releases/$REDIS_FILE"
     cd $REDIS_DIR
     $MAKE
     cd ..
-
-    #Fetch Heron
-    HERON_FILE="$HERON_DIR.tgz.gz"
-    fetch_untar_file "$HERON_FILE" "https://github.com/twitter/heron/releases/download/$HERON_VERSION/heron-$HERON_VERSION-ubuntu.tar.gz"
-
+  elif [ "SETUP_KAFKA" = "$OPERATION" ];
+  then
+    run "INFO"
     #Fetch Kafka
     KAFKA_FILE="$KAFKA_DIR.tgz"
     fetch_untar_file "$KAFKA_FILE" "$APACHE_MIRROR/kafka/$KAFKA_VERSION/$KAFKA_FILE"
-
-    #Fetch Storm
-    STORM_FILE="$STORM_DIR.tar.gz"
-    fetch_untar_file "$STORM_FILE" "$APACHE_MIRROR/storm/$STORM_DIR/$STORM_FILE"
-
+  elif [ "SETUP_FLINK" = "$OPERATION" ];
+  then
+    run "INFO"
     #Fetch Flink
     FLINK_FILE="$FLINK_DIR-bin-hadoop27-scala_${SCALA_BIN_VERSION}.tgz"
     fetch_untar_file "$FLINK_FILE" "$APACHE_MIRROR/flink/flink-$FLINK_VERSION/$FLINK_FILE"
-
+  elif [ "SETUP_SPARK" = "$OPERATION" ];
+  then
+    run "INFO"
     #Fetch Spark
     SPARK_FILE="$SPARK_DIR.tgz"
     fetch_untar_file "$SPARK_FILE" "$APACHE_MIRROR/spark/spark-$SPARK_VERSION/$SPARK_FILE"
-
+  elif [ "SETUP_STORM" = "$OPERATION" ];
+  then
+    run "INFO"
+    #Fetch Storm
+    STORM_FILE="$STORM_DIR.tar.gz"
+    fetch_untar_file "$STORM_FILE" "$APACHE_MIRROR/storm/$STORM_DIR/$STORM_FILE"
+  elif [ "SETUP_HERON" = "$OPERATION" ];
+  then
+    run "INFO"
+    #Fetch Heron
+    HERON_FILE="$HERON_DIR.tgz.gz"
+    fetch_untar_file "$HERON_FILE" "https://github.com/twitter/heron/releases/download/$HERON_VERSION/heron-$HERON_VERSION-ubuntu.tar.gz"
   elif [ "START_ZK" = "$OPERATION" ];
   then
     start_if_needed dev_zookeeper ZooKeeper 10 "$STORM_DIR/bin/storm" dev-zookeeper
