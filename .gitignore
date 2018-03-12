@@ -10,3 +10,12 @@ download-cache
 .project
 .settings
 bin
+apache-storm-1.2.0
+data
+flink-1.4.0
+heron-0.17.4
+kafka_2.11-0.11.0.2
+redis-4.0.8
+spark-2.2.1-bin-hadoop2.6
+redis-4.0.8
+dump.rdb
