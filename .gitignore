@@ -10,6 +10,7 @@ download-cache
 .project
 .settings
 bin
+apache-storm-1.2.0
 apache-storm-1.2.1
 flink-1.4.0
 heron-0.17.4
