@@ -1,0 +1,7 @@
+2018-02-19 08:35:36.799 o.a.s.u.core main [INFO] Starting ui server for storm version '1.2.0'
+2018-02-19 08:35:36.803 o.a.s.d.m.MetricsUtils main [INFO] Using statistics reporter plugin:org.apache.storm.daemon.metrics.reporters.JmxPreparableReporter
+2018-02-19 08:35:36.804 o.a.s.d.m.r.JmxPreparableReporter main [INFO] Preparing...
+2018-02-19 08:35:36.834 o.a.s.d.common main [INFO] Started statistics report plugin...
+2018-02-19 08:35:36.918 o.a.s.s.o.e.j.s.Server main [INFO] jetty-7.x.y-SNAPSHOT
+2018-02-19 08:35:36.968 o.a.s.s.o.e.j.s.h.ContextHandler main [INFO] started o.a.s.s.o.e.j.s.ServletContextHandler{/,null}
+2018-02-19 08:35:37.017 o.a.s.s.o.e.j.s.AbstractConnector main [INFO] Started SelectChannelConnector@0.0.0.0:8080

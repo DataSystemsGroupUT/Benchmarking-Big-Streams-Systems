@@ -1,0 +1,7 @@
+2018-02-19 08:35:38.927 o.a.s.d.logviewer main [INFO] Starting logviewer server for storm version '1.2.0'
+2018-02-19 08:35:39.144 o.a.s.s.o.e.j.s.Server main [INFO] jetty-7.x.y-SNAPSHOT
+2018-02-19 08:35:39.174 o.a.s.s.o.e.j.s.h.ContextHandler main [INFO] started o.a.s.s.o.e.j.s.ServletContextHandler{/,null}
+2018-02-19 08:35:39.217 o.a.s.s.o.e.j.s.AbstractConnector main [INFO] Started SelectChannelConnector@0.0.0.0:8000
+2018-02-19 08:35:39.218 o.a.s.d.m.MetricsUtils main [INFO] Using statistics reporter plugin:org.apache.storm.daemon.metrics.reporters.JmxPreparableReporter
+2018-02-19 08:35:39.218 o.a.s.d.m.r.JmxPreparableReporter main [INFO] Preparing...
+2018-02-19 08:35:39.224 o.a.s.d.common main [INFO] Started statistics report plugin...

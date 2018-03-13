@@ -1,15 +1,16 @@
 kafka.brokers:
-    - "localhost"
+    - "kafka-node01"
+    - "kafka-node02"
 
 zookeeper.servers:
-    - "localhost"
+    - "zookeeper"
 
 kafka.port: 9092
 zookeeper.port: 2181
-redis.host: "localhost"
+redis.host: "redis"
 kafka.topic: "ad-events"
-kafka.partitions: 1
-process.hosts: 1
+kafka.partitions: 2
+process.hosts: 4
 process.cores: 4
 storm.workers: 1
 storm.ackers: 2

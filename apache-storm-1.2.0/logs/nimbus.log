@@ -1,0 +1,579 @@
+2018-02-19 08:35:29.240 o.a.s.d.nimbus main [INFO] Starting Nimbus with conf {"topology.builtin.metrics.bucket.size.secs" 60, "nimbus.childopts" "-Xmx1024m", "ui.filter.params" nil, "storm.cluster.mode" "distributed", "storm.messaging.netty.client_worker_threads" 1, "logviewer.max.per.worker.logs.size.mb" 2048, "supervisor.run.worker.as.user" false, "topology.max.task.parallelism" nil, "topology.priority" 29, "zmq.threads" 1, "storm.group.mapping.service" "org.apache.storm.security.auth.ShellBasedGroupsMapping", "transactional.zookeeper.root" "/transactional", "topology.sleep.spout.wait.strategy.time.ms" 1, "ui.pagination" 20, "scheduler.display.resource" false, "topology.max.replication.wait.time.sec" 60, "drpc.invocations.port" 3773, "supervisor.localizer.cache.target.size.mb" 10240, "topology.multilang.serializer" "org.apache.storm.multilang.JsonSerializer", "storm.messaging.netty.server_worker_threads" 1, "nimbus.blobstore.class" "org.apache.storm.blobstore.LocalFsBlobStore", "resource.aware.scheduler.eviction.strategy" "org.apache.storm.scheduler.resource.strategies.eviction.DefaultEvictionStrategy", "topology.max.error.report.per.interval" 5, "storm.thrift.transport" "org.apache.storm.security.auth.SimpleTransportPlugin", "zmq.hwm" 0, "storm.group.mapping.service.params" nil, "worker.profiler.enabled" false, "storm.principal.tolocal" "org.apache.storm.security.auth.DefaultPrincipalToLocal", "supervisor.worker.shutdown.sleep.secs" 3, "pacemaker.host" "localhost", "storm.zookeeper.retry.times" 5, "ui.actions.enabled" true, "zmq.linger.millis" 5000, "supervisor.enable" true, "topology.stats.sample.rate" 0.05, "storm.messaging.netty.min_wait_ms" 100, "worker.log.level.reset.poll.secs" 30, "storm.zookeeper.port" 2181, "supervisor.heartbeat.frequency.secs" 5, "topology.enable.message.timeouts" true, "supervisor.cpu.capacity" 400.0, "drpc.worker.threads" 64, "supervisor.blobstore.download.thread.count" 5, "task.backpressure.poll.secs" 30, "drpc.queue.size" 128, "topology.backpressure.enable" false, "supervisor.blobstore.class" "org.apache.storm.blobstore.NimbusBlobStore", "storm.blobstore.inputstream.buffer.size.bytes" 65536, "topology.shellbolt.max.pending" 100, "drpc.https.keystore.password" "", "nimbus.code.sync.freq.secs" 120, "logviewer.port" 8000, "topology.scheduler.strategy" "org.apache.storm.scheduler.resource.strategies.scheduling.DefaultResourceAwareStrategy", "topology.executor.send.buffer.size" 1024, "resource.aware.scheduler.priority.strategy" "org.apache.storm.scheduler.resource.strategies.priority.DefaultSchedulingPriorityStrategy", "pacemaker.auth.method" "NONE", "storm.daemon.metrics.reporter.plugins" ["org.apache.storm.daemon.metrics.reporters.JmxPreparableReporter"], "topology.worker.logwriter.childopts" "-Xmx64m", "topology.spout.wait.strategy" "org.apache.storm.spout.SleepSpoutWaitStrategy", "ui.host" "0.0.0.0", "storm.nimbus.retry.interval.millis" 2000, "nimbus.inbox.jar.expiration.secs" 3600, "dev.zookeeper.path" "/tmp/dev-storm-zookeeper", "topology.acker.executors" nil, "topology.fall.back.on.java.serialization" true, "topology.eventlogger.executors" 0, "supervisor.localizer.cleanup.interval.ms" 600000, "storm.zookeeper.servers" ["localhost"], "nimbus.thrift.threads" 64, "logviewer.cleanup.age.mins" 10080, "topology.worker.childopts" nil, "topology.classpath" nil, "supervisor.monitor.frequency.secs" 3, "nimbus.credential.renewers.freq.secs" 600, "backpressure.znode.timeout.secs" 30, "topology.skip.missing.kryo.registrations" false, "drpc.authorizer.acl.filename" "drpc-auth-acl.yaml", "pacemaker.kerberos.users" [], "storm.group.mapping.service.cache.duration.secs" 120, "topology.testing.always.try.serialize" false, "nimbus.monitor.freq.secs" 10, "storm.health.check.timeout.ms" 5000, "supervisor.supervisors" [], "topology.tasks" nil, "topology.bolts.outgoing.overflow.buffer.enable" false, "storm.messaging.netty.socket.backlog" 500, "topology.workers" 1, "pacemaker.base.threads" 10, "storm.local.dir" "storm-local", "backpressure.znode.update.freq.secs" 15, "worker.childopts" "-Xmx%HEAP-MEM%m -XX:+PrintGCDetails -Xloggc:artifacts/gc.log -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=1M -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=artifacts/heapdump", "storm.auth.simple-white-list.users" [], "topology.disruptor.batch.timeout.millis" 1, "topology.message.timeout.secs" 30, "topology.state.synchronization.timeout.secs" 60, "topology.tuple.serializer" "org.apache.storm.serialization.types.ListDelegateSerializer", "supervisor.supervisors.commands" [], "nimbus.blobstore.expiration.secs" 600, "logviewer.childopts" "-Xmx128m", "topology.environment" nil, "topology.debug" false, "topology.disruptor.batch.size" 100, "storm.disable.symlinks" false, "storm.messaging.netty.max_retries" 300, "ui.childopts" "-Xmx768m", "storm.network.topography.plugin" "org.apache.storm.networktopography.DefaultRackDNSToSwitchMapping", "storm.zookeeper.session.timeout" 20000, "drpc.childopts" "-Xmx768m", "drpc.http.creds.plugin" "org.apache.storm.security.auth.DefaultHttpCredentialsPlugin", "storm.zookeeper.connection.timeout" 15000, "storm.zookeeper.auth.user" nil, "storm.meta.serialization.delegate" "org.apache.storm.serialization.GzipThriftSerializationDelegate", "topology.max.spout.pending" nil, "storm.codedistributor.class" "org.apache.storm.codedistributor.LocalFileSystemCodeDistributor", "nimbus.supervisor.timeout.secs" 60, "nimbus.task.timeout.secs" 30, "drpc.port" 3772, "pacemaker.max.threads" 50, "storm.zookeeper.retry.intervalceiling.millis" 30000, "nimbus.thrift.port" 6627, "storm.auth.simple-acl.admins" [], "topology.component.cpu.pcore.percent" 10.0, "supervisor.memory.capacity.mb" 3072.0, "storm.nimbus.retry.times" 5, "supervisor.worker.start.timeout.secs" 120, "storm.zookeeper.retry.interval" 1000, "logs.users" nil, "storm.cluster.metrics.consumer.publish.interval.secs" 60, "worker.profiler.command" "flight.bash", "transactional.zookeeper.port" nil, "drpc.max_buffer_size" 1048576, "pacemaker.thread.timeout" 10, "task.credentials.poll.secs" 30, "drpc.https.keystore.type" "JKS", "topology.worker.receiver.thread.count" 1, "topology.state.checkpoint.interval.ms" 1000, "supervisor.slots.ports" [6700 6701 6702 6703], "topology.transfer.buffer.size" 1024, "storm.health.check.dir" "healthchecks", "topology.worker.shared.thread.pool.size" 4, "drpc.authorizer.acl.strict" false, "nimbus.file.copy.expiration.secs" 600, "worker.profiler.childopts" "-XX:+UnlockCommercialFeatures -XX:+FlightRecorder", "topology.executor.receive.buffer.size" 1024, "backpressure.disruptor.low.watermark" 0.4, "nimbus.task.launch.secs" 120, "storm.local.mode.zmq" false, "storm.messaging.netty.buffer_size" 5242880, "storm.cluster.state.store" "org.apache.storm.cluster_state.zookeeper_state_factory", "worker.heartbeat.frequency.secs" 1, "storm.log4j2.conf.dir" "log4j2", "ui.http.creds.plugin" "org.apache.storm.security.auth.DefaultHttpCredentialsPlugin", "storm.zookeeper.root" "/storm", "topology.tick.tuple.freq.secs" nil, "drpc.https.port" -1, "storm.workers.artifacts.dir" "workers-artifacts", "supervisor.blobstore.download.max_retries" 3, "task.refresh.poll.secs" 10, "storm.exhibitor.port" 8080, "task.heartbeat.frequency.secs" 3, "pacemaker.port" 6699, "storm.messaging.netty.max_wait_ms" 1000, "topology.component.resources.offheap.memory.mb" 0.0, "drpc.http.port" 3774, "topology.error.throttle.interval.secs" 10, "storm.messaging.transport" "org.apache.storm.messaging.netty.Context", "topology.disable.loadaware.messaging" false, "storm.messaging.netty.authentication" false, "topology.component.resources.onheap.memory.mb" 128.0, "topology.kryo.factory" "org.apache.storm.serialization.DefaultKryoFactory", "worker.gc.childopts" "", "nimbus.topology.validator" "org.apache.storm.nimbus.DefaultTopologyValidator", "nimbus.seeds" ["localhost"], "nimbus.queue.size" 100000, "nimbus.cleanup.inbox.freq.secs" 600, "storm.blobstore.replication.factor" 3, "worker.heap.memory.mb" 768, "logviewer.max.sum.worker.logs.size.mb" 4096, "pacemaker.childopts" "-Xmx1024m", "ui.users" nil, "transactional.zookeeper.servers" nil, "supervisor.worker.timeout.secs" 30, "storm.zookeeper.auth.password" nil, "storm.blobstore.acl.validation.enabled" false, "client.blobstore.class" "org.apache.storm.blobstore.NimbusBlobStore", "storm.thrift.socket.timeout.ms" 600000, "supervisor.childopts" "-Xmx256m", "topology.worker.max.heap.size.mb" 768.0, "ui.http.x-frame-options" "DENY", "backpressure.disruptor.high.watermark" 0.9, "ui.filter" nil, "ui.header.buffer.bytes" 4096, "topology.min.replication.count" 1, "topology.disruptor.wait.timeout.millis" 1000, "storm.nimbus.retry.intervalceiling.millis" 60000, "topology.trident.batch.emit.interval.millis" 500, "storm.auth.simple-acl.users" [], "drpc.invocations.threads" 64, "java.library.path" "/usr/local/lib:/opt/local/lib:/usr/lib", "ui.port" 8080, "storm.exhibitor.poll.uripath" "/exhibitor/v1/cluster/list", "storm.messaging.netty.transfer.batch.size" 262144, "logviewer.appender.name" "A1", "nimbus.thrift.max_buffer_size" 1048576, "storm.auth.simple-acl.users.commands" [], "drpc.request.timeout.secs" 600}
+2018-02-19 08:35:29.250 o.a.s.n.NimbusInfo main [INFO] Nimbus figures out its name to localhost
+2018-02-19 08:35:29.418 o.a.s.s.o.a.c.u.Compatibility main [INFO] Running in ZooKeeper 3.4.x compatibility mode
+2018-02-19 08:35:29.470 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl main [INFO] Starting
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:host.name=localhost
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:java.version=1.8.0_144
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:java.vendor=Oracle Corporation
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:java.home=/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/jre
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:java.class.path=/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/*:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/slf4j-api-1.7.21.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/minlog-1.3.0.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/log4j-api-2.8.2.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/metrics-ganglia-3.1.0.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/metrics-graphite-3.1.0.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/kryo-3.0.3.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/servlet-api-2.5.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/objenesis-2.1.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/storm-core-1.2.0.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/log4j-over-slf4j-1.6.6.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/gmetric4j-1.0.7.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/asm-5.0.3.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/storm-rename-hack-1.2.0.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/log4j-slf4j-impl-2.8.2.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/reflectasm-1.10.1.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/ring-cors-0.1.5.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/clojure-1.7.0.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/disruptor-3.3.2.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/oncrpc-1.0.7.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/metrics-core-3.1.0.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/lib/log4j-core-2.8.2.jar:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/extlib/*:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/extlib-daemon/*:/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/conf
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:java.library.path=/usr/local/lib:/opt/local/lib:/usr/lib
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:java.io.tmpdir=/var/folders/yh/4k8lvf3n2qsbm13qp1l9t96c0000gn/T/
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:java.compiler=<NA>
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:os.name=Mac OS X
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:os.arch=x86_64
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:os.version=10.13.3
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:user.name=sahverdiyev
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:user.home=/Users/sahverdiyev
+2018-02-19 08:35:29.484 o.a.s.s.o.a.z.ZooKeeper main [INFO] Client environment:user.dir=/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking
+2018-02-19 08:35:29.485 o.a.s.s.o.a.z.ZooKeeper main [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@21bd128b
+2018-02-19 08:35:29.520 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 08:35:29.523 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl main [INFO] Default schema
+2018-02-19 08:35:29.538 o.a.s.b.FileBlobStoreImpl main [INFO] Creating new blob store based in /Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/apache-storm-1.2.0/storm-local/blobs
+2018-02-19 08:35:29.551 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl main [INFO] Starting
+2018-02-19 08:35:29.552 o.a.s.s.o.a.z.ZooKeeper main [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@415ef4d8
+2018-02-19 08:35:29.554 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 08:35:29.554 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl main [INFO] Default schema
+2018-02-19 08:35:29.554 o.a.s.d.nimbus main [INFO] Using default scheduler
+2018-02-19 08:35:29.555 o.a.s.n.NimbusInfo main [INFO] Nimbus figures out its name to localhost
+2018-02-19 08:35:29.612 o.a.s.n.NimbusInfo main [INFO] Nimbus figures out its name to localhost
+2018-02-19 08:35:29.645 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 08:35:29.646 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 08:35:29.691 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0003, negotiated timeout = 20000
+2018-02-19 08:35:29.691 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0004, negotiated timeout = 20000
+2018-02-19 08:35:29.752 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl main [INFO] Starting
+2018-02-19 08:35:29.764 o.a.s.s.o.a.z.ZooKeeper main [INFO] Initiating client connection, connectString=localhost:2181 sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@2e43c38d
+2018-02-19 08:35:29.767 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl main [INFO] Default schema
+2018-02-19 08:35:29.768 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 08:35:29.768 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 08:35:29.771 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: CONNECTED
+2018-02-19 08:35:29.771 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: CONNECTED
+2018-02-19 08:35:29.771 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0005, negotiated timeout = 20000
+2018-02-19 08:35:29.772 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: CONNECTED
+2018-02-19 08:35:29.779 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :connected:none
+2018-02-19 08:35:29.779 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :connected:none
+2018-02-19 08:35:29.847 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl Curator-Framework-0 [INFO] backgroundOperationsLoop exiting
+2018-02-19 08:35:29.854 o.a.s.s.o.a.z.ZooKeeper main [INFO] Session: 0x161acc5a2de0005 closed
+2018-02-19 08:35:29.854 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 08:35:29.857 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl main [INFO] Starting
+2018-02-19 08:35:29.858 o.a.s.s.o.a.z.ZooKeeper main [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@1ba467c2
+2018-02-19 08:35:29.858 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl main [INFO] Default schema
+2018-02-19 08:35:29.859 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 08:35:29.860 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 08:35:29.861 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl main [INFO] Starting
+2018-02-19 08:35:29.861 o.a.s.s.o.a.z.ZooKeeper main [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@6975fb1c
+2018-02-19 08:35:29.862 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0006, negotiated timeout = 20000
+2018-02-19 08:35:29.862 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl main [INFO] Default schema
+2018-02-19 08:35:29.862 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: CONNECTED
+2018-02-19 08:35:29.864 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 08:35:29.865 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 08:35:29.867 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0007, negotiated timeout = 20000
+2018-02-19 08:35:29.867 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: CONNECTED
+2018-02-19 08:35:30.020 o.a.s.zookeeper main [INFO] Queued up for leader lock.
+2018-02-19 08:35:30.035 o.a.s.s.o.a.c.u.ZKPaths Curator-Framework-0 [WARN] The version of ZooKeeper being used doesn't support Container nodes. CreateMode.PERSISTENT will be used instead.
+2018-02-19 08:35:30.059 o.a.s.d.m.MetricsUtils main [INFO] Using statistics reporter plugin:org.apache.storm.daemon.metrics.reporters.JmxPreparableReporter
+2018-02-19 08:35:30.060 o.a.s.d.m.r.JmxPreparableReporter main [INFO] Preparing...
+2018-02-19 08:35:30.075 o.a.s.d.common main [INFO] Started statistics report plugin...
+2018-02-19 08:35:30.101 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-blobs [] local-topology-blobs [] diff-topology-blobs []
+2018-02-19 08:35:30.103 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-dependencies [] local-blobs [] diff-topology-dependencies []
+2018-02-19 08:35:30.103 o.a.s.z.Zookeeper main-EventThread [INFO] Accepting leadership, all active topologies and corresponding dependencies found locally.
+2018-02-19 08:35:30.185 o.a.s.d.nimbus main [INFO] Starting nimbus server for storm version '1.2.0'
+2018-02-19 08:40:13.034 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 183329ms for sessionid 0x161acc5a2de0003, closing socket connection and attempting reconnect
+2018-02-19 08:40:13.034 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 182960ms for sessionid 0x161acc5a2de0006, closing socket connection and attempting reconnect
+2018-02-19 08:40:13.109 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 182219ms for sessionid 0x161acc5a2de0007, closing socket connection and attempting reconnect
+2018-02-19 08:40:13.135 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 08:40:13.136 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Writer Zookeeper.
+2018-02-19 08:40:13.137 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 08:40:13.216 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 08:40:13.216 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Reader Zookeeper.
+2018-02-19 08:40:13.216 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 08:40:13.216 o.a.s.u.StormBoundedExponentialBackoffRetry timer [WARN] WILL SLEEP FOR 1001ms (NOT MAX)
+2018-02-19 08:40:13.613 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 182852ms for sessionid 0x161acc5a2de0004, closing socket connection and attempting reconnect
+2018-02-19 08:40:13.719 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 08:40:13.719 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :disconnected:none
+2018-02-19 08:40:13.720 o.a.s.z.Zookeeper Curator-ConnectionStateManager-0 [INFO] localhost lost leadership.
+2018-02-19 08:40:13.757 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 08:40:13.757 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 08:40:13.758 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0004, negotiated timeout = 20000
+2018-02-19 08:40:13.759 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 08:40:13.759 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :connected:none
+2018-02-19 08:40:13.770 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 08:40:13.771 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 08:40:13.772 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0003, negotiated timeout = 20000
+2018-02-19 08:40:13.772 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 08:40:13.780 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-blobs [] local-topology-blobs [] diff-topology-blobs []
+2018-02-19 08:40:13.780 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-dependencies [] local-blobs [] diff-topology-dependencies []
+2018-02-19 08:40:13.780 o.a.s.z.Zookeeper main-EventThread [INFO] Accepting leadership, all active topologies and corresponding dependencies found locally.
+2018-02-19 08:40:13.906 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 08:40:13.907 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 08:40:13.911 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0007, negotiated timeout = 20000
+2018-02-19 08:40:13.913 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 08:40:13.913 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to RECONNECTED
+2018-02-19 08:40:13.913 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state has changed to reconnected so setting nimbuses entry one more time
+2018-02-19 08:40:13.933 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 08:40:13.934 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 08:40:13.936 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0006, negotiated timeout = 20000
+2018-02-19 08:40:13.936 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 09:27:25.034 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 2800701ms for sessionid 0x161acc5a2de0007, closing socket connection and attempting reconnect
+2018-02-19 09:27:25.134 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 09:27:25.135 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 09:27:25.135 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Reader Zookeeper.
+2018-02-19 09:27:25.991 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de0004, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 09:27:25.992 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de0006, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 09:27:25.993 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de0003, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 09:27:26.094 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 09:27:26.094 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 09:27:26.095 o.a.s.z.Zookeeper Curator-ConnectionStateManager-0 [INFO] localhost lost leadership.
+2018-02-19 09:27:26.095 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :disconnected:none
+2018-02-19 09:27:26.095 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Writer Zookeeper.
+2018-02-19 09:27:26.097 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 09:27:26.138 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 09:27:26.138 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 09:27:26.152 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0007 has expired, closing socket connection
+2018-02-19 09:27:26.153 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 09:27:26.153 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@6975fb1c
+2018-02-19 09:27:26.156 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 09:27:26.156 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Reader Zookeeper.
+2018-02-19 09:27:26.156 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 09:27:26.156 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 09:27:26.157 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 09:27:26.158 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 09:27:26.160 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de000c, negotiated timeout = 20000
+2018-02-19 09:27:26.160 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 09:27:26.162 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to RECONNECTED
+2018-02-19 09:27:26.162 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state has changed to reconnected so setting nimbuses entry one more time
+2018-02-19 09:27:26.181 o.a.s.d.nimbus timer [INFO] not a leader, skipping cleanup
+2018-02-19 09:27:26.197 o.a.s.d.nimbus timer [INFO] not a leader, skipping credential renewal.
+2018-02-19 09:27:26.194 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 09:27:26.196 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 09:27:26.199 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0003 has expired, closing socket connection
+2018-02-19 09:27:26.199 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 09:27:26.199 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@21bd128b
+2018-02-19 09:27:26.200 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 09:27:26.200 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 09:27:26.201 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 09:27:26.201 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 09:27:26.203 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de000d, negotiated timeout = 20000
+2018-02-19 09:27:26.204 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 09:27:26.272 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 09:27:26.272 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 09:27:26.275 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0004 has expired, closing socket connection
+2018-02-19 09:27:26.275 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 09:27:26.275 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@415ef4d8
+2018-02-19 09:27:26.276 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 09:27:26.276 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :expired:none
+2018-02-19 09:27:26.276 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 09:27:26.277 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 09:27:26.277 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 09:27:26.281 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de000e, negotiated timeout = 20000
+2018-02-19 09:27:26.281 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 09:27:26.282 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :connected:none
+2018-02-19 09:27:26.530 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-blobs [] local-topology-blobs [] diff-topology-blobs []
+2018-02-19 09:27:26.530 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-dependencies [] local-blobs [] diff-topology-dependencies []
+2018-02-19 09:27:26.530 o.a.s.z.Zookeeper main-EventThread [INFO] Accepting leadership, all active topologies and corresponding dependencies found locally.
+2018-02-19 09:27:26.571 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 09:27:26.571 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 09:27:26.572 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 09:27:26.572 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0006 has expired, closing socket connection
+2018-02-19 09:27:26.572 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@1ba467c2
+2018-02-19 09:27:26.572 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 09:27:26.573 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Writer Zookeeper.
+2018-02-19 09:27:26.573 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 09:27:26.573 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 09:27:26.574 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 09:27:26.575 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de000f, negotiated timeout = 20000
+2018-02-19 09:27:26.575 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 10:54:46.060 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 825085ms for sessionid 0x161acc5a2de000d, closing socket connection and attempting reconnect
+2018-02-19 10:54:46.162 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 10:54:46.188 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de000f, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 10:54:46.188 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de000c, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 10:54:46.188 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de000e, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 10:54:46.290 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 10:54:46.290 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 10:54:46.291 o.a.s.u.StormBoundedExponentialBackoffRetry timer [WARN] WILL SLEEP FOR 1001ms (NOT MAX)
+2018-02-19 10:54:46.291 o.a.s.z.Zookeeper Curator-ConnectionStateManager-0 [INFO] localhost lost leadership.
+2018-02-19 10:54:46.291 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 10:54:46.292 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :disconnected:none
+2018-02-19 10:54:46.292 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 10:54:46.292 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Reader Zookeeper.
+2018-02-19 10:54:46.292 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Writer Zookeeper.
+2018-02-19 10:54:46.599 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 10:54:46.600 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 10:54:46.602 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de000f has expired, closing socket connection
+2018-02-19 10:54:46.602 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 10:54:46.602 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@1ba467c2
+2018-02-19 10:54:46.603 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 10:54:46.603 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Writer Zookeeper.
+2018-02-19 10:54:46.603 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 10:54:46.604 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 10:54:46.605 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 10:54:46.608 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0010, negotiated timeout = 20000
+2018-02-19 10:54:46.608 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 10:54:46.698 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 10:54:46.699 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 10:54:46.700 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de000d has expired, closing socket connection
+2018-02-19 10:54:46.700 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 10:54:46.700 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@21bd128b
+2018-02-19 10:54:46.700 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 10:54:46.701 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 10:54:46.701 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 10:54:46.702 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 10:54:46.704 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0011, negotiated timeout = 20000
+2018-02-19 10:54:46.704 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 10:54:46.831 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 10:54:46.832 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 10:54:46.832 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 10:54:46.832 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de000e has expired, closing socket connection
+2018-02-19 10:54:46.833 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@415ef4d8
+2018-02-19 10:54:46.833 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 10:54:46.833 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :expired:none
+2018-02-19 10:54:46.833 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 10:54:46.834 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 10:54:46.834 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 10:54:46.834 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 10:54:46.835 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 10:54:46.836 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de000c has expired, closing socket connection
+2018-02-19 10:54:46.836 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 10:54:46.836 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@6975fb1c
+2018-02-19 10:54:46.836 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 10:54:46.836 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0013, negotiated timeout = 20000
+2018-02-19 10:54:46.836 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 10:54:46.836 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Reader Zookeeper.
+2018-02-19 10:54:46.836 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 10:54:46.836 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 10:54:46.837 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :connected:none
+2018-02-19 10:54:46.838 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 10:54:46.838 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 10:54:46.840 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0014, negotiated timeout = 20000
+2018-02-19 10:54:46.840 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 10:54:46.841 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to RECONNECTED
+2018-02-19 10:54:46.841 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state has changed to reconnected so setting nimbuses entry one more time
+2018-02-19 10:54:46.849 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-blobs [] local-topology-blobs [] diff-topology-blobs []
+2018-02-19 10:54:46.850 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-dependencies [] local-blobs [] diff-topology-dependencies []
+2018-02-19 10:54:46.850 o.a.s.z.Zookeeper main-EventThread [INFO] Accepting leadership, all active topologies and corresponding dependencies found locally.
+2018-02-19 11:44:07.059 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 2929686ms for sessionid 0x161acc5a2de0014, closing socket connection and attempting reconnect
+2018-02-19 11:44:07.110 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de0010, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 11:44:07.110 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de0013, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 11:44:07.111 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de0011, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 11:44:07.167 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 11:44:07.168 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Reader Zookeeper.
+2018-02-19 11:44:07.168 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 11:44:07.211 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 11:44:07.211 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 11:44:07.211 o.a.s.z.Zookeeper Curator-ConnectionStateManager-0 [INFO] localhost lost leadership.
+2018-02-19 11:44:07.212 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :disconnected:none
+2018-02-19 11:44:07.212 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Writer Zookeeper.
+2018-02-19 11:44:07.212 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 11:44:07.390 o.a.s.d.nimbus timer [INFO] not a leader, skipping assignments
+2018-02-19 11:44:07.391 o.a.s.d.nimbus timer [INFO] not a leader, skipping cleanup
+2018-02-19 11:44:07.534 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:44:07.534 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 11:44:07.535 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0010 has expired, closing socket connection
+2018-02-19 11:44:07.535 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 11:44:07.535 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@1ba467c2
+2018-02-19 11:44:07.536 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 11:44:07.536 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Writer Zookeeper.
+2018-02-19 11:44:07.536 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 11:44:07.537 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:44:07.537 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 11:44:07.546 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0017, negotiated timeout = 20000
+2018-02-19 11:44:07.547 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 11:44:07.691 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:44:07.691 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 11:44:07.692 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0011 has expired, closing socket connection
+2018-02-19 11:44:07.692 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 11:44:07.692 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@21bd128b
+2018-02-19 11:44:07.693 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 11:44:07.693 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 11:44:07.693 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:44:07.694 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 11:44:07.695 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0018, negotiated timeout = 20000
+2018-02-19 11:44:07.695 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 11:44:07.814 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:44:07.815 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 11:44:07.816 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0014 has expired, closing socket connection
+2018-02-19 11:44:07.816 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 11:44:07.816 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@6975fb1c
+2018-02-19 11:44:07.817 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 11:44:07.818 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Reader Zookeeper.
+2018-02-19 11:44:07.818 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 11:44:07.818 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 11:44:07.819 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:44:07.819 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 11:44:07.825 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de001a, negotiated timeout = 20000
+2018-02-19 11:44:07.826 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:44:07.826 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 11:44:07.826 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 11:44:07.826 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to RECONNECTED
+2018-02-19 11:44:07.826 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state has changed to reconnected so setting nimbuses entry one more time
+2018-02-19 11:44:07.827 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0013 has expired, closing socket connection
+2018-02-19 11:44:07.828 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 11:44:07.828 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@415ef4d8
+2018-02-19 11:44:07.829 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 11:44:07.829 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :expired:none
+2018-02-19 11:44:07.829 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 11:44:07.833 o.a.s.d.nimbus timer [INFO] not a leader, skipping credential renewal.
+2018-02-19 11:44:07.833 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:44:07.833 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 11:44:07.837 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de001b, negotiated timeout = 20000
+2018-02-19 11:44:07.837 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 11:44:07.838 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :connected:none
+2018-02-19 11:44:07.853 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-blobs [] local-topology-blobs [] diff-topology-blobs []
+2018-02-19 11:44:07.853 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-dependencies [] local-blobs [] diff-topology-dependencies []
+2018-02-19 11:44:07.853 o.a.s.z.Zookeeper main-EventThread [INFO] Accepting leadership, all active topologies and corresponding dependencies found locally.
+2018-02-19 11:49:07.059 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 262912ms for sessionid 0x161acc5a2de001a, closing socket connection and attempting reconnect
+2018-02-19 11:49:07.160 o.a.s.u.StormBoundedExponentialBackoffRetry timer [WARN] WILL SLEEP FOR 1001ms (NOT MAX)
+2018-02-19 11:49:07.160 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 11:49:07.161 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 11:49:07.161 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Reader Zookeeper.
+2018-02-19 11:49:07.401 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:49:07.401 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 11:49:07.403 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de001a, negotiated timeout = 20000
+2018-02-19 11:49:07.404 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 11:49:07.404 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to RECONNECTED
+2018-02-19 11:49:07.404 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state has changed to reconnected so setting nimbuses entry one more time
+2018-02-19 11:49:07.405 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 265587ms for sessionid 0x161acc5a2de0017, closing socket connection and attempting reconnect
+2018-02-19 11:49:07.511 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 11:49:07.511 o.a.s.u.StormBoundedExponentialBackoffRetry Curator-ConnectionStateManager-0 [WARN] WILL SLEEP FOR 1001ms (NOT MAX)
+2018-02-19 11:49:07.512 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Writer Zookeeper.
+2018-02-19 11:49:07.635 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:49:07.636 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 11:49:07.637 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0017, negotiated timeout = 20000
+2018-02-19 11:49:07.637 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 11:49:07.963 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de0018, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 11:49:07.965 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de001b, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 11:49:08.067 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 11:49:08.067 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 11:49:08.067 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :disconnected:none
+2018-02-19 11:49:08.068 o.a.s.z.Zookeeper Curator-ConnectionStateManager-0 [INFO] localhost lost leadership.
+2018-02-19 11:49:08.173 o.a.s.d.nimbus timer [INFO] not a leader, skipping cleanup
+2018-02-19 11:49:08.184 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:49:08.184 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 11:49:08.185 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 11:49:08.185 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0018 has expired, closing socket connection
+2018-02-19 11:49:08.185 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@21bd128b
+2018-02-19 11:49:08.185 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 11:49:08.186 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 11:49:08.186 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:49:08.187 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 11:49:08.188 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de001c, negotiated timeout = 20000
+2018-02-19 11:49:08.189 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 11:49:09.023 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:49:09.023 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 11:49:09.024 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de001b has expired, closing socket connection
+2018-02-19 11:49:09.024 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 11:49:09.024 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@415ef4d8
+2018-02-19 11:49:09.025 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 11:49:09.025 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :expired:none
+2018-02-19 11:49:09.025 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 11:49:09.026 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 11:49:09.026 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 11:49:09.033 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de001e, negotiated timeout = 20000
+2018-02-19 11:49:09.033 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 11:49:09.033 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :connected:none
+2018-02-19 11:49:09.041 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-blobs [] local-topology-blobs [] diff-topology-blobs []
+2018-02-19 11:49:09.041 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-dependencies [] local-blobs [] diff-topology-dependencies []
+2018-02-19 11:49:09.041 o.a.s.z.Zookeeper main-EventThread [INFO] Accepting leadership, all active topologies and corresponding dependencies found locally.
+2018-02-19 12:43:13.060 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 3214811ms for sessionid 0x161acc5a2de001a, closing socket connection and attempting reconnect
+2018-02-19 12:43:13.168 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 12:43:13.169 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Reader Zookeeper.
+2018-02-19 12:43:13.169 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 12:43:13.828 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 12:43:13.828 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 12:43:13.829 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de001a, negotiated timeout = 20000
+2018-02-19 12:43:13.829 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 12:43:13.830 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to RECONNECTED
+2018-02-19 12:43:13.830 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state has changed to reconnected so setting nimbuses entry one more time
+2018-02-19 12:43:13.830 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 3211956ms for sessionid 0x161acc5a2de0017, closing socket connection and attempting reconnect
+2018-02-19 12:43:13.842 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 3211453ms for sessionid 0x161acc5a2de001e, closing socket connection and attempting reconnect
+2018-02-19 12:43:13.906 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de001c, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 12:43:13.936 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 12:43:13.936 o.a.s.u.StormBoundedExponentialBackoffRetry Curator-ConnectionStateManager-0 [WARN] WILL SLEEP FOR 1001ms (NOT MAX)
+2018-02-19 12:43:13.936 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Writer Zookeeper.
+2018-02-19 12:43:13.949 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 12:43:13.949 o.a.s.u.StormBoundedExponentialBackoffRetry timer [WARN] WILL SLEEP FOR 1001ms (NOT MAX)
+2018-02-19 12:43:13.949 o.a.s.z.Zookeeper Curator-ConnectionStateManager-0 [INFO] localhost lost leadership.
+2018-02-19 12:43:13.949 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :disconnected:none
+2018-02-19 12:43:14.007 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 12:43:14.085 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 12:43:14.086 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 12:43:14.088 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de001c has expired, closing socket connection
+2018-02-19 12:43:14.088 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 12:43:14.088 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@21bd128b
+2018-02-19 12:43:14.089 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 12:43:14.089 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 12:43:14.090 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 12:43:14.091 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 12:43:14.093 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de001f, negotiated timeout = 20000
+2018-02-19 12:43:14.093 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 12:43:14.683 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 12:43:14.683 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 12:43:14.684 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de001e has expired, closing socket connection
+2018-02-19 12:43:14.684 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 12:43:14.684 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@415ef4d8
+2018-02-19 12:43:14.684 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 12:43:14.685 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :expired:none
+2018-02-19 12:43:14.685 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 12:43:14.685 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 12:43:14.685 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 12:43:14.687 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0020, negotiated timeout = 20000
+2018-02-19 12:43:14.687 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 12:43:14.687 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :connected:none
+2018-02-19 12:43:14.695 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-blobs [] local-topology-blobs [] diff-topology-blobs []
+2018-02-19 12:43:14.695 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-dependencies [] local-blobs [] diff-topology-dependencies []
+2018-02-19 12:43:14.695 o.a.s.z.Zookeeper main-EventThread [INFO] Accepting leadership, all active topologies and corresponding dependencies found locally.
+2018-02-19 12:43:14.771 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 12:43:14.772 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 12:43:14.773 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 12:43:14.773 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0017 has expired, closing socket connection
+2018-02-19 12:43:14.773 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@1ba467c2
+2018-02-19 12:43:14.773 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 12:43:14.774 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Writer Zookeeper.
+2018-02-19 12:43:14.774 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 12:43:14.774 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 12:43:14.775 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 12:43:14.778 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0021, negotiated timeout = 20000
+2018-02-19 12:43:14.778 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 13:41:12.062 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 3468186ms for sessionid 0x161acc5a2de001a, closing socket connection and attempting reconnect
+2018-02-19 13:41:12.135 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de001f, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 13:41:12.135 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de0020, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 13:41:12.135 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de0021, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 13:41:12.163 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 13:41:12.163 o.a.s.u.StormBoundedExponentialBackoffRetry timer [WARN] WILL SLEEP FOR 1001ms (NOT MAX)
+2018-02-19 13:41:12.163 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Reader Zookeeper.
+2018-02-19 13:41:12.163 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 13:41:12.236 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 13:41:12.236 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 13:41:12.236 o.a.s.z.Zookeeper Curator-ConnectionStateManager-0 [INFO] localhost lost leadership.
+2018-02-19 13:41:12.236 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Writer Zookeeper.
+2018-02-19 13:41:12.236 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :disconnected:none
+2018-02-19 13:41:12.241 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 13:41:12.341 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 13:41:12.341 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 13:41:12.347 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de001a has expired, closing socket connection
+2018-02-19 13:41:12.347 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 13:41:12.347 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@6975fb1c
+2018-02-19 13:41:12.407 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 13:41:12.407 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Reader Zookeeper.
+2018-02-19 13:41:12.407 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 13:41:12.407 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 13:41:12.408 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 13:41:12.408 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 13:41:12.410 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0023, negotiated timeout = 20000
+2018-02-19 13:41:12.410 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 13:41:12.410 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to RECONNECTED
+2018-02-19 13:41:12.410 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state has changed to reconnected so setting nimbuses entry one more time
+2018-02-19 13:41:12.482 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 13:41:12.482 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 13:41:12.483 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0020 has expired, closing socket connection
+2018-02-19 13:41:12.483 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 13:41:12.483 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@415ef4d8
+2018-02-19 13:41:12.483 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 13:41:12.483 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :expired:none
+2018-02-19 13:41:12.483 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 13:41:12.484 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 13:41:12.484 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 13:41:12.486 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0024, negotiated timeout = 20000
+2018-02-19 13:41:12.486 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 13:41:12.487 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :connected:none
+2018-02-19 13:41:12.497 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-blobs [] local-topology-blobs [] diff-topology-blobs []
+2018-02-19 13:41:12.497 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-dependencies [] local-blobs [] diff-topology-dependencies []
+2018-02-19 13:41:12.497 o.a.s.z.Zookeeper main-EventThread [INFO] Accepting leadership, all active topologies and corresponding dependencies found locally.
+2018-02-19 13:41:12.660 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 13:41:12.660 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 13:41:12.661 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de001f has expired, closing socket connection
+2018-02-19 13:41:12.661 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 13:41:12.661 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@21bd128b
+2018-02-19 13:41:12.661 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 13:41:12.661 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 13:41:12.662 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 13:41:12.662 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 13:41:12.663 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/127.0.0.1:2181, sessionid = 0x161acc5a2de0026, negotiated timeout = 20000
+2018-02-19 13:41:12.663 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 13:41:13.084 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 13:41:13.085 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 13:41:13.085 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0021 has expired, closing socket connection
+2018-02-19 13:41:13.085 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 13:41:13.085 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@1ba467c2
+2018-02-19 13:41:13.086 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 13:41:13.086 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Writer Zookeeper.
+2018-02-19 13:41:13.086 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 13:41:13.087 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 13:41:13.087 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 13:41:13.093 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0027, negotiated timeout = 20000
+2018-02-19 13:41:13.093 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 14:21:13.581 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 2393581ms for sessionid 0x161acc5a2de0024, closing socket connection and attempting reconnect
+2018-02-19 14:21:13.581 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 2394100ms for sessionid 0x161acc5a2de0026, closing socket connection and attempting reconnect
+2018-02-19 14:21:13.586 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 2393672ms for sessionid 0x161acc5a2de0027, closing socket connection and attempting reconnect
+2018-02-19 14:21:13.586 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Client session timed out, have not heard from server in 2390213ms for sessionid 0x161acc5a2de0023, closing socket connection and attempting reconnect
+2018-02-19 14:21:13.812 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 14:21:13.812 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 14:21:13.815 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 14:21:13.815 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 14:21:13.817 o.a.s.z.Zookeeper Curator-ConnectionStateManager-0 [INFO] localhost lost leadership.
+2018-02-19 14:21:13.824 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 14:21:13.825 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :disconnected:none
+2018-02-19 14:21:13.825 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Reader Zookeeper.
+2018-02-19 14:21:13.825 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :disconnected::none: with disconnected Writer Zookeeper.
+2018-02-19 14:21:13.928 o.a.s.u.StormBoundedExponentialBackoffRetry timer [WARN] WILL SLEEP FOR 1001ms (NOT MAX)
+2018-02-19 14:21:14.331 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 14:21:14.333 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 14:21:14.535 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 14:21:14.536 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@415ef4d8
+2018-02-19 14:21:14.536 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0024 has expired, closing socket connection
+2018-02-19 14:21:14.538 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 14:21:14.539 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :expired:none
+2018-02-19 14:21:14.539 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 14:21:14.541 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 14:21:14.542 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 14:21:14.546 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 14:21:14.547 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 14:21:14.577 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de0028, negotiated timeout = 20000
+2018-02-19 14:21:14.577 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 14:21:14.578 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :connected:none
+2018-02-19 14:21:14.588 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0027 has expired, closing socket connection
+2018-02-19 14:21:14.588 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 14:21:14.588 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@1ba467c2
+2018-02-19 14:21:14.589 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 14:21:14.590 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Writer Zookeeper.
+2018-02-19 14:21:14.590 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 14:21:14.590 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 14:21:14.591 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 14:21:14.606 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de002a, negotiated timeout = 20000
+2018-02-19 14:21:14.607 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 14:21:14.618 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-blobs [] local-topology-blobs [] diff-topology-blobs []
+2018-02-19 14:21:14.618 o.a.s.z.Zookeeper main-EventThread [INFO] active-topology-dependencies [] local-blobs [] diff-topology-dependencies []
+2018-02-19 14:21:14.618 o.a.s.z.Zookeeper main-EventThread [INFO] Accepting leadership, all active topologies and corresponding dependencies found locally.
+2018-02-19 14:21:14.662 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 14:21:14.663 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 14:21:14.664 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0026 has expired, closing socket connection
+2018-02-19 14:21:14.664 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 14:21:14.665 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@21bd128b
+2018-02-19 14:21:14.665 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 14:21:14.665 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 14:21:14.666 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 14:21:14.666 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 14:21:14.668 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de002b, negotiated timeout = 20000
+2018-02-19 14:21:14.668 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 14:21:14.668 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 14:21:14.669 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/127.0.0.1:2181, initiating session
+2018-02-19 14:21:14.669 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to reconnect to ZooKeeper service, session 0x161acc5a2de0023 has expired, closing socket connection
+2018-02-19 14:21:14.669 o.a.s.s.o.a.c.ConnectionState main-EventThread [WARN] Session expired event received
+2018-02-19 14:21:14.670 o.a.s.s.o.a.z.ZooKeeper main-EventThread [INFO] Initiating client connection, connectString=localhost:2181/storm sessionTimeout=20000 watcher=org.apache.storm.shade.org.apache.curator.ConnectionState@6975fb1c
+2018-02-19 14:21:14.670 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: LOST
+2018-02-19 14:21:14.670 o.a.s.c.zookeeper-state-factory main-EventThread [WARN] Received event :expired::none: with disconnected Reader Zookeeper.
+2018-02-19 14:21:14.670 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to LOST
+2018-02-19 14:21:14.670 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 14:21:14.671 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181. Will not attempt to authenticate using SASL (unknown error)
+2018-02-19 14:21:14.671 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Socket connection established to localhost/0:0:0:0:0:0:0:1:2181, initiating session
+2018-02-19 14:21:14.679 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, sessionid = 0x161acc5a2de002c, negotiated timeout = 20000
+2018-02-19 14:21:14.679 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: RECONNECTED
+2018-02-19 14:21:14.679 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state listener invoked, zookeeper connection state has changed to RECONNECTED
+2018-02-19 14:21:14.679 o.a.s.cluster Curator-ConnectionStateManager-0 [INFO] Connection state has changed to reconnected so setting nimbuses entry one more time
+2018-02-19 14:54:51.065 o.a.s.d.nimbus Thread-7 [INFO] Shutting down master
+2018-02-19 14:54:51.090 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl Curator-Framework-0 [INFO] backgroundOperationsLoop exiting
+2018-02-19 14:54:51.098 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de0028, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 14:54:51.098 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de002b, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 14:54:51.098 o.a.s.s.o.a.z.ClientCnxn main-SendThread(localhost:2181) [INFO] Unable to read additional data from server sessionid 0x161acc5a2de002c, likely server has closed socket, closing socket connection and attempting reconnect
+2018-02-19 14:54:51.199 o.a.s.s.o.a.z.ZooKeeper Thread-7 [INFO] Session: 0x161acc5a2de002a closed
+2018-02-19 14:54:51.200 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
+2018-02-19 14:54:51.203 o.a.s.s.o.a.c.f.i.CuratorFrameworkImpl Curator-Framework-0 [INFO] backgroundOperationsLoop exiting
+2018-02-19 14:54:51.203 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 14:54:51.203 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 14:54:51.203 o.a.s.s.o.a.c.f.s.ConnectionStateManager main-EventThread [INFO] State change: SUSPENDED
+2018-02-19 14:54:51.203 o.a.s.zookeeper main-EventThread [INFO] Zookeeper state update: :disconnected:none
+2018-02-19 14:54:51.204 o.a.s.s.o.a.c.f.s.ConnectionStateManager Curator-ConnectionStateManager-0 [WARN] There are no ConnectionStateListeners registered.
+2018-02-19 14:54:51.204 o.a.s.z.Zookeeper Curator-ConnectionStateManager-0 [INFO] localhost lost leadership.
+2018-02-19 14:54:52.046 o.a.s.s.o.a.z.ZooKeeper Thread-7 [INFO] Session: 0x161acc5a2de002c closed
+2018-02-19 14:54:52.046 o.a.s.s.o.a.z.ClientCnxn main-EventThread [INFO] EventThread shut down
