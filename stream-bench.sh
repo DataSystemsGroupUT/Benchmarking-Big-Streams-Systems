@@ -207,7 +207,7 @@ run() {
     rm -rf /tmp/dev-storm-zookeeper
   elif [ "START_REDIS" = "$OPERATION" ];
   then
-    start_if_needed redis-server Redis 1 "$REDIS_DIR/src/redis-server"
+    start_if_needed redis-server Redis 1 "$REDIS_DIR/src/redis-server" --protected-mode no
     cd data
     $LEIN run -n --configPath ../conf/benchmarkConf.yaml
     cd ..
