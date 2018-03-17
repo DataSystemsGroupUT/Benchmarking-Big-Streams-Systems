@@ -160,11 +160,9 @@ startRedis
 sleep 10
 startFlink
 startLoadData
-startZkLoadData
 sleep ${TEST_TIME}
 stopLoadData
-stopZkLoadData
-sleep 5
+sleep 60
 stopFlink
 sleep 5
 stopRedis
