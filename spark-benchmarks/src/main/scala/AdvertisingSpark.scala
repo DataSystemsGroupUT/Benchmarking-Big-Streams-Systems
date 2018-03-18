@@ -114,7 +114,7 @@ object KafkaRedisAdvertisingStream {
     hosts.foreach({
       System.out.print(joined);
       if (!(joined.toString().equals(""))) {
-        joined.append(",");
+        joined.append(_).append(",");
       }
 
       joined.append(_).append(":").append(port);
