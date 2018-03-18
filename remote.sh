@@ -16,6 +16,12 @@ STOP_FLINK_CMD="cd stream-benchmarking; ./flink-1.4.0/bin/stop-cluster.sh;"
 START_FLINK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_FLINK_PROCESSING;"
 STOP_FLINK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_FLINK_PROCESSING;"
 
+START_SPARK_MASTER_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/start-master.sh -h stream-node01 -p 7077;"
+STOP_SPARK_MASTER_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/stop-master.sh;"
+START_SPARK_SLAVE_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/start-slave.sh spark://stream-node01:7077;"
+STOP_SPARK_SLAVE_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/stop-slave.sh;"
+START_SPARK_PROC_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./stream-bench.sh START_SPARK_PROCESSING;"
+STOP_SPARK_PROC_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./stream-bench.sh STOP_SPARK_PROCESSING;"
 
 START_ZK_CMD="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/zookeeper-server-start.sh -daemon config/zookeeper.properties"
 STOP_ZK_CMD="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/zookeeper-server-stop.sh;"
@@ -139,6 +145,35 @@ function stopFlink {
     nohup ssh ubuntu@stream-node01 ${STOP_FLINK_CMD} &
 }
 
+
+function startSpark {
+    echo "Starting Spark Master"
+    ssh ubuntu@stream-node01 ${START_SPARK_MASTER_CMD}
+    sleep 3
+    echo "Starting Spark node 02"
+    ssh ubuntu@stream-node02 ${START_SPARK_MASTER_CMD}
+    echo "Starting Spark node 03"
+    ssh ubuntu@stream-node03 ${START_SPARK_MASTER_CMD}
+    echo "Starting Spark node 04"
+    ssh ubuntu@stream-node04 ${START_SPARK_MASTER_CMD}
+    echo "Starting Spark node 05"
+    ssh ubuntu@stream-node05 ${START_SPARK_MASTER_CMD}
+    echo "Starting Spark node 06"
+    ssh ubuntu@stream-node06 ${START_SPARK_MASTER_CMD}
+    echo "Starting Spark node 07"
+    ssh ubuntu@stream-node07 ${START_SPARK_MASTER_CMD}
+    echo "Starting Spark node 08"
+    ssh ubuntu@stream-node08 ${START_SPARK_MASTER_CMD}
+    nohup ssh ubuntu@stream-node01 ${START_SPARK_PROC_CMD} &
+}
+
+function stopSpark {
+    echo "Stopping Spark"
+    ssh ubuntu@stream-node01 ${STOP_FLINK_PROC_CMD}
+    sleep 5
+    nohup ssh ubuntu@stream-node01 ${STOP_FLINK_CMD} &
+}
+
 function startRedis {
     echo "Starting Redis"
     nohup ssh ubuntu@redis ${START_REDIS_CMD} &
@@ -150,25 +185,44 @@ function stopRedis {
 }
 
 
-cleanResult
-startZK
-sleep 5
-startKafka
-sleep 5
-cleanKafka
-startRedis
-sleep 10
-startFlink
-startLoadData
-sleep ${TEST_TIME}
-stopLoadData
-sleep 60
-stopFlink
-sleep 5
-stopRedis
-stopKafka
-sleep 5
-stopZK
+function prepareEnvironment(){
+    cleanResult
+    startZK
+    sleep 5
+    startKafka
+    sleep 5
+    cleanKafka
+    startRedis
+    sleep 10
+}
 
+function destroyEnvironment(){
+    sleep 5
+    stopRedis
+    stopKafka
+    sleep 5
+    stopZK
+}
+prepareEnvironment
+case $1 in
+    flink)
+        startFlink
+        startLoadData
+        sleep ${TEST_TIME}
+        stopLoadData
+        sleep 60
+        stopFlink
+    ;;
+    spark)
+        startFlink
+        startLoadData
+        sleep ${TEST_TIME}
+        stopLoadData
+        sleep 60
+        stopFlink
+    ;;
+esac
+
+destroyEnvironment
 
 
