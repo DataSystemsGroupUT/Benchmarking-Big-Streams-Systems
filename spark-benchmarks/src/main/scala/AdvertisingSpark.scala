@@ -119,7 +119,7 @@ object KafkaRedisAdvertisingStream {
         joined.append(",");
       }
 
-      joined.append(_).append(":").append(port);
+      joined.append(",").append(_).append(":").append(port);
     })
     return joined.toString();
   }
