@@ -113,7 +113,7 @@ object KafkaRedisAdvertisingStream {
   def joinHosts(hosts: Seq[String], port: String): String = {
     val joined = new StringBuilder("");
     hosts.foreach({
-      System.err.println(joined);
+      System.err.println(joined.toString());
       if (!joined.isEmpty) {
         joined.append(",");
       }
