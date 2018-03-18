@@ -116,7 +116,7 @@ object KafkaRedisAdvertisingStream {
     hosts.foreach({
       joined.append(",").append(_).append(":").append(port);
     })
-    return joined.toString().substring(2);
+    return joined.toString().substring(1);
   }
 
   def parseJson(jsonString: String): Array[String] = {
