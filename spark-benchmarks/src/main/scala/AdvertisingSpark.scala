@@ -60,7 +60,7 @@ object KafkaRedisAdvertisingStream {
 
     // Create direct kafka stream with brokers and topics
     val topicsSet = Set(topic)
-    System.err.println("3213123")
+
     val brokers = joinHosts(kafkaHosts, kafkaPort)
 
     val kafkaParams = Map[String, String]("metadata.broker.list" -> brokers, "auto.offset.reset" -> "smallest")
@@ -113,10 +113,9 @@ object KafkaRedisAdvertisingStream {
 
   def joinHosts(hosts: Seq[String], port: String): String = {
     val joined = new StringBuilder("");
-    System.err.println("asdasdsad")
     hosts.foreach({
       System.err.println(joined.toString())
-      if (!joined.isEmpty) {
+      if (joined.nonEmpty) {
         joined.append(",");
       }
 
