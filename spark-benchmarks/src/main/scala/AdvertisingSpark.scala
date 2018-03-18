@@ -115,7 +115,7 @@ object KafkaRedisAdvertisingStream {
     val joined = new StringBuilder("");
     hosts.foreach({
       System.err.println(joined.toString())
-      if (joined.nonEmpty) {
+      if (!joined.toString().equals("")) {
         joined.append(",");
       }
 
