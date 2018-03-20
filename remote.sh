@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 TEST_TIME=1800
-TPS="4000"
+TPS="1000"
 SHORT_SLEEP=10
 LONG_SLEEP=60
 
