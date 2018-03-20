@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-TEST_TIME=1800
+TEST_TIME=100
 TPS="4000"
-SHORT_SLEEP=20
-LONG_SLEEP=100
+SHORT_SLEEP=10
+LONG_SLEEP=60
 
 CLEAN_LOAD_RESULT_CMD="rm stream*;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
 
-CHANGE_TPS_CMD="sed -i “s/LOAD:-10000/ssl_2018/g” stream-benchmarking/stream-bench.sh;"
+CHANGE_TPS_CMD="sed -i “s/LOAD:-1000/ssl_2018/g” stream-benchmarking/stream-bench.sh;"
 
 LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
@@ -17,7 +17,7 @@ DELETE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh 
 CREATE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 4 --topic ad-events;"
 
 START_MONITOR_PROCESS_CMD="top -b -d 1 | grep --line-buffered java > stream.process;"
-STOP_MONITOR_PROCESS_CMD="ps aux | grep top | awk {'print $2'} | head -n 1 | xargs sudo kill ;"
+STOP_MONITOR_PROCESS_CMD="ps aux | grep top | awk {'print \$2'} | xargs sudo kill;"
 MONITOR_PID_CMD="ps aux | grep java > stream.pid"
 
 START_FLINK_CMD="cd stream-benchmarking; ./flink-1.4.0/bin/start-cluster.sh;"
@@ -42,25 +42,25 @@ STOP_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_REDIS;"
 PULL_GIT="cd stream-benchmarking; git reset --hard HEAD; git pull origin master;"
 
 function pullRepository {
-    nohup ssh ubuntu@stream-node01 ${PULL_GIT} &
-    nohup ssh ubuntu@stream-node02 ${PULL_GIT} &
-    nohup ssh ubuntu@stream-node03 ${PULL_GIT} &
-    nohup ssh ubuntu@stream-node04 ${PULL_GIT} &
-    nohup ssh ubuntu@stream-node05 ${PULL_GIT} &
-    nohup ssh ubuntu@stream-node06 ${PULL_GIT} &
-    nohup ssh ubuntu@stream-node07 ${PULL_GIT} &
-    nohup ssh ubuntu@stream-node08 ${PULL_GIT} &
-    nohup ssh ubuntu@zookeeper-node01 ${PULL_GIT} &
-    nohup ssh ubuntu@zookeeper-node02 ${PULL_GIT} &
-    nohup ssh ubuntu@zookeeper-node03 ${PULL_GIT} &
-    nohup ssh ubuntu@kafka-node01 ${PULL_GIT} &
-    nohup ssh ubuntu@kafka-node02 ${PULL_GIT} &
-    nohup ssh ubuntu@kafka-node03 ${PULL_GIT} &
-    nohup ssh ubuntu@kafka-node04 ${PULL_GIT} &
-    nohup ssh ubuntu@load-node01 ${PULL_GIT} &
-    nohup ssh ubuntu@load-node02 ${PULL_GIT} &
-    nohup ssh ubuntu@load-node03 ${PULL_GIT} &
-    nohup ssh ubuntu@redis ${PULL_GIT} &
+    ssh ubuntu@stream-node01 ${PULL_GIT}
+    ssh ubuntu@stream-node02 ${PULL_GIT}
+    ssh ubuntu@stream-node03 ${PULL_GIT}
+    ssh ubuntu@stream-node04 ${PULL_GIT}
+    ssh ubuntu@stream-node05 ${PULL_GIT}
+    ssh ubuntu@stream-node06 ${PULL_GIT}
+    ssh ubuntu@stream-node07 ${PULL_GIT}
+    ssh ubuntu@stream-node08 ${PULL_GIT}
+    ssh ubuntu@zookeeper-node01 ${PULL_GIT}
+    ssh ubuntu@zookeeper-node02 ${PULL_GIT}
+    ssh ubuntu@zookeeper-node03 ${PULL_GIT}
+    ssh ubuntu@kafka-node01 ${PULL_GIT}
+    ssh ubuntu@kafka-node02 ${PULL_GIT}
+    ssh ubuntu@kafka-node03 ${PULL_GIT}
+    ssh ubuntu@kafka-node04 ${PULL_GIT}
+    ssh ubuntu@load-node01 ${PULL_GIT}
+    ssh ubuntu@load-node02 ${PULL_GIT}
+    ssh ubuntu@load-node03 ${PULL_GIT}
+    ssh ubuntu@redis ${PULL_GIT}
 }
 
 function stopLoadData {
@@ -71,6 +71,7 @@ function stopLoadData {
     echo "Main loader stopping node 03"
     nohup ssh ubuntu@load-node03 ${LOAD_STOP_CMD} &
     sleep ${LONG_SLEEP}
+    sleep ${LONG_SLEEP}
 }
 
 function stopZkLoadData {
@@ -80,7 +81,6 @@ function stopZkLoadData {
     nohup ssh ubuntu@zookeeper-node02 ${LOAD_STOP_CMD} &
     echo "Zookeeper loader stopping node 03"
     nohup ssh ubuntu@zookeeper-node03 ${LOAD_STOP_CMD} &
-    sleep ${LONG_SLEEP}
 }
 
 
@@ -96,7 +96,6 @@ function startLoadData {
 }
 
 function startZkLoadData {
-    sleep ${LONG_SLEEP}
     echo "Zookeeper loader starting node 01"
     nohup ssh ubuntu@zookeeper-node01 ${LOAD_START_CMD} &
     echo "Zookeeper loader starting node 02"
@@ -214,6 +213,11 @@ function getProcessId(){
     ssh ubuntu@stream-node06 ${MONITOR_PID_CMD}
     ssh ubuntu@stream-node07 ${MONITOR_PID_CMD}
     ssh ubuntu@stream-node08 ${MONITOR_PID_CMD}
+
+    ssh ubuntu@kafka-node01 ${MONITOR_PID_CMD}
+    ssh ubuntu@kafka-node02 ${MONITOR_PID_CMD}
+    ssh ubuntu@kafka-node03 ${MONITOR_PID_CMD}
+    ssh ubuntu@kafka-node04 ${MONITOR_PID_CMD}
 }
 
 function startMonitoring(){
@@ -225,6 +229,11 @@ function startMonitoring(){
     nohup ssh ubuntu@stream-node06 ${START_MONITOR_PROCESS_CMD} &
     nohup ssh ubuntu@stream-node07 ${START_MONITOR_PROCESS_CMD} &
     nohup ssh ubuntu@stream-node08 ${START_MONITOR_PROCESS_CMD} &
+
+    nohup ssh ubuntu@kafka-node01 ${START_MONITOR_PROCESS_CMD} &
+    nohup ssh ubuntu@kafka-node02 ${START_MONITOR_PROCESS_CMD} &
+    nohup ssh ubuntu@kafka-node03 ${START_MONITOR_PROCESS_CMD} &
+    nohup ssh ubuntu@kafka-node04 ${START_MONITOR_PROCESS_CMD} &
 }
 
 function stopMonitoring(){
@@ -236,6 +245,11 @@ function stopMonitoring(){
     ssh ubuntu@stream-node06 ${STOP_MONITOR_PROCESS_CMD}
     ssh ubuntu@stream-node07 ${STOP_MONITOR_PROCESS_CMD}
     ssh ubuntu@stream-node08 ${STOP_MONITOR_PROCESS_CMD}
+
+    ssh ubuntu@kafka-node01 ${STOP_MONITOR_PROCESS_CMD}
+    ssh ubuntu@kafka-node02 ${STOP_MONITOR_PROCESS_CMD}
+    ssh ubuntu@kafka-node03 ${STOP_MONITOR_PROCESS_CMD}
+    ssh ubuntu@kafka-node04 ${STOP_MONITOR_PROCESS_CMD}
 }
 
 function stopSpark {
@@ -255,9 +269,9 @@ function stopSparkProcessing {
 }
 
 function changeTps(){
-    ssh ubuntu@load-node01 "sed -i “s/LOAD:-$1/LOAD:-$2/g” stream-benchmarking/stream-bench.sh"
-    ssh ubuntu@load-node02 "sed -i “s/LOAD:-$1/LOAD:-$2/g” stream-benchmarking/stream-bench.sh"
-    ssh ubuntu@load-node03 "sed -i “s/LOAD:-$1/LOAD:-$2/g” stream-benchmarking/stream-bench.sh"
+    ssh ubuntu@load-node01 "sed -i \"s/LOAD:-4000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
+    ssh ubuntu@load-node02 "sed -i \"s/LOAD:-4000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
+    ssh ubuntu@load-node03 "sed -i \"s/LOAD:-4000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
 }
 
 
@@ -315,6 +329,17 @@ function getBenchmarkResult(){
     scp ubuntu@stream-node07:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node07.process
     scp ubuntu@stream-node08:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node08.process
 
+    scp ubuntu@kafka-node01:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node01.pid
+    scp ubuntu@kafka-node02:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node02.pid
+    scp ubuntu@kafka-node03:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node03.pid
+    scp ubuntu@kafka-node04:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node04.pid
+
+    scp ubuntu@kafka-node01:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node01.process
+    scp ubuntu@kafka-node02:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node02.process
+    scp ubuntu@kafka-node03:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node03.process
+    scp ubuntu@kafka-node04:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node04.process
+
+
     scp ubuntu@load-node01:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node01-seen.txt
     scp ubuntu@load-node01:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node01-updated.txt
 
@@ -324,13 +349,25 @@ function getBenchmarkResult(){
     scp ubuntu@load-node03:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node03-seen.txt
     scp ubuntu@load-node03:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node03-updated.txt
 
+    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node01-seen.txt
+    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node01-updated.txt
+
+    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node02-seen.txt
+    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node02-updated.txt
+
+    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node03-seen.txt
+    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node03-updated.txt
+
 }
 
 function benchmark(){
     startMonitoring
     startLoadData
+    startZkLoadData
+    start
     sleep ${TEST_TIME}
     getProcessId
+    stopZkLoadData
     stopLoadData
     stopMonitoring
     getBenchmarkResult $1
@@ -359,11 +396,12 @@ function runSystem(){
 }
 
 
-
 while true; do
-    if (("$TPS" > "20000")); then
+    pullRepository
+    if (("$TPS" > "10000")); then
         break
     fi
+    changeTps
     runSystem $1
     TPS=$[$TPS + 1000]
 done
