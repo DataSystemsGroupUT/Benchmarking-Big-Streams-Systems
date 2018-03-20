@@ -20,3 +20,5 @@ spark-2.2.1-bin-hadoop2.6
 redis-4.0.8
 dump.rdb
 nohup.out
+data/seen.txt
+data/updated.txt

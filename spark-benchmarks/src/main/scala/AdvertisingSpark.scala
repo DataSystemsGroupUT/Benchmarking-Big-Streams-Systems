@@ -24,6 +24,7 @@ import java.util.{LinkedHashMap, UUID}
 
 import compat.Platform.currentTime
 import benchmark.common.Utils
+import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.streaming.kafka010.{ConsumerStrategies, KafkaUtils, LocationStrategies}
 
 import scala.collection.JavaConverters._
@@ -65,7 +66,12 @@ object KafkaRedisAdvertisingStream {
 
     val brokers = joinHosts(kafkaHosts, kafkaPort)
 
-    val kafkaParams = Map[String, String]("metadata.broker.list" -> brokers, "auto.offset.reset" -> "smallest")
+    val kafkaParams = Map[String, Object](
+      "bootstrap.servers" -> brokers,
+      "group.id" -> "0",
+      "key.deserializer" -> classOf[StringDeserializer],
+      "value.deserializer" -> classOf[StringDeserializer],
+      "auto.offset.reset" -> "latest")
     System.err.println(
       "Trying to connect to Kafka at " + brokers)
     val messages = KafkaUtils.createDirectStream[String, String](
