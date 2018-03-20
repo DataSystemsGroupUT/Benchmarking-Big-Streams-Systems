@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 
 TEST_TIME=1800
+TPS="4000"
+SHORT_SLEEP=20
+LONG_SLEEP=100
 
+CLEAN_LOAD_RESULT_CMD="rm stream*;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
+
+CHANGE_TPS_CMD="sed -i “s/LOAD:-10000/ssl_2018/g” stream-benchmarking/stream-bench.sh;"
 
 LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
@@ -10,16 +16,17 @@ LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
 DELETE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh --delete --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic ad-events;"
 CREATE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 4 --topic ad-events;"
 
+START_MONITOR_PROCESS_CMD="top -b -d 1 | grep --line-buffered java > stream.process;"
+STOP_MONITOR_PROCESS_CMD="ps aux | grep top | awk {'print $2'} | head -n 1 | xargs sudo kill ;"
+MONITOR_PID_CMD="ps aux | grep java > stream.pid"
 
 START_FLINK_CMD="cd stream-benchmarking; ./flink-1.4.0/bin/start-cluster.sh;"
 STOP_FLINK_CMD="cd stream-benchmarking; ./flink-1.4.0/bin/stop-cluster.sh;"
 START_FLINK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_FLINK_PROCESSING;"
 STOP_FLINK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_FLINK_PROCESSING;"
 
-START_SPARK_MASTER_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/start-master.sh -h stream-node01 -p 7077;"
-STOP_SPARK_MASTER_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/stop-master.sh;"
-START_SPARK_SLAVE_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/start-slave.sh spark://stream-node01:7077;"
-STOP_SPARK_SLAVE_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/stop-slave.sh;"
+START_SPARK_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/start-all.sh;"
+STOP_SPARK_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/stop-all.sh;"
 START_SPARK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_PROCESSING;"
 STOP_SPARK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_PROCESSING;"
 
@@ -32,6 +39,30 @@ STOP_KAFKA_CMD="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-server-s
 START_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh START_REDIS;"
 STOP_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_REDIS;"
 
+PULL_GIT="cd stream-benchmarking; git reset --hard HEAD; git pull origin master;"
+
+function pullRepository {
+    nohup ssh ubuntu@stream-node01 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node02 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node03 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node04 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node05 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node06 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node07 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node08 ${PULL_GIT} &
+    nohup ssh ubuntu@zookeeper-node01 ${PULL_GIT} &
+    nohup ssh ubuntu@zookeeper-node02 ${PULL_GIT} &
+    nohup ssh ubuntu@zookeeper-node03 ${PULL_GIT} &
+    nohup ssh ubuntu@kafka-node01 ${PULL_GIT} &
+    nohup ssh ubuntu@kafka-node02 ${PULL_GIT} &
+    nohup ssh ubuntu@kafka-node03 ${PULL_GIT} &
+    nohup ssh ubuntu@kafka-node04 ${PULL_GIT} &
+    nohup ssh ubuntu@load-node01 ${PULL_GIT} &
+    nohup ssh ubuntu@load-node02 ${PULL_GIT} &
+    nohup ssh ubuntu@load-node03 ${PULL_GIT} &
+    nohup ssh ubuntu@redis ${PULL_GIT} &
+}
+
 function stopLoadData {
     echo "Main loader stopping node 01"
     nohup ssh ubuntu@load-node01 ${LOAD_STOP_CMD} &
@@ -39,6 +70,7 @@ function stopLoadData {
     nohup ssh ubuntu@load-node02 ${LOAD_STOP_CMD} &
     echo "Main loader stopping node 03"
     nohup ssh ubuntu@load-node03 ${LOAD_STOP_CMD} &
+    sleep ${LONG_SLEEP}
 }
 
 function stopZkLoadData {
@@ -48,10 +80,12 @@ function stopZkLoadData {
     nohup ssh ubuntu@zookeeper-node02 ${LOAD_STOP_CMD} &
     echo "Zookeeper loader stopping node 03"
     nohup ssh ubuntu@zookeeper-node03 ${LOAD_STOP_CMD} &
+    sleep ${LONG_SLEEP}
 }
 
 
 function startLoadData {
+    sleep ${LONG_SLEEP}
     echo "Main loader starting node 01"
     nohup ssh ubuntu@load-node01 ${LOAD_START_CMD} &
     echo "Main loader starting node 02"
@@ -62,6 +96,7 @@ function startLoadData {
 }
 
 function startZkLoadData {
+    sleep ${LONG_SLEEP}
     echo "Zookeeper loader starting node 01"
     nohup ssh ubuntu@zookeeper-node01 ${LOAD_START_CMD} &
     echo "Zookeeper loader starting node 02"
@@ -121,6 +156,15 @@ function stopKafka {
 
 function cleanResult {
     echo "Cleaning previous benchmark result"
+    ssh ubuntu@stream-node01 ${CLEAN_LOAD_RESULT_CMD}
+    ssh ubuntu@stream-node02 ${CLEAN_LOAD_RESULT_CMD}
+    ssh ubuntu@stream-node03 ${CLEAN_LOAD_RESULT_CMD}
+    ssh ubuntu@stream-node04 ${CLEAN_LOAD_RESULT_CMD}
+    ssh ubuntu@stream-node05 ${CLEAN_LOAD_RESULT_CMD}
+    ssh ubuntu@stream-node06 ${CLEAN_LOAD_RESULT_CMD}
+    ssh ubuntu@stream-node07 ${CLEAN_LOAD_RESULT_CMD}
+    ssh ubuntu@stream-node08 ${CLEAN_LOAD_RESULT_CMD}
+
     ssh ubuntu@load-node01 ${CLEAN_RESULT_CMD}
     ssh ubuntu@load-node02 ${CLEAN_RESULT_CMD}
     ssh ubuntu@load-node03 ${CLEAN_RESULT_CMD}
@@ -134,109 +178,197 @@ function cleanResult {
 function startFlink {
     echo "Starting Flink"
     ssh ubuntu@stream-node01 ${START_FLINK_CMD}
-    sleep 3
-    nohup ssh ubuntu@stream-node01 ${START_FLINK_PROC_CMD} &
+    sleep ${SHORT_SLEEP}
 }
 
 function stopFlink {
     echo "Stopping Flink"
     ssh ubuntu@stream-node01 ${STOP_FLINK_PROC_CMD}
-    sleep 5
-    nohup ssh ubuntu@stream-node01 ${STOP_FLINK_CMD} &
+
 }
 
+function startFlinkProcessing {
+    echo "Starting Flink Processing"
+    nohup ssh ubuntu@stream-node01 ${START_FLINK_PROC_CMD} &
+    sleep ${LONG_SLEEP}
+}
+
+function stopFlinkProcessing {
+    echo "Stopping Flink Processing"
+    nohup ssh ubuntu@stream-node01 ${STOP_FLINK_CMD} &
+    sleep ${SHORT_SLEEP}
+}
 
 function startSpark {
-    echo "Starting Spark Master"
-    ssh ubuntu@stream-node01 ${START_SPARK_MASTER_CMD}
-    sleep 3
-    echo "Starting Spark node 02"
-    ssh ubuntu@stream-node02 ${START_SPARK_SLAVE_CMD}
-    echo "Starting Spark node 03"
-    ssh ubuntu@stream-node03 ${START_SPARK_SLAVE_CMD}
-    echo "Starting Spark node 04"
-    ssh ubuntu@stream-node04 ${START_SPARK_SLAVE_CMD}
-    echo "Starting Spark node 05"
-    ssh ubuntu@stream-node05 ${START_SPARK_SLAVE_CMD}
-    echo "Starting Spark node 06"
-    ssh ubuntu@stream-node06 ${START_SPARK_SLAVE_CMD}
-    echo "Starting Spark node 07"
-    ssh ubuntu@stream-node07 ${START_SPARK_SLAVE_CMD}
-    echo "Starting Spark node 08"
-    ssh ubuntu@stream-node08 ${START_SPARK_SLAVE_CMD}
-    echo "Starting Spark processing"
-    nohup ssh ubuntu@stream-node01 ${START_SPARK_PROC_CMD} &
+    echo "Starting Spark"
+    ssh ubuntu@stream-node01 ${START_SPARK_CMD}
+    sleep ${SHORT_SLEEP}
+}
+
+function getProcessId(){
+    ssh ubuntu@stream-node01 ${MONITOR_PID_CMD}
+    ssh ubuntu@stream-node02 ${MONITOR_PID_CMD}
+    ssh ubuntu@stream-node03 ${MONITOR_PID_CMD}
+    ssh ubuntu@stream-node04 ${MONITOR_PID_CMD}
+    ssh ubuntu@stream-node05 ${MONITOR_PID_CMD}
+    ssh ubuntu@stream-node06 ${MONITOR_PID_CMD}
+    ssh ubuntu@stream-node07 ${MONITOR_PID_CMD}
+    ssh ubuntu@stream-node08 ${MONITOR_PID_CMD}
+}
+
+function startMonitoring(){
+    nohup ssh ubuntu@stream-node01 ${START_MONITOR_PROCESS_CMD} &
+    nohup ssh ubuntu@stream-node02 ${START_MONITOR_PROCESS_CMD} &
+    nohup ssh ubuntu@stream-node03 ${START_MONITOR_PROCESS_CMD} &
+    nohup ssh ubuntu@stream-node04 ${START_MONITOR_PROCESS_CMD} &
+    nohup ssh ubuntu@stream-node05 ${START_MONITOR_PROCESS_CMD} &
+    nohup ssh ubuntu@stream-node06 ${START_MONITOR_PROCESS_CMD} &
+    nohup ssh ubuntu@stream-node07 ${START_MONITOR_PROCESS_CMD} &
+    nohup ssh ubuntu@stream-node08 ${START_MONITOR_PROCESS_CMD} &
+}
+
+function stopMonitoring(){
+    ssh ubuntu@stream-node01 ${STOP_MONITOR_PROCESS_CMD}
+    ssh ubuntu@stream-node02 ${STOP_MONITOR_PROCESS_CMD}
+    ssh ubuntu@stream-node03 ${STOP_MONITOR_PROCESS_CMD}
+    ssh ubuntu@stream-node04 ${STOP_MONITOR_PROCESS_CMD}
+    ssh ubuntu@stream-node05 ${STOP_MONITOR_PROCESS_CMD}
+    ssh ubuntu@stream-node06 ${STOP_MONITOR_PROCESS_CMD}
+    ssh ubuntu@stream-node07 ${STOP_MONITOR_PROCESS_CMD}
+    ssh ubuntu@stream-node08 ${STOP_MONITOR_PROCESS_CMD}
 }
 
 function stopSpark {
+    echo "Stopping Spark"
+    ssh ubuntu@stream-node01 ${STOP_SPARK_CMD}
+}
+function startSparkProcessing {
+    echo "Starting Spark processing"
+    nohup ssh ubuntu@stream-node01 ${START_SPARK_PROC_CMD} &
+    sleep ${SHORT_SLEEP}
+}
+
+function stopSparkProcessing {
     echo "Stopping Spark processing"
     nohup ssh ubuntu@stream-node01 ${STOP_SPARK_PROC_CMD} &
-    echo "Stopping Spark node 02"
-    ssh ubuntu@stream-node02 ${STOP_SPARK_SLAVE_CMD}
-    echo "Stopping Spark node 03"
-    ssh ubuntu@stream-node03 ${STOP_SPARK_SLAVE_CMD}
-    echo "Stopping Spark node 04"
-    ssh ubuntu@stream-node04 ${STOP_SPARK_SLAVE_CMD}
-    echo "Stopping Spark node 05"
-    ssh ubuntu@stream-node05 ${STOP_SPARK_SLAVE_CMD}
-    echo "Stopping Spark node 06"
-    ssh ubuntu@stream-node06 ${STOP_SPARK_SLAVE_CMD}
-    echo "Stopping Spark node 07"
-    ssh ubuntu@stream-node07 ${STOP_SPARK_SLAVE_CMD}
-    echo "Stopping Spark node 08"
-    ssh ubuntu@stream-node08 ${STOP_SPARK_SLAVE_CMD}
-    echo "Stopping Spark Master"
-    ssh ubuntu@stream-node01 ${STOP_SPARK_MASTER_CMD}
+    sleep ${SHORT_SLEEP}
 }
+
+function changeTps(){
+    ssh ubuntu@load-node01 "sed -i “s/LOAD:-$1/LOAD:-$2/g” stream-benchmarking/stream-bench.sh"
+    ssh ubuntu@load-node02 "sed -i “s/LOAD:-$1/LOAD:-$2/g” stream-benchmarking/stream-bench.sh"
+    ssh ubuntu@load-node03 "sed -i “s/LOAD:-$1/LOAD:-$2/g” stream-benchmarking/stream-bench.sh"
+}
+
 
 function startRedis {
     echo "Starting Redis"
     nohup ssh ubuntu@redis ${START_REDIS_CMD} &
+    sleep ${SHORT_SLEEP}
 }
 
 function stopRedis {
     echo "Stopping Redis"
     ssh ubuntu@redis ${STOP_REDIS_CMD}
+    sleep ${SHORT_SLEEP}
 }
 
 
 function prepareEnvironment(){
     cleanResult
     startZK
-    sleep 5
+    sleep ${SHORT_SLEEP}
     startKafka
-    sleep 5
+    sleep ${SHORT_SLEEP}
     cleanKafka
     startRedis
-    sleep 10
 }
 
 function destroyEnvironment(){
-    sleep 5
+    sleep ${SHORT_SLEEP}
     stopRedis
     stopKafka
-    sleep 5
+    sleep ${SHORT_SLEEP}
     stopZK
 }
-prepareEnvironment
-case $1 in
-    flink)
-        startFlink
-        startLoadData
-        sleep ${TEST_TIME}
-        stopLoadData
-        sleep 60
-        stopFlink
-    ;;
-    spark)
-        startSpark
-        startLoadData
-        sleep ${TEST_TIME}
-        stopLoadData
-        sleep 60
-        stopSpark
-    ;;
-esac
-destroyEnvironment
 
 
+function getBenchmarkResult(){
+
+    rm -rf result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}
+    mkdir result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}
+    scp ubuntu@stream-node01:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node01.pid
+    scp ubuntu@stream-node02:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node02.pid
+    scp ubuntu@stream-node03:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node03.pid
+    scp ubuntu@stream-node04:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node04.pid
+    scp ubuntu@stream-node05:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node05.pid
+    scp ubuntu@stream-node06:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node06.pid
+    scp ubuntu@stream-node07:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node07.pid
+    scp ubuntu@stream-node08:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node08.pid
+
+    scp ubuntu@stream-node01:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node01.process
+    scp ubuntu@stream-node02:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node02.process
+    scp ubuntu@stream-node03:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node03.process
+    scp ubuntu@stream-node04:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node04.process
+    scp ubuntu@stream-node05:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node05.process
+    scp ubuntu@stream-node06:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node06.process
+    scp ubuntu@stream-node07:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node07.process
+    scp ubuntu@stream-node08:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node08.process
+
+    scp ubuntu@load-node01:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node01-seen.txt
+    scp ubuntu@load-node01:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node01-updated.txt
+
+    scp ubuntu@load-node02:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node02-seen.txt
+    scp ubuntu@load-node02:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node02-updated.txt
+
+    scp ubuntu@load-node03:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node03-seen.txt
+    scp ubuntu@load-node03:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node03-updated.txt
+
+}
+
+function benchmark(){
+    startMonitoring
+    startLoadData
+    sleep ${TEST_TIME}
+    getProcessId
+    stopLoadData
+    stopMonitoring
+    getBenchmarkResult $1
+}
+
+
+function runSystem(){
+    prepareEnvironment
+    case $1 in
+        flink)
+            startFlink
+            startFlinkProcessing
+            benchmark $1
+            stopFlinkProcessing
+            stopFlink
+        ;;
+        spark)
+            startSpark
+            startSparkProcessing
+            benchmark $1
+            stopSparkProcessing
+            stopSpark
+        ;;
+    esac
+    destroyEnvironment
+}
+
+
+
+while true; do
+    if (("$TPS" > "20000")); then
+        break
+    fi
+    runSystem $1
+    TPS=$[$TPS + 1000]
+done
+
+#stopLoadData
+#stopSparkProcessing
+#stopSpark
+#destroyEnvironment
