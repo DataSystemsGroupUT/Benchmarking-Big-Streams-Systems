@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TEST_TIME=100
+TEST_TIME=1800
 TPS="4000"
 SHORT_SLEEP=10
 LONG_SLEEP=60
@@ -364,7 +364,6 @@ function benchmark(){
     startMonitoring
     startLoadData
     startZkLoadData
-    start
     sleep ${TEST_TIME}
     getProcessId
     stopZkLoadData
