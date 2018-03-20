@@ -269,9 +269,13 @@ function stopSparkProcessing {
 }
 
 function changeTps(){
-    ssh ubuntu@load-node01 "sed -i \"s/LOAD:-4000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
-    ssh ubuntu@load-node02 "sed -i \"s/LOAD:-4000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
-    ssh ubuntu@load-node03 "sed -i \"s/LOAD:-4000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
+    ssh ubuntu@load-node01 "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
+    ssh ubuntu@load-node02 "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
+    ssh ubuntu@load-node03 "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
+
+    ssh ubuntu@zookeeper-node01 "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
+    ssh ubuntu@zookeeper-node02 "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
+    ssh ubuntu@zookeeper-node03 "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
 }
 
 
