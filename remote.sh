@@ -8,7 +8,7 @@ LONG_SLEEP=60
 CLEAN_LOAD_RESULT_CMD="rm stream*;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
 
-CHANGE_TPS_CMD="sed -i “s/LOAD:-1000/ssl_2018/g” stream-benchmarking/stream-bench.sh;"
+CHANGE_TPS_CMD="sed -i “s/LOAD:-1000/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
 
 LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
