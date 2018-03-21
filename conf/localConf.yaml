@@ -18,4 +18,4 @@ process.hosts: 7
 process.cores: 4
 storm.workers: 1
 storm.ackers: 2
-spark.batchtime: 2000
+spark.batchtime: 3000
