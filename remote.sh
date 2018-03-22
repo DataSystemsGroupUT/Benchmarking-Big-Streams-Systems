@@ -401,7 +401,7 @@ function runSystem(){
 
 while true; do
     pullRepository
-    if (("$TPS" > "10000")); then
+    if (("$TPS" > "6000")); then
         break
     fi
     changeTps
