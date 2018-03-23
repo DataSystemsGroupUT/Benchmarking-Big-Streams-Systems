@@ -2,8 +2,9 @@
 
 TEST_TIME=1800
 TPS="1000"
+BATCH="10000"
 SHORT_SLEEP=10
-LONG_SLEEP=60
+LONG_SLEEP=20
 
 CLEAN_LOAD_RESULT_CMD="rm stream*;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
@@ -313,54 +314,62 @@ function destroyEnvironment(){
 
 function getBenchmarkResult(){
 
-    rm -rf result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}
-    mkdir result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}
-    scp ubuntu@stream-node01:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node01.pid
-    scp ubuntu@stream-node02:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node02.pid
-    scp ubuntu@stream-node03:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node03.pid
-    scp ubuntu@stream-node04:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node04.pid
-    scp ubuntu@stream-node05:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node05.pid
-    scp ubuntu@stream-node06:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node06.pid
-    scp ubuntu@stream-node07:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node07.pid
-    scp ubuntu@stream-node08:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node08.pid
-
-    scp ubuntu@stream-node01:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node01.process
-    scp ubuntu@stream-node02:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node02.process
-    scp ubuntu@stream-node03:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node03.process
-    scp ubuntu@stream-node04:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node04.process
-    scp ubuntu@stream-node05:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node05.process
-    scp ubuntu@stream-node06:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node06.process
-    scp ubuntu@stream-node07:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node07.process
-    scp ubuntu@stream-node08:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/stream-node08.process
-
-    scp ubuntu@kafka-node01:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node01.pid
-    scp ubuntu@kafka-node02:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node02.pid
-    scp ubuntu@kafka-node03:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node03.pid
-    scp ubuntu@kafka-node04:~/stream.pid result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node04.pid
-
-    scp ubuntu@kafka-node01:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node01.process
-    scp ubuntu@kafka-node02:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node02.process
-    scp ubuntu@kafka-node03:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node03.process
-    scp ubuntu@kafka-node04:~/stream.process result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/kafka-node04.process
 
 
-    scp ubuntu@load-node01:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node01-seen.txt
-    scp ubuntu@load-node01:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node01-updated.txt
+    if (("$1" > "spark")); then
+        PATH=result/${1}_${BATCH}/TPS_${TPS}_DURATION_${TEST_TIME}
+    else
+        PATH=result/${1}_${BATCH}/TPS_${TPS}_DURATION_${TEST_TIME}
+    fi
 
-    scp ubuntu@load-node02:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node02-seen.txt
-    scp ubuntu@load-node02:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node02-updated.txt
+    rm -rf $PATH
+    mkdir $PATH
+    scp ubuntu@stream-node01:~/stream.pid $PATH/stream-node01.pid
+    scp ubuntu@stream-node02:~/stream.pid $PATH/stream-node02.pid
+    scp ubuntu@stream-node03:~/stream.pid $PATH/stream-node03.pid
+    scp ubuntu@stream-node04:~/stream.pid $PATH/stream-node04.pid
+    scp ubuntu@stream-node05:~/stream.pid $PATH/stream-node05.pid
+    scp ubuntu@stream-node06:~/stream.pid $PATH/stream-node06.pid
+    scp ubuntu@stream-node07:~/stream.pid $PATH/stream-node07.pid
+    scp ubuntu@stream-node08:~/stream.pid $PATH/stream-node08.pid
 
-    scp ubuntu@load-node03:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node03-seen.txt
-    scp ubuntu@load-node03:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/load-node03-updated.txt
+    scp ubuntu@stream-node01:~/stream.process $PATH/stream-node01.process
+    scp ubuntu@stream-node02:~/stream.process $PATH/stream-node02.process
+    scp ubuntu@stream-node03:~/stream.process $PATH/stream-node03.process
+    scp ubuntu@stream-node04:~/stream.process $PATH/stream-node04.process
+    scp ubuntu@stream-node05:~/stream.process $PATH/stream-node05.process
+    scp ubuntu@stream-node06:~/stream.process $PATH/stream-node06.process
+    scp ubuntu@stream-node07:~/stream.process $PATH/stream-node07.process
+    scp ubuntu@stream-node08:~/stream.process $PATH/stream-node08.process
 
-    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node01-seen.txt
-    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node01-updated.txt
+    scp ubuntu@kafka-node01:~/stream.pid $PATH/kafka-node01.pid
+    scp ubuntu@kafka-node02:~/stream.pid $PATH/kafka-node02.pid
+    scp ubuntu@kafka-node03:~/stream.pid $PATH/kafka-node03.pid
+    scp ubuntu@kafka-node04:~/stream.pid $PATH/kafka-node04.pid
 
-    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node02-seen.txt
-    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node02-updated.txt
+    scp ubuntu@kafka-node01:~/stream.process $PATH/kafka-node01.process
+    scp ubuntu@kafka-node02:~/stream.process $PATH/kafka-node02.process
+    scp ubuntu@kafka-node03:~/stream.process $PATH/kafka-node03.process
+    scp ubuntu@kafka-node04:~/stream.process $PATH/kafka-node04.process
 
-    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/seen.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node03-seen.txt
-    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/updated.txt result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}/zookeeper-node03-updated.txt
+
+    scp ubuntu@load-node01:~/stream-benchmarking/data/seen.txt $PATH/load-node01-seen.txt
+    scp ubuntu@load-node01:~/stream-benchmarking/data/updated.txt $PATH/load-node01-updated.txt
+
+    scp ubuntu@load-node02:~/stream-benchmarking/data/seen.txt $PATH/load-node02-seen.txt
+    scp ubuntu@load-node02:~/stream-benchmarking/data/updated.txt $PATH/load-node02-updated.txt
+
+    scp ubuntu@load-node03:~/stream-benchmarking/data/seen.txt $PATH/load-node03-seen.txt
+    scp ubuntu@load-node03:~/stream-benchmarking/data/updated.txt $PATH/load-node03-updated.txt
+
+    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/seen.txt $PATH/zookeeper-node01-seen.txt
+    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/updated.txt $PATH/zookeeper-node01-updated.txt
+
+    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/seen.txt $PATH/zookeeper-node02-seen.txt
+    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/updated.txt $PATH/zookeeper-node02-updated.txt
+
+    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/seen.txt $PATH/zookeeper-node03-seen.txt
+    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/updated.txt $PATH/zookeeper-node03-updated.txt
 
 }
 
@@ -399,17 +408,41 @@ function runSystem(){
 }
 
 
-while true; do
-    pullRepository
-    if (("$TPS" > "6000")); then
-        break
-    fi
-    changeTps
-    runSystem $1
-    TPS=$[$TPS + 1000]
-done
+function benchmark (){
+    while true; do
+        pullRepository
+        if (("$TPS" > "6000")); then
+            break
+        fi
+        changeTps
+        runSystem $1
+        TPS=$[$TPS + 1000]
+    done
+}
 
-#stopLoadData
-#stopSparkProcessing
-#stopSpark
-#destroyEnvironment
+
+case $1 in
+    flink)
+        benchmark "flink"
+    ;;
+    spark)
+        benchmark "spark"
+    ;;
+    both)
+        benchmark "flink"
+        benchmark "spark"
+    ;;
+    stop)
+        stopZkLoadData
+        stopLoadData
+        stopMonitoring
+        stopSparkProcessing
+        stopSpark
+        destroyEnvironment
+    ;;
+    push)
+        git add .
+        git commit -am "Automatic push message"
+        git push origin master
+esac
+
