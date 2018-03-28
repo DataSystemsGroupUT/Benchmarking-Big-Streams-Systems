@@ -314,62 +314,60 @@ function destroyEnvironment(){
 
 function getBenchmarkResult(){
 
-
-
-    if (("$1" > "spark")); then
-        PATH=result/${1}_${BATCH}/TPS_${TPS}_DURATION_${TEST_TIME}
+    if (("$1" == "spark")); then
+        PATH_RESULT=result/${1}_${BATCH}/TPS_${TPS}_DURATION_${TEST_TIME}
     else
-        PATH=result/${1}_${BATCH}/TPS_${TPS}_DURATION_${TEST_TIME}
+        PATH_RESULT=result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}
     fi
 
-    rm -rf $PATH
-    mkdir $PATH
-    scp ubuntu@stream-node01:~/stream.pid $PATH/stream-node01.pid
-    scp ubuntu@stream-node02:~/stream.pid $PATH/stream-node02.pid
-    scp ubuntu@stream-node03:~/stream.pid $PATH/stream-node03.pid
-    scp ubuntu@stream-node04:~/stream.pid $PATH/stream-node04.pid
-    scp ubuntu@stream-node05:~/stream.pid $PATH/stream-node05.pid
-    scp ubuntu@stream-node06:~/stream.pid $PATH/stream-node06.pid
-    scp ubuntu@stream-node07:~/stream.pid $PATH/stream-node07.pid
-    scp ubuntu@stream-node08:~/stream.pid $PATH/stream-node08.pid
+    echo ${PATH_RESULT}
+    rm -rf ${PATH_RESULT};
+    mkdir ${PATH_RESULT}
+    scp ubuntu@stream-node01:~/stream.pid ${PATH_RESULT}/stream-node01.pid
+    scp ubuntu@stream-node02:~/stream.pid ${PATH_RESULT}/stream-node02.pid
+    scp ubuntu@stream-node03:~/stream.pid ${PATH_RESULT}/stream-node03.pid
+    scp ubuntu@stream-node04:~/stream.pid ${PATH_RESULT}/stream-node04.pid
+    scp ubuntu@stream-node05:~/stream.pid ${PATH_RESULT}/stream-node05.pid
+    scp ubuntu@stream-node06:~/stream.pid ${PATH_RESULT}/stream-node06.pid
+    scp ubuntu@stream-node07:~/stream.pid ${PATH_RESULT}/stream-node07.pid
+    scp ubuntu@stream-node08:~/stream.pid ${PATH_RESULT}/stream-node08.pid
 
-    scp ubuntu@stream-node01:~/stream.process $PATH/stream-node01.process
-    scp ubuntu@stream-node02:~/stream.process $PATH/stream-node02.process
-    scp ubuntu@stream-node03:~/stream.process $PATH/stream-node03.process
-    scp ubuntu@stream-node04:~/stream.process $PATH/stream-node04.process
-    scp ubuntu@stream-node05:~/stream.process $PATH/stream-node05.process
-    scp ubuntu@stream-node06:~/stream.process $PATH/stream-node06.process
-    scp ubuntu@stream-node07:~/stream.process $PATH/stream-node07.process
-    scp ubuntu@stream-node08:~/stream.process $PATH/stream-node08.process
+    scp ubuntu@stream-node01:~/stream.process ${PATH_RESULT}/stream-node01.process
+    scp ubuntu@stream-node02:~/stream.process ${PATH_RESULT}/stream-node02.process
+    scp ubuntu@stream-node03:~/stream.process ${PATH_RESULT}/stream-node03.process
+    scp ubuntu@stream-node04:~/stream.process ${PATH_RESULT}/stream-node04.process
+    scp ubuntu@stream-node05:~/stream.process ${PATH_RESULT}/stream-node05.process
+    scp ubuntu@stream-node06:~/stream.process ${PATH_RESULT}/stream-node06.process
+    scp ubuntu@stream-node07:~/stream.process ${PATH_RESULT}/stream-node07.process
+    scp ubuntu@stream-node08:~/stream.process ${PATH_RESULT}/stream-node08.process
+    scp ubuntu@kafka-node01:~/stream.pid ${PATH_RESULT}/kafka-node01.pid
+    scp ubuntu@kafka-node02:~/stream.pid ${PATH_RESULT}/kafka-node02.pid
+    scp ubuntu@kafka-node03:~/stream.pid ${PATH_RESULT}/kafka-node03.pid
+    scp ubuntu@kafka-node04:~/stream.pid ${PATH_RESULT}/kafka-node04.pid
 
-    scp ubuntu@kafka-node01:~/stream.pid $PATH/kafka-node01.pid
-    scp ubuntu@kafka-node02:~/stream.pid $PATH/kafka-node02.pid
-    scp ubuntu@kafka-node03:~/stream.pid $PATH/kafka-node03.pid
-    scp ubuntu@kafka-node04:~/stream.pid $PATH/kafka-node04.pid
-
-    scp ubuntu@kafka-node01:~/stream.process $PATH/kafka-node01.process
-    scp ubuntu@kafka-node02:~/stream.process $PATH/kafka-node02.process
-    scp ubuntu@kafka-node03:~/stream.process $PATH/kafka-node03.process
-    scp ubuntu@kafka-node04:~/stream.process $PATH/kafka-node04.process
+    scp ubuntu@kafka-node01:~/stream.process ${PATH_RESULT}/kafka-node01.process
+    scp ubuntu@kafka-node02:~/stream.process ${PATH_RESULT}/kafka-node02.process
+    scp ubuntu@kafka-node03:~/stream.process ${PATH_RESULT}/kafka-node03.process
+    scp ubuntu@kafka-node04:~/stream.process ${PATH_RESULT}/kafka-node04.process
 
 
-    scp ubuntu@load-node01:~/stream-benchmarking/data/seen.txt $PATH/load-node01-seen.txt
-    scp ubuntu@load-node01:~/stream-benchmarking/data/updated.txt $PATH/load-node01-updated.txt
+    scp ubuntu@load-node01:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/load-node01-seen.txt
+    scp ubuntu@load-node01:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/load-node01-updated.txt
 
-    scp ubuntu@load-node02:~/stream-benchmarking/data/seen.txt $PATH/load-node02-seen.txt
-    scp ubuntu@load-node02:~/stream-benchmarking/data/updated.txt $PATH/load-node02-updated.txt
+    scp ubuntu@load-node02:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/load-node02-seen.txt
+    scp ubuntu@load-node02:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/load-node02-updated.txt
 
-    scp ubuntu@load-node03:~/stream-benchmarking/data/seen.txt $PATH/load-node03-seen.txt
-    scp ubuntu@load-node03:~/stream-benchmarking/data/updated.txt $PATH/load-node03-updated.txt
+    scp ubuntu@load-node03:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/load-node03-seen.txt
+    scp ubuntu@load-node03:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/load-node03-updated.txt
 
-    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/seen.txt $PATH/zookeeper-node01-seen.txt
-    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/updated.txt $PATH/zookeeper-node01-updated.txt
+    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/zookeeper-node01-seen.txt
+    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/zookeeper-node01-updated.txt
 
-    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/seen.txt $PATH/zookeeper-node02-seen.txt
-    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/updated.txt $PATH/zookeeper-node02-updated.txt
+    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/zookeeper-node02-seen.txt
+    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/zookeeper-node02-updated.txt
 
-    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/seen.txt $PATH/zookeeper-node03-seen.txt
-    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/updated.txt $PATH/zookeeper-node03-updated.txt
+    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/zookeeper-node03-seen.txt
+    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/zookeeper-node03-updated.txt
 
 }
 
