@@ -406,7 +406,7 @@ function runSystem(){
 }
 
 
-function benchmark (){
+function benchmarkLoop (){
     while true; do
         pullRepository
         if (("$TPS" > "6000")); then
@@ -421,14 +421,14 @@ function benchmark (){
 
 case $1 in
     flink)
-        benchmark "flink"
+        benchmarkLoop "flink"
     ;;
     spark)
-        benchmark "spark"
+        benchmarkLoop "spark"
     ;;
     both)
-        benchmark "flink"
-        benchmark "spark"
+        benchmarkLoop "flink"
+        benchmarkLoop "spark"
     ;;
     stop)
         stopZkLoadData
