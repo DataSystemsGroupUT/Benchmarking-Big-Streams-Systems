@@ -15,7 +15,7 @@
 (def num-campaigns 100)
 (def view-capacity-per-window 10)
 (def kafka-event-count  (* 10 1000000)) ; N millions
-(def time-divisor 10000)               ; 10 seconds
+(def time-divisor 1000)               ; 1 seconds
 
 (defn make-ids [n]
   (for [n (range n)]

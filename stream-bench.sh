@@ -213,6 +213,9 @@ run() {
     cd ..
   elif [ "STOP_REDIS" = "$OPERATION" ];
   then
+    cd data
+    $LEIN run -g --configPath ../$CONF_FILE || true
+    cd ..
     stop_if_needed redis-server Redis
     rm -f dump.rdb
   elif [ "START_STORM" = "$OPERATION" ];
@@ -259,9 +262,6 @@ run() {
   elif [ "STOP_LOAD" = "$OPERATION" ];
   then
     stop_if_needed leiningen.core.main "Load Generation"
-    cd data
-    $LEIN run -g --configPath ../$CONF_FILE || true
-    cd ..
   elif [ "START_STORM_TOPOLOGY" = "$OPERATION" ];
   then
     "$STORM_DIR/bin/storm" jar ./storm-benchmarks/target/storm-benchmarks-0.1.0.jar storm.benchmark.AdvertisingTopology test-topo -conf $CONF_FILE

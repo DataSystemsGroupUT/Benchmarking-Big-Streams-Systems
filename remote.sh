@@ -5,6 +5,7 @@ TPS="1000"
 BATCH="10000"
 SHORT_SLEEP=10
 LONG_SLEEP=20
+WAIT_AFTER_STOP_PRODUCER=120
 
 CLEAN_LOAD_RESULT_CMD="rm stream*;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
@@ -351,23 +352,8 @@ function getBenchmarkResult(){
     scp ubuntu@kafka-node04:~/stream.process ${PATH_RESULT}/kafka-node04.process
 
 
-    scp ubuntu@load-node01:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/load-node01-seen.txt
-    scp ubuntu@load-node01:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/load-node01-updated.txt
-
-    scp ubuntu@load-node02:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/load-node02-seen.txt
-    scp ubuntu@load-node02:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/load-node02-updated.txt
-
-    scp ubuntu@load-node03:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/load-node03-seen.txt
-    scp ubuntu@load-node03:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/load-node03-updated.txt
-
-    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/zookeeper-node01-seen.txt
-    scp ubuntu@zookeeper-node01:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/zookeeper-node01-updated.txt
-
-    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/zookeeper-node02-seen.txt
-    scp ubuntu@zookeeper-node02:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/zookeeper-node02-updated.txt
-
-    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/zookeeper-node03-seen.txt
-    scp ubuntu@zookeeper-node03:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/zookeeper-node03-updated.txt
+    scp ubuntu@redis:~/stream-benchmarking/data/seen.txt ${PATH_RESULT}/redis-seen.txt
+    scp ubuntu@redis:~/stream-benchmarking/data/updated.txt ${PATH_RESULT}/redis-updated.txt
 
 }
 
@@ -376,11 +362,11 @@ function benchmark(){
     startLoadData
     startZkLoadData
     sleep ${TEST_TIME}
-    getProcessId
     stopZkLoadData
     stopLoadData
+    sleep ${WAIT_AFTER_STOP_PRODUCER}
+    getProcessId
     stopMonitoring
-    getBenchmarkResult $1
 }
 
 
@@ -403,13 +389,15 @@ function runSystem(){
         ;;
     esac
     destroyEnvironment
+
+    getBenchmarkResult $1
 }
 
 
 function benchmarkLoop (){
     while true; do
         pullRepository
-        if (("$TPS" > "6000")); then
+        if (("$TPS" > "5000")); then
             break
         fi
         changeTps
