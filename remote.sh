@@ -5,9 +5,9 @@ TPS="100"
 BATCH="10000"
 SHORT_SLEEP=10
 LONG_SLEEP=20
-WAIT_AFTER_STOP_PRODUCER=240
+WAIT_AFTER_STOP_PRODUCER=24
 
-CLEAN_LOAD_RESULT_CMD="rm stream*;"
+CLEAN_LOAD_RESULT_CMD="rm stream-node*;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
 
 CHANGE_TPS_CMD="sed -i “s/LOAD:-1000/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
@@ -168,13 +168,7 @@ function cleanResult {
     ssh ubuntu@stream-node07 ${CLEAN_LOAD_RESULT_CMD}
     ssh ubuntu@stream-node08 ${CLEAN_LOAD_RESULT_CMD}
 
-    ssh ubuntu@load-node01 ${CLEAN_RESULT_CMD}
-    ssh ubuntu@load-node02 ${CLEAN_RESULT_CMD}
-    ssh ubuntu@load-node03 ${CLEAN_RESULT_CMD}
-
-    ssh ubuntu@zookeeper-node01 ${CLEAN_RESULT_CMD}
-    ssh ubuntu@zookeeper-node02 ${CLEAN_RESULT_CMD}
-    ssh ubuntu@zookeeper-node03 ${CLEAN_RESULT_CMD}
+    ssh ubuntu@redis ${CLEAN_RESULT_CMD}
 
 }
 
@@ -399,7 +393,7 @@ function runSystem(){
 function benchmarkLoop (){
     while true; do
         pullRepository
-        if (("$TPS" > "5000")); then
+        if (("$TPS" > "100")); then
             break
         fi
         changeTps
