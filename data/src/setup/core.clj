@@ -92,7 +92,7 @@
                                   "\", \"ad_id\": \"" (rand-nth ads)
                                   "\", \"ad_type\": \"" (rand-nth ad-types)
                                   "\", \"event_type\": \"" (rand-nth event-types)
-                                  "\", \"event_time\": \"" (str (+ start-time (* n 10) skew late-by))
+                                  "\", \"event_time\": \"" (str (start-time skew late-by))
                                   "\", \"ip_address\": \"1.2.3.4\"}")]
                 (.write kafka-o (str json-str "\n"))
                 (send p (record "ad-events" (.getBytes json-str))))))))))))
