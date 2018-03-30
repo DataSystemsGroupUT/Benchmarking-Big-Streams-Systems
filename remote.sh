@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 TEST_TIME=180
-TPS="1000"
+TPS="100"
 BATCH="10000"
 SHORT_SLEEP=10
 LONG_SLEEP=20
@@ -44,25 +44,27 @@ STOP_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_REDIS;"
 PULL_GIT="cd stream-benchmarking; git reset --hard HEAD; git pull origin master;"
 
 function pullRepository {
-    ssh ubuntu@stream-node01 ${PULL_GIT}
-    ssh ubuntu@stream-node02 ${PULL_GIT}
-    ssh ubuntu@stream-node03 ${PULL_GIT}
-    ssh ubuntu@stream-node04 ${PULL_GIT}
-    ssh ubuntu@stream-node05 ${PULL_GIT}
-    ssh ubuntu@stream-node06 ${PULL_GIT}
-    ssh ubuntu@stream-node07 ${PULL_GIT}
-    ssh ubuntu@stream-node08 ${PULL_GIT}
-    ssh ubuntu@zookeeper-node01 ${PULL_GIT}
-    ssh ubuntu@zookeeper-node02 ${PULL_GIT}
-    ssh ubuntu@zookeeper-node03 ${PULL_GIT}
-    ssh ubuntu@kafka-node01 ${PULL_GIT}
-    ssh ubuntu@kafka-node02 ${PULL_GIT}
-    ssh ubuntu@kafka-node03 ${PULL_GIT}
-    ssh ubuntu@kafka-node04 ${PULL_GIT}
-    ssh ubuntu@load-node01 ${PULL_GIT}
-    ssh ubuntu@load-node02 ${PULL_GIT}
-    ssh ubuntu@load-node03 ${PULL_GIT}
-    ssh ubuntu@redis ${PULL_GIT}
+    nohup ssh ubuntu@stream-node01 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node02 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node03 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node04 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node05 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node06 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node07 ${PULL_GIT} &
+    nohup ssh ubuntu@stream-node08 ${PULL_GIT} &
+    nohup ssh ubuntu@zookeeper-node01 ${PULL_GIT} &
+    nohup ssh ubuntu@zookeeper-node02 ${PULL_GIT} &
+    nohup ssh ubuntu@zookeeper-node03 ${PULL_GIT} &
+    nohup ssh ubuntu@kafka-node01 ${PULL_GIT} &
+    nohup ssh ubuntu@kafka-node02 ${PULL_GIT} &
+    nohup ssh ubuntu@kafka-node03 ${PULL_GIT} &
+    nohup ssh ubuntu@kafka-node04 ${PULL_GIT} &
+    nohup ssh ubuntu@load-node01 ${PULL_GIT} &
+    nohup ssh ubuntu@load-node02 ${PULL_GIT} &
+    nohup ssh ubuntu@load-node03 ${PULL_GIT} &
+    nohup ssh ubuntu@redis ${PULL_GIT} &
+
+    sleep ${SHORT_SLEEP}
 }
 
 function stopLoadData {
@@ -390,7 +392,6 @@ function runSystem(){
         ;;
     esac
     destroyEnvironment
-
     getBenchmarkResult $1
 }
 
@@ -411,7 +412,6 @@ function benchmarkLoop (){
 case $1 in
     flink)
         benchmarkLoop "flink"
-#        getBenchmarkResult $1
     ;;
     spark)
         benchmarkLoop "spark"
