@@ -1,6 +1,3 @@
-# Copyright 2015, Yahoo Inc.
-# Licensed under the terms of the Apache License 2.0. Please see LICENSE file in the project root for terms.
-
 kafka.brokers:
     - "kafka-node01"
     - "kafka-node02"
@@ -17,13 +14,8 @@ zookeeper.port: 2181
 redis.host: "redis"
 kafka.topic: "ad-events"
 kafka.partitions: 4
-
 process.hosts: 7
 process.cores: 4
-
-#STORM Specific
 storm.workers: 1
 storm.ackers: 2
-
-#Spark Specific
-spark.batchtime: 10000
+spark.batchtime: 2000
