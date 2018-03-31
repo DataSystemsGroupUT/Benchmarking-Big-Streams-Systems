@@ -319,7 +319,7 @@ case $1 in
         destroyEnvironment
     ;;
     push)
-        git add .
+        git add --all
         git commit -am "Automatic push message"
         git push origin master
     ;;
