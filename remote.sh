@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 TEST_TIME=1800
 TPS="1000"
@@ -296,9 +296,12 @@ case $1 in
         benchmarkLoop "flink"
     ;;
     flink_test)
-        benchmarkLoop "flink_test"
+        ./remote.sh "push"
     ;;
     spark)
+        benchmarkLoop "spark"
+        sed -i '.original' "s/spark.batchtime: 2000/spark.batchtime: 10000/g" conf/*
+        run push
         benchmarkLoop "spark"
     ;;
     both)
