@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-TEST_TIME=1800
+TEST_TIME=180
 TPS="1000"
 BATCH="2000"
 SHORT_SLEEP=10
 LONG_SLEEP=20
-WAIT_AFTER_STOP_PRODUCER=240
+WAIT_AFTER_STOP_PRODUCER=12
 
 CLEAN_LOAD_RESULT_CMD="rm stream.*;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
@@ -272,8 +272,8 @@ function runSystem(){
             stopSpark
         ;;
     esac
-    getBenchmarkResult $1
     destroyEnvironment
+    getBenchmarkResult $1
 
 }
 
@@ -320,6 +320,8 @@ case $1 in
         stopMonitoring
         stopFlinkProcessing
         stopFlink
+        stopSparkProcessing
+        stopSpark
         destroyEnvironment
     ;;
     push)
@@ -331,6 +333,7 @@ case $1 in
         getBenchmarkResult $1
     ;;
     *)
-        runCommandStreamServers "${PULL_GIT}"
+        PATH_RESULT=result/spark_2000/TPS_${TPS}_DURATION_${TEST_TIME}
+        getResultFromRedisServer "${PATH_RESULT}"
 esac
 
