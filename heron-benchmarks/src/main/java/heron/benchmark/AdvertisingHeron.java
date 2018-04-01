@@ -119,6 +119,7 @@ public class AdvertisingHeron {
     transient RedisAdCampaignCache redisAdCampaignCache;
     private String redisServerHost;
 
+
     public RedisJoinBolt(String redisServerHost) {
       this.redisServerHost = redisServerHost;
     }
@@ -156,14 +157,16 @@ public class AdvertisingHeron {
     private OutputCollector _collector;
     transient private CampaignProcessorCommon campaignProcessorCommon;
     private String redisServerHost;
+    private int timeDivisor;
 
-    public CampaignProcessor(String redisServerHost) {
+    public CampaignProcessor(String redisServerHost, int timeDivisor) {
       this.redisServerHost = redisServerHost;
+      this.timeDivisor = timeDivisor;
     }
 
     public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
       _collector = collector;
-      campaignProcessorCommon = new CampaignProcessorCommon(redisServerHost);
+      campaignProcessorCommon = new CampaignProcessorCommon(redisServerHost, Long.valueOf(timeDivisor));
       this.campaignProcessorCommon.prepare();
     }
 
@@ -216,6 +219,7 @@ public class AdvertisingHeron {
     int workers = ((Number)commonConfig.get("storm.workers")).intValue();
     int ackers = ((Number)commonConfig.get("storm.ackers")).intValue();
     int cores = ((Number)commonConfig.get("process.cores")).intValue();
+    int timeDivisor = ((Number)commonConfig.get("time.divisor")).intValue();
     int parallel = Math.max(1, cores/7);
 
     ZkHosts hosts = new ZkHosts(zkServerHosts);
@@ -232,7 +236,7 @@ public class AdvertisingHeron {
     builder.setBolt("event_filter", new EventFilterBolt(), parallel).shuffleGrouping("event_deserializer");
     builder.setBolt("event_projection", new EventProjectionBolt(), parallel).shuffleGrouping("event_filter");
     builder.setBolt("redis_join", new RedisJoinBolt(redisServerHost), parallel).shuffleGrouping("event_projection");
-    builder.setBolt("campaign_processor", new CampaignProcessor(redisServerHost), parallel*2)
+    builder.setBolt("campaign_processor", new CampaignProcessor(redisServerHost, timeDivisor), parallel*2)
             .fieldsGrouping("redis_join", new Fields("campaign_id"));
 
     Config conf = new Config();

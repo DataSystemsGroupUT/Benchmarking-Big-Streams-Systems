@@ -34,6 +34,12 @@ object KafkaRedisAdvertisingStream {
   def main(args: Array[String]) {
 
     val commonConfig = Utils.findAndReadConfigFile(args(0), true).asInstanceOf[java.util.Map[String, Any]];
+
+    val timeDivisor = commonConfig.get("time.divisor") match {
+      case n: Number => n.longValue()
+      case other => throw new ClassCastException(other + " not a Number")
+    }
+
     val batchSize = commonConfig.get("spark.batchtime") match {
       case n: Number => n.longValue()
       case other => throw new ClassCastException(other + " not a Number")
@@ -97,7 +103,7 @@ object KafkaRedisAdvertisingStream {
     //Note that the Storm benchmark caches the results from Redis, we don't do that here yet
     val redisJoined = projected.mapPartitions(queryRedisTopLevel(_, redisHost), false)
 
-    val campaign_timeStamp = redisJoined.map(campaignTime(_))
+    val campaign_timeStamp = redisJoined.map(campaignTime(_, timeDivisor))
     //each record in the RDD: key:(campaign_id : String, window_time: Long),  Value: (ad_id : String)
     //DStream[((String,Long),String)]
 
@@ -173,7 +179,7 @@ object KafkaRedisAdvertisingStream {
     }
   }
 
-  def campaignTime(event: Array[String]): ((String, Long), String) = {
+  def campaignTime(event: Array[String], timeDivisor: Long): ((String, Long), String) = {
     val time_divisor: Long = 10000L
     ((event(0),time_divisor * (event(2).toLong / time_divisor)), event(1))
     //Key: (campaign_id, window_time),  Value: ad_id

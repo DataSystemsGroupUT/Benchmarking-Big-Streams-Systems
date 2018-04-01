@@ -25,11 +25,12 @@ public class CampaignProcessorCommon {
 
     private long processed = 0;
 
-    private static final Long time_divisor = 1000L; // 10 second windows
+    private Long time_divisor; // 10 second windows
 
-    public CampaignProcessorCommon(String redisServerHostname) {
+    public CampaignProcessorCommon(String redisServerHostname, Long time_divisor) {
         jedis = new Jedis(redisServerHostname);
         flush_jedis = new Jedis(redisServerHostname);
+        this.time_divisor = time_divisor;
     }
 
     public void prepare() {
@@ -97,7 +98,7 @@ public class CampaignProcessorCommon {
         }
     }
 
-    public static Window redisGetWindow(Long timeBucket, Long time_divisor) {
+    public Window redisGetWindow(Long timeBucket, Long time_divisor) {
 
         Window win = new Window();
         win.timestamp = Long.toString(timeBucket * time_divisor);

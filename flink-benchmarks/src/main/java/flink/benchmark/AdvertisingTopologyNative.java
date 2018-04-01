@@ -161,7 +161,7 @@ public class AdvertisingTopologyNative {
             parameterTool.getRequired("jedis_server");
             LOG.info("Opening connection with Jedis to {}", parameterTool.getRequired("jedis_server"));
 
-            this.campaignProcessorCommon = new CampaignProcessorCommon(parameterTool.getRequired("jedis_server"));
+            this.campaignProcessorCommon = new CampaignProcessorCommon(parameterTool.getRequired("jedis_server"),Long.valueOf(parameterTool.get("time.divisor")));
             this.campaignProcessorCommon.prepare();
         }
 
@@ -183,9 +183,17 @@ public class AdvertisingTopologyNative {
         flinkConfs.put("bootstrap.servers", kafkaBrokers);
         flinkConfs.put("zookeeper.connect", zookeeperServers);
         flinkConfs.put("jedis_server", getRedisHost(conf));
+        flinkConfs.put("time.divisor", getTimeDivisor(conf));
         flinkConfs.put("group.id", "myGroup");
 
         return flinkConfs;
+    }
+
+    private static String getTimeDivisor(Map conf) {
+        if(!conf.containsKey("time.divisor")) {
+            throw new IllegalArgumentException("Not time divisor found!");
+        }
+        return String.valueOf(conf.get("time.divisor"));
     }
 
     private static String getZookeeperServers(Map conf) {

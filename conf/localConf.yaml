@@ -1,17 +1,12 @@
 kafka.brokers:
-    - "kafka-node01"
-    - "kafka-node02"
-    - "kafka-node03"
-    - "kafka-node04"
+    - "localhost"
 
 zookeeper.servers:
-    - "zookeeper-node01"
-    - "zookeeper-node02"
-    - "zookeeper-node03"
+    - "localhost"
 
 kafka.port: 9092
 zookeeper.port: 2181
-redis.host: "redis"
+redis.host: "localhost"
 kafka.topic: "ad-events"
 kafka.partitions: 4
 process.hosts: 7
@@ -19,3 +14,5 @@ process.cores: 4
 storm.workers: 1
 storm.ackers: 2
 spark.batchtime: 2000
+
+time.divisor: 1000
