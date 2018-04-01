@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-rm ./nohup.out
+
 TEST_TIME=1800
 TPS="1000"
 BATCH="2000"
