@@ -25,7 +25,7 @@ public class CampaignProcessorCommon {
 
     private long processed = 0;
 
-    private static final Long time_divisor = 10000L; // 10 second windows
+    private static final Long time_divisor = 1000L; // 10 second windows
 
     public CampaignProcessorCommon(String redisServerHostname) {
         jedis = new Jedis(redisServerHostname);
