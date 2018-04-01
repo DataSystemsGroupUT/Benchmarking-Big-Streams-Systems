@@ -1,7 +1,7 @@
 
 
 ######################################################################################################################################
-##########################                  Flink Benchmark Stream Server Load                              ##########################
+##########################                        Benchmark Stream Server Load                              ##########################
 ######################################################################################################################################
 
 
@@ -48,7 +48,7 @@ generateStreamServerLoadReport <- function(engine){
       guides(fill=FALSE) +
       xlab("Seconds") + ylab("CPU load percentage") +
       ggtitle(paste(toupper(engine), "BENCHMARK Stream Servers CPU load for TPS", TPS)) +
-      theme(plot.title = element_text(size = 7, face = "plain"), text = element_text(size = 7, face = "plain"))
+      theme(plot.title = element_text(size = 15, face = "plain"), text = element_text(size = 12, face = "plain"))
     ggsave(paste("STREAM", "CPU.pdf", sep = "_"), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
     
     names(memoryUsage) <- c("NODE","USAGE","TIME")
@@ -57,7 +57,7 @@ generateStreamServerLoadReport <- function(engine){
       guides(fill=FALSE) +
       xlab("Seconds") + ylab("Memory load percentage") +
       ggtitle(paste(toupper(engine), "BENCHMARK Stream Servers MEMORY load for TPS", TPS)) +
-      theme(plot.title = element_text(size = 7, face = "plain"), text = element_text(size = 7, face = "plain"))
+      theme(plot.title = element_text(size = 15, face = "plain"), text = element_text(size = 12, face = "plain"))
     ggsave(paste("STREAM", "MEMMORY.pdf", sep = "_"), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
   }
 }

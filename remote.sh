@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
-TEST_TIME=180
+rm nohup.out
+TEST_TIME=1800
 TPS="1000"
 BATCH="2000"
 SHORT_SLEEP=10
 LONG_SLEEP=20
-WAIT_AFTER_STOP_PRODUCER=12
+WAIT_AFTER_STOP_PRODUCER=120
 
 CLEAN_LOAD_RESULT_CMD="rm stream.*;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
+
+CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
 
 CHANGE_TPS_CMD="sed -i “s/LOAD:-1000/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
 
@@ -54,14 +57,11 @@ function pullRepository {
     runCommandKafkaServers "${PULL_GIT}" "nohup"
     runCommandLoadServers "${PULL_GIT}" "nohup"
     runCommandRedisServer "${PULL_GIT}" "nohup"
-    sleep ${SHORT_SLEEP}
 }
 
 function stopLoadData {
     echo "Main loaders stopping"
     runCommandLoadServers "${LOAD_STOP_CMD}" "nohup"
-    sleep ${LONG_SLEEP}
-    sleep ${LONG_SLEEP}
 }
 
 function stopZkLoadData {
@@ -71,7 +71,6 @@ function stopZkLoadData {
 
 
 function startLoadData {
-    sleep ${LONG_SLEEP}
     echo "Main loaders starting"
     runCommandLoadServers "${LOAD_START_CMD}" "nohup"
 
@@ -116,37 +115,31 @@ function cleanResult {
     runCommandStreamServers "${CLEAN_LOAD_RESULT_CMD}"
     runCommandKafkaServers "${CLEAN_LOAD_RESULT_CMD}"
     ssh ubuntu@redis ${CLEAN_RESULT_CMD}
-
 }
 
 function startFlink {
     echo "Starting Flink"
     ssh ubuntu@stream-node01 ${START_FLINK_CMD}
-    sleep ${SHORT_SLEEP}
 }
 
 function stopFlink {
     echo "Stopping Flink"
     ssh ubuntu@stream-node01 ${STOP_FLINK_PROC_CMD}
-
 }
 
 function startFlinkProcessing {
     echo "Starting Flink Processing"
     nohup ssh ubuntu@stream-node01 ${START_FLINK_PROC_CMD} &
-    sleep ${LONG_SLEEP}
 }
 
 function stopFlinkProcessing {
     echo "Stopping Flink Processing"
     nohup ssh ubuntu@stream-node01 ${STOP_FLINK_CMD} &
-    sleep ${SHORT_SLEEP}
 }
 
 function startSpark {
     echo "Starting Spark"
     ssh ubuntu@stream-node01 ${START_SPARK_CMD}
-    sleep ${SHORT_SLEEP}
 }
 
 function stopSpark {
@@ -157,13 +150,11 @@ function stopSpark {
 function startSparkProcessing {
     echo "Starting Spark processing"
     nohup ssh ubuntu@stream-node01 ${START_SPARK_PROC_CMD} &
-    sleep ${SHORT_SLEEP}
 }
 
 function stopSparkProcessing {
     echo "Stopping Spark processing"
     nohup ssh ubuntu@stream-node01 ${STOP_SPARK_PROC_CMD} &
-    sleep ${SHORT_SLEEP}
 }
 
 function getProcessId(){
@@ -203,11 +194,12 @@ function stopRedis {
 function prepareEnvironment(){
     cleanResult
     startZK
-    sleep ${SHORT_SLEEP}
+    sleep ${LONG_SLEEP}
     startKafka
-    sleep ${SHORT_SLEEP}
+    sleep ${LONG_SLEEP}
     cleanKafka
     startRedis
+    sleep ${LONG_SLEEP}
 }
 
 function destroyEnvironment(){
@@ -232,18 +224,23 @@ function getBenchmarkResult(){
     getResultFromKafkaServer "${PATH_RESULT}"
     getResultFromRedisServer "${PATH_RESULT}"
 
+    Rscript reporting.R
+
 }
 
 function benchmark(){
+    sleep ${LONG_SLEEP}
     startMonitoring
     startLoadData
     startZkLoadData
     sleep ${TEST_TIME}
     stopZkLoadData
     stopLoadData
+    sleep ${LONG_SLEEP}
+    stopMonitoring
     sleep ${WAIT_AFTER_STOP_PRODUCER}
     getProcessId
-    stopMonitoring
+
 }
 
 
@@ -252,23 +249,20 @@ function runSystem(){
     case $1 in
         flink)
             startFlink
+            sleep ${SHORT_SLEEP}
             startFlinkProcessing
             benchmark $1
             stopFlinkProcessing
-            stopFlink
-        ;;
-        flink_test)
-            startFlink
-            startFlinkProcessing
-            benchmark $1
-            stopFlinkProcessing
+            sleep ${SHORT_SLEEP}
             stopFlink
         ;;
         spark)
             startSpark
+            sleep ${SHORT_SLEEP}
             startSparkProcessing
             benchmark $1
             stopSparkProcessing
+            sleep ${SHORT_SLEEP}
             stopSpark
         ;;
     esac
@@ -277,10 +271,22 @@ function runSystem(){
 
 }
 
+function stopAll (){
+    stopZkLoadData
+    stopLoadData
+    stopMonitoring
+    stopFlinkProcessing
+    stopFlink
+    stopSparkProcessing
+    stopSpark
+    destroyEnvironment
+}
+
 
 function benchmarkLoop (){
     while true; do
         pullRepository
+        sleep ${SHORT_SLEEP}
         if (("$TPS" > "4000")); then
             break
         fi
@@ -295,17 +301,10 @@ case $1 in
     flink)
         benchmarkLoop "flink"
     ;;
-    flink_test)
-        benchmarkLoop "flink_test"
-    ;;
     spark)
-#        benchmarkLoop "spark"
-#        sed -i '.original' "s/spark.batchtime: 2000/spark.batchtime: 10000/g" conf/*
-#        ./remote.sh "push"
-#        BATCH = "10000"
         benchmarkLoop "spark"
     ;;
-    both)
+    all)
         benchmarkLoop "flink"
         benchmarkLoop "spark"
     ;;
@@ -315,25 +314,20 @@ case $1 in
         startFlinkProcessing
     ;;
     stop)
-        stopZkLoadData
-        stopLoadData
-        stopMonitoring
-        stopFlinkProcessing
-        stopFlink
-        stopSparkProcessing
-        stopSpark
-        destroyEnvironment
+        stopAll
     ;;
     push)
         git add --all
         git commit -am "Automatic push message"
         git push origin master
     ;;
-    data)
-        getBenchmarkResult $1
+    report)
+        Rscript reporting.R
+    ;;
+    build)
+        runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
-        PATH_RESULT=result/spark_2000/TPS_${TPS}_DURATION_${TEST_TIME}
-        getResultFromRedisServer "${PATH_RESULT}"
+        echo "Please Enter valid command"
 esac
 

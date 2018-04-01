@@ -96,6 +96,7 @@ public class AdvertisingTopologyNative {
         public void flatMap(String input, Collector<Tuple7<String, String, String, String, String, String, String>> out)
                 throws Exception {
             JSONObject obj = new JSONObject(input);
+            LOG.debug(input);
             Tuple7<String, String, String, String, String, String, String> tuple =
                     new Tuple7<String, String, String, String, String, String, String>(
                             obj.getString("user_id"),
