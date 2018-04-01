@@ -37,7 +37,7 @@ ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
 PARTITIONS=${PARTITIONS:-4}
 LOAD=${LOAD:-1000}
-CONF_FILE=./conf/localConf.yaml
+CONF_FILE=./conf/benchmarkConf.yaml
 TEST_TIME=${TEST_TIME:-240}
 
 pid_match() {
@@ -209,7 +209,7 @@ run() {
   then
     start_if_needed redis-server Redis 1 "$REDIS_DIR/src/redis-server" --protected-mode no
     cd data
-    $LEIN run -n --configPath ../conf/benchmarkConf.yaml
+    $LEIN run -n --configPath ../$CONF_FILE
     cd ..
   elif [ "STOP_REDIS" = "$OPERATION" ];
   then
