@@ -299,10 +299,10 @@ case $1 in
         benchmarkLoop "flink_test"
     ;;
     spark)
-        benchmarkLoop "spark"
-        sed -i '.original' "s/spark.batchtime: 2000/spark.batchtime: 10000/g" conf/*
-        ./remote.sh "push"
-        BATCH = "10000"
+#        benchmarkLoop "spark"
+#        sed -i '.original' "s/spark.batchtime: 2000/spark.batchtime: 10000/g" conf/*
+#        ./remote.sh "push"
+#        BATCH = "10000"
         benchmarkLoop "spark"
     ;;
     both)
