@@ -13,6 +13,27 @@ function runCommandStreamServers(){
     done
 }
 
+function runCommandMasterStreamServers(){
+    if [ "$2" != "nohup" ]; then
+        ssh ubuntu@stream-node01 $1
+    else
+        nohup ssh ubuntu@stream-node01 $1 &
+    fi
+}
+
+function runCommandSlaveStreamServers(){
+    counter=2
+    while [ ${counter} -le 8 ]
+    do
+        if [ "$2" != "nohup" ]; then
+            ssh ubuntu@stream-node0${counter} $1
+        else
+            nohup ssh ubuntu@stream-node0${counter} $1 &
+        fi
+        ((counter++))
+    done
+}
+
 function runCommandKafkaServers(){
     counter=1
     while [ ${counter} -le 4 ]

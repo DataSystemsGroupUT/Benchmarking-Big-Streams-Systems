@@ -3,7 +3,7 @@
 
 TEST_TIME=1800
 TPS="1000"
-BATCH="2000"
+BATCH="10000"
 SHORT_SLEEP=10
 LONG_SLEEP=20
 WAIT_AFTER_STOP_PRODUCER=120
@@ -24,6 +24,13 @@ CREATE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh 
 START_MONITOR_PROCESS_CMD="top -b -d 1 | grep --line-buffered java > stream.process;"
 STOP_MONITOR_PROCESS_CMD="ps aux | grep top | awk {'print \$2'} | xargs sudo kill;"
 MONITOR_PID_CMD="ps aux | grep java > stream.pid"
+
+START_STORM_NIMBUS_CMD="cd stream-benchmarking; ./apache-storm-1.2.1/bin/storm nimbus;"
+STOP_STORM_NIMBUS_CMD="ps aux | grep storm | awk {'print \$2'} | xargs sudo kill;"
+START_STORM_SUPERVISOR_CMD="cd stream-benchmarking; ./apache-storm-1.2.1/bin/storm supervisor;"
+STOP_STORM_SUPERVISOR_CMD="ps aux | grep storm | awk {'print \$2'} | xargs sudo kill;"
+START_STORM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_STORM_TOPOLOGY;"
+STOP_STORM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_STORM_TOPOLOGY;"
 
 START_FLINK_CMD="cd stream-benchmarking; ./flink-1.4.0/bin/start-cluster.sh;"
 STOP_FLINK_CMD="cd stream-benchmarking; ./flink-1.4.0/bin/stop-cluster.sh;"
@@ -119,42 +126,66 @@ function cleanResult {
 
 function startFlink {
     echo "Starting Flink"
-    ssh ubuntu@stream-node01 ${START_FLINK_CMD}
+    runCommandMasterStreamServers "${START_FLINK_CMD}"
 }
 
 function stopFlink {
     echo "Stopping Flink"
-    ssh ubuntu@stream-node01 ${STOP_FLINK_PROC_CMD}
+    runCommandMasterStreamServers "${STOP_FLINK_CMD}"
 }
 
 function startFlinkProcessing {
     echo "Starting Flink Processing"
-    nohup ssh ubuntu@stream-node01 ${START_FLINK_PROC_CMD} &
+    runCommandMasterStreamServers "${START_FLINK_PROC_CMD}" "nohup"
 }
 
 function stopFlinkProcessing {
     echo "Stopping Flink Processing"
-    nohup ssh ubuntu@stream-node01 ${STOP_FLINK_CMD} &
-}
+    runCommandMasterStreamServers "${STOP_FLINK_PROC_CMD}" "nohup"
+ }
 
 function startSpark {
     echo "Starting Spark"
-    ssh ubuntu@stream-node01 ${START_SPARK_CMD}
+    runCommandMasterStreamServers "${START_SPARK_CMD}"
 }
 
 function stopSpark {
     echo "Stopping Spark"
-    ssh ubuntu@stream-node01 ${STOP_SPARK_CMD}
+    runCommandMasterStreamServers "${STOP_SPARK_CMD}"
 }
 
 function startSparkProcessing {
     echo "Starting Spark processing"
-    nohup ssh ubuntu@stream-node01 ${START_SPARK_PROC_CMD} &
+    runCommandMasterStreamServers "${START_SPARK_PROC_CMD}" "nohup"
 }
 
 function stopSparkProcessing {
     echo "Stopping Spark processing"
-    nohup ssh ubuntu@stream-node01 ${STOP_SPARK_PROC_CMD} &
+    runCommandMasterStreamServers "${STOP_SPARK_PROC_CMD}" "nohup"
+}
+
+function startStorm {
+    echo "Starting Storm"
+    runCommandMasterStreamServers "${START_STORM_NIMBUS_CMD}" "nohup"
+    sleep ${SHORT_SLEEP}
+    runCommandSlaveStreamServers "${START_STORM_SUPERVISOR_CMD}" "nohup"
+}
+
+function stopStorm {
+    echo "Stopping Storm"
+    runCommandSlaveStreamServers "${STOP_STORM_SUPERVISOR_CMD}" "nohup"
+    sleep ${SHORT_SLEEP}
+    runCommandMasterStreamServers "${STOP_STORM_NIMBUS_CMD}" "nohup"
+}
+
+function startStormProcessing {
+    echo "Starting Spark processing"
+    runCommandMasterStreamServers "${START_STORM_PROC_CMD}" "nohup"
+}
+
+function stopStormProcessing {
+    echo "Stopping Spark processing"
+    runCommandMasterStreamServers "${STOP_STORM_PROC_CMD}" "nohup"
 }
 
 function getProcessId(){
@@ -265,6 +296,15 @@ function runSystem(){
             sleep ${SHORT_SLEEP}
             stopSpark
         ;;
+        storm)
+            startStorm
+            sleep ${SHORT_SLEEP}
+            startStormProcessing
+            benchmark $1
+            stopStormProcessing
+            sleep ${SHORT_SLEEP}
+            stopStorm
+        ;;
     esac
     destroyEnvironment
     getBenchmarkResult $1
@@ -304,9 +344,13 @@ case $1 in
     spark)
         benchmarkLoop "spark"
     ;;
+    storm)
+        benchmarkLoop "spark"
+    ;;
     all)
         benchmarkLoop "flink"
         benchmarkLoop "spark"
+        benchmarkLoop "storm"
     ;;
     start)
         prepareEnvironment

@@ -22,7 +22,7 @@ process.hosts: 7
 process.cores: 4
 
 #STORM Specific
-storm.workers: 1
+storm.workers: 28
 storm.ackers: 2
 
 #Spark Specific
