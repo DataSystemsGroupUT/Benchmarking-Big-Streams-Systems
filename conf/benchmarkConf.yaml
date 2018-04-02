@@ -29,4 +29,4 @@ storm.ackers: 2
 spark.batchtime: 2000
 
 #Time Divisor
-time.divisor: 1000
+time.divisor: 10000

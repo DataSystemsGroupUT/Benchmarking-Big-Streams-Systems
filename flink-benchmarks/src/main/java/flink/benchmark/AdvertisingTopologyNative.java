@@ -96,7 +96,6 @@ public class AdvertisingTopologyNative {
         public void flatMap(String input, Collector<Tuple7<String, String, String, String, String, String, String>> out)
                 throws Exception {
             JSONObject obj = new JSONObject(input);
-            LOG.info(input);
             Tuple7<String, String, String, String, String, String, String> tuple =
                     new Tuple7<String, String, String, String, String, String, String>(
                             obj.getString("user_id"),
@@ -114,8 +113,6 @@ public class AdvertisingTopologyNative {
             FilterFunction<Tuple7<String, String, String, String, String, String, String>> {
         @Override
         public boolean filter(Tuple7<String, String, String, String, String, String, String> tuple) throws Exception {
-            LOG.info(String.valueOf(tuple));
-            LOG.info(tuple.toString());
             return tuple.getField(4).equals("view");
         }
     }

@@ -155,6 +155,7 @@ run() {
 	echo 'storm.workers: 1' >> $CONF_FILE
 	echo 'storm.ackers: 2' >> $CONF_FILE
 	echo 'spark.batchtime: 2000' >> $CONF_FILE
+	echo 'time.divisor: 10000' >> $CONF_FILE
   elif [ "SETUP_BENCHMARK" = "$OPERATION" ];
   then
     

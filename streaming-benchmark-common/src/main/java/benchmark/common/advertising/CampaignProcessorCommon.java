@@ -14,21 +14,19 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+
 public class CampaignProcessorCommon {
     private static final Logger LOG = LoggerFactory.getLogger(CampaignProcessorCommon.class);
-    private Jedis jedis;
     private Jedis flush_jedis;
-    private Long lastWindowMillis;
     // Bucket -> Campaign_id -> Window
     private LRUHashMap<Long, HashMap<String, Window>> campaign_windows;
     private Set<CampaignWindowPair> need_flush;
 
-    private long processed = 0;
 
     private Long time_divisor; // 10 second windows
 
     public CampaignProcessorCommon(String redisServerHostname, Long time_divisor) {
-        jedis = new Jedis(redisServerHostname);
+
         flush_jedis = new Jedis(redisServerHostname);
         this.time_divisor = time_divisor;
     }
@@ -36,7 +34,6 @@ public class CampaignProcessorCommon {
     public void prepare() {
 
         campaign_windows = new LRUHashMap<Long, HashMap<String, Window>>(10);
-        lastWindowMillis = System.currentTimeMillis();
         need_flush = new HashSet<CampaignWindowPair>();
 
         Runnable flusher = new Runnable() {
@@ -45,7 +42,6 @@ public class CampaignProcessorCommon {
                     while (true) {
                         Thread.sleep(1000);
                         flushWindows();
-                        lastWindowMillis = System.currentTimeMillis();
                     }
                 } catch (InterruptedException e) {
                     LOG.error("Interrupted", e);
@@ -64,7 +60,6 @@ public class CampaignProcessorCommon {
         synchronized(need_flush) {
             need_flush.add(newPair);
         }
-        processed++;
     }
 
     private void writeWindow(String campaign, Window win) {
@@ -144,5 +139,20 @@ public class CampaignProcessorCommon {
             }
             return window;
         }
+    }
+
+
+
+    public static void main(String[] args){
+        CampaignProcessorCommon campaignProcessorCommon = new CampaignProcessorCommon("redis", 10000L);
+        campaignProcessorCommon.prepare();
+        campaignProcessorCommon.execute("1", "1522620341534");
+        campaignProcessorCommon.execute("1", "1522620344534");
+        LOG.info(campaignProcessorCommon.getWindow(152262034L, "1").toString());
+        campaignProcessorCommon.flushWindows();
+        LOG.info(campaignProcessorCommon.getWindow(152262034L, "1").toString());
+        campaignProcessorCommon.execute("1", "1522620346534");
+        LOG.info(campaignProcessorCommon.getWindow(152262034L, "1").toString());
+
     }
 }
