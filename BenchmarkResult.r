@@ -18,7 +18,7 @@ generateBenchmarkReport <- function(engine){
     for(i in 1:length(Seen$V1)) {
       SumProceed[i] = sum(Seen$V1[1:i])
     }
-    df <- data.frame(TPS, Seen$V1, round(Updated$V1, digits=-2), round(SumProceed*100/sum(Seen$V1),digits=0))
+    df <- data.frame(TPS, Seen$V1, Updated$V1 - 10000, round(SumProceed*100/sum(Seen$V1),digits=0))
     result <- rbind(result, df)
     
     if (length(Seen$V1)  != length(Updated$V1)){ 
@@ -26,8 +26,10 @@ generateBenchmarkReport <- function(engine){
     }
     
     names(df) <- c("TPS","Seen","Throughput", "Percentile")
+    df = df[df$Throughput > 0,]
     ggplot(data=df, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
       geom_line() +
+      scale_y_log10() +
       guides(fill=FALSE) +
       xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
       ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
@@ -35,6 +37,7 @@ generateBenchmarkReport <- function(engine){
     ggsave( "BENCHMARK_RESULT.pdf", width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
   }
   names(result) <- c("TPS","Seen","Throughput", "Percentile")
+  result = result[result$Throughput > 0,]
   ggplot(data=result, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
     geom_line() +
     guides(fill=FALSE) +
