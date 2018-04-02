@@ -352,10 +352,8 @@ case $1 in
         benchmarkLoop "spark"
         benchmarkLoop "storm"
     ;;
-    start)
+    prepare)
         prepareEnvironment
-        startFlink
-        startFlinkProcessing
     ;;
     stop)
         stopAll
