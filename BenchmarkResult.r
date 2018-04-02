@@ -24,7 +24,7 @@ generateBenchmarkReport <- function(engine){
     if (length(Seen$V1)  != length(Updated$V1)){ 
       stop("Input data set is wrong. Be sure you have selected correct collections")
     }
-    
+
     names(df) <- c("TPS","Seen","Throughput", "Percentile")
     df = df[df$Throughput > 0,]
     ggplot(data=df, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
@@ -40,6 +40,7 @@ generateBenchmarkReport <- function(engine){
   result = result[result$Throughput > 0,]
   ggplot(data=result, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
     geom_line() +
+    scale_y_log10() +
     guides(fill=FALSE) +
     xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
     ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +

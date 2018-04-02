@@ -26,7 +26,7 @@ storm.workers: 1
 storm.ackers: 2
 
 #Spark Specific
-spark.batchtime: 2000
+spark.batchtime: 10000
 
 #Time Divisor
 time.divisor: 10000
