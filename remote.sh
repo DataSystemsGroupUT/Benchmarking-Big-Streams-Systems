@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=1800
+TEST_TIME=180
 TPS="1000"
 BATCH="10000"
 SHORT_SLEEP=10
 LONG_SLEEP=20
-WAIT_AFTER_STOP_PRODUCER=120
+WAIT_AFTER_STOP_PRODUCER=12
 
 CLEAN_LOAD_RESULT_CMD="rm stream.*;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
@@ -345,7 +345,7 @@ case $1 in
         benchmarkLoop "spark"
     ;;
     storm)
-        benchmarkLoop "spark"
+        benchmarkLoop "storm"
     ;;
     all)
         benchmarkLoop "flink"
