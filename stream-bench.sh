@@ -160,6 +160,9 @@ run() {
   then
     
     $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION" -Dheron.version="$HERON_VERSION"
+    cd ${STORM_DIR}
+    $MVN clean install -Dkafka.artifact.id=kafka_2.11 -Dkafka.version=0.9.0.1
+    cd ..
   elif [ "SETUP_REDIS" = "$OPERATION" ];
   then
     

@@ -179,12 +179,12 @@ function stopStorm {
 }
 
 function startStormProcessing {
-    echo "Starting Spark processing"
+    echo "Starting Storm processing"
     runCommandMasterStreamServers "${START_STORM_PROC_CMD}" "nohup"
 }
 
 function stopStormProcessing {
-    echo "Stopping Spark processing"
+    echo "Stopping Storm processing"
     runCommandMasterStreamServers "${STOP_STORM_PROC_CMD}" "nohup"
 }
 
@@ -319,6 +319,8 @@ function stopAll (){
     stopFlink
     stopSparkProcessing
     stopSpark
+    stopStormProcessing
+    stopStorm
     destroyEnvironment
 }
 
@@ -362,6 +364,10 @@ case $1 in
     ;;
     stop)
         stopAll
+    ;;
+    load)
+        startLoadData
+        startZkLoadData
     ;;
     push)
         git add --all

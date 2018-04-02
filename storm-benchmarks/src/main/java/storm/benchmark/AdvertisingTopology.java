@@ -81,6 +81,7 @@ public class AdvertisingTopology {
 
         @Override
         public void execute(Tuple tuple) {
+            System.out.println(tuple.toString());
             if(tuple.getStringByField("event_type").equals("view")) {
                 _collector.emit(tuple, tuple.getValues());
             }
@@ -103,6 +104,7 @@ public class AdvertisingTopology {
 
         @Override
         public void execute(Tuple tuple) {
+            System.out.println(tuple.toString());
             _collector.emit(tuple, new Values(tuple.getStringByField("ad_id"),
                                               tuple.getStringByField("event_time")));
             _collector.ack(tuple);
@@ -131,6 +133,7 @@ public class AdvertisingTopology {
 
         @Override
         public void execute(Tuple tuple) {
+            System.out.println(tuple.toString());
             String ad_id = tuple.getStringByField("ad_id");
             String campaign_id = this.redisAdCampaignCache.execute(ad_id);
             if(campaign_id == null) {
@@ -174,7 +177,7 @@ public class AdvertisingTopology {
 
             String campaign_id = tuple.getStringByField("campaign_id");
             String event_time = tuple.getStringByField("event_time");
-
+            System.out.println(tuple.toString());
            this.campaignProcessorCommon.execute(campaign_id, event_time);
             _collector.ack(tuple);
         }
@@ -196,6 +199,7 @@ public class AdvertisingTopology {
 
             joined += s + ":" + port;
         }
+        System.out.println("HOSTS"  + joined);
         return joined;
     }
 
@@ -224,7 +228,7 @@ public class AdvertisingTopology {
         ZkHosts hosts = new ZkHosts(zkServerHosts);
 
 
-
+        System.out.println("Configuration loading  ");
         SpoutConfig spoutConfig = new SpoutConfig(hosts, kafkaTopic, "/" + kafkaTopic, UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
         KafkaSpout kafkaSpout = new KafkaSpout(spoutConfig);
@@ -252,5 +256,7 @@ public class AdvertisingTopology {
             cluster.killTopology("test");
             cluster.shutdown();
         }
+
+        System.out.println("Configuration done ");
     }
 }
