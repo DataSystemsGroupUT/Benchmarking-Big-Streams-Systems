@@ -355,6 +355,11 @@ case $1 in
     prepare)
         prepareEnvironment
     ;;
+    start)
+        if [ "$2" == "storm" ]; then
+            startStorm
+        fi
+    ;;
     stop)
         stopAll
     ;;
