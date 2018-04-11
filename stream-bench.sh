@@ -15,7 +15,7 @@ KAFKA_VERSION=${KAFKA_VERSION:-"0.11.0.2"}
 REDIS_VERSION=${REDIS_VERSION:-"4.0.8"}
 SCALA_BIN_VERSION=${SCALA_BIN_VERSION:-"2.11"}
 SCALA_SUB_VERSION=${SCALA_SUB_VERSION:-"11"}
-STORM_VERSION=${STORM_VERSION:-"1.2.1"}
+    STORM_VERSION=${STORM_VERSION:-"1.2.1"}
 FLINK_VERSION=${FLINK_VERSION:-"1.4.0"}
 SPARK_VERSION=${SPARK_VERSION:-"2.2.1"}
 HERON_VERSION=${HERON_VERSION:-"0.17.4"}
@@ -136,33 +136,10 @@ run() {
     run "SETUP_FLINK"
     run "SETUP_SPARK"
 
-  elif [ "INFO" = "$OPERATION" ];
-  then
-    $GIT clean -fd
-    echo 'kafka.brokers:' > $CONF_FILE
-    echo '    - "localhost"' >> $CONF_FILE
-    echo >> $CONF_FILE
-    echo 'zookeeper.servers:' >> $CONF_FILE
-    echo '    - "'$ZK_HOST'"' >> $CONF_FILE
-    echo >> $CONF_FILE
-    echo 'kafka.port: 9092' >> $CONF_FILE
-	echo 'zookeeper.port: '$ZK_PORT >> $CONF_FILE
-	echo 'redis.host: "localhost"' >> $CONF_FILE
-	echo 'kafka.topic: "'$TOPIC'"' >> $CONF_FILE
-	echo 'kafka.partitions: '$PARTITIONS >> $CONF_FILE
-	echo 'process.hosts: 1' >> $CONF_FILE
-	echo 'process.cores: 4' >> $CONF_FILE
-	echo 'storm.workers: 1' >> $CONF_FILE
-	echo 'storm.ackers: 2' >> $CONF_FILE
-	echo 'spark.batchtime: 2000' >> $CONF_FILE
-	echo 'time.divisor: 10000' >> $CONF_FILE
   elif [ "SETUP_BENCHMARK" = "$OPERATION" ];
   then
     
     $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION" -Dheron.version="$HERON_VERSION"
-    cd ${STORM_DIR}
-    $MVN clean install -Dkafka.artifact.id=kafka_2.11 -Dkafka.version=0.9.0.1
-    cd ..
   elif [ "SETUP_REDIS" = "$OPERATION" ];
   then
     

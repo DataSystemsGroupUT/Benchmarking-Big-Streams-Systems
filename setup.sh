@@ -15,6 +15,10 @@ sudo apt-get install gcc
 sudo apt-get install tcl
 sudo apt-get install build-essential
 
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install python2.7
+
 wget -O- https://raw.githubusercontent.com/nicolargo/glancesautoinstall/master/install.sh | sudo /bin/bash
 
 
