@@ -47,7 +47,7 @@ public class AdvertisingTopology {
 
         @Override
         public void execute(Tuple tuple) {
-
+            System.out.println(tuple.toString());
             JSONObject obj = new JSONObject(tuple.getString(0));
             _collector.emit(tuple, new Values(obj.getString("user_id"),
                     obj.getString("page_id"),

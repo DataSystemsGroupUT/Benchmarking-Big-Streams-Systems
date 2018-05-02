@@ -15,7 +15,8 @@ Licensed under the terms of the Apache License 2.0. Please see LICENSE file in t
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spark.version>2.2.1</spark.version>
+        <spark.version>2.3.0</spark.version>
+        <spark-cp.version>2.3.0</spark-cp.version>
         <kafka.version>0.11.0.2</kafka.version>
         <flink.version>1.4.0</flink.version>
         <storm.version>1.2.1</storm.version>
@@ -129,6 +130,7 @@ Licensed under the terms of the Apache License 2.0. Please see LICENSE file in t
         <module>storm-benchmarks</module>
         <module>flink-benchmarks</module>
         <module>spark-benchmarks</module>
+        <module>spark-cp-benchmarks</module>
         <module>heron-benchmarks</module>
     </modules>
 

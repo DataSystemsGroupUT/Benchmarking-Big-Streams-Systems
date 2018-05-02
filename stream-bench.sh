@@ -15,9 +15,9 @@ KAFKA_VERSION=${KAFKA_VERSION:-"0.11.0.2"}
 REDIS_VERSION=${REDIS_VERSION:-"4.0.8"}
 SCALA_BIN_VERSION=${SCALA_BIN_VERSION:-"2.11"}
 SCALA_SUB_VERSION=${SCALA_SUB_VERSION:-"11"}
-    STORM_VERSION=${STORM_VERSION:-"1.2.1"}
+STORM_VERSION=${STORM_VERSION:-"1.2.1"}
 FLINK_VERSION=${FLINK_VERSION:-"1.4.0"}
-SPARK_VERSION=${SPARK_VERSION:-"2.2.1"}
+SPARK_VERSION=${SPARK_VERSION:-"2.3.0"}
 HERON_VERSION=${HERON_VERSION:-"0.17.4"}
 
 STORM_DIR="apache-storm-$STORM_VERSION"
@@ -35,8 +35,8 @@ ZK_HOST="localhost"
 ZK_PORT="2181"
 ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
-PARTITIONS=${PARTITIONS:-4}
-LOAD=${LOAD:-1000}
+PARTITIONS=${PARTITIONS:-10}
+LOAD=${LOAD:-1}
 CONF_FILE=./conf/localConf.yaml
 TEST_TIME=${TEST_TIME:-240}
 
@@ -253,7 +253,7 @@ run() {
     sleep 10
   elif [ "START_SPARK_PROCESSING" = "$OPERATION" ];
   then
-    "$SPARK_DIR/bin/spark-submit" --master spark://stream-node01:7077 --class spark.benchmark.KafkaRedisAdvertisingStream ./spark-benchmarks/target/spark-benchmarks-0.1.0.jar "$CONF_FILE" &
+    "$SPARK_DIR/bin/spark-submit" --master spark://steam-node01:7077 --class spark.benchmark.KafkaRedisAdvertisingStream ./spark-cp-benchmarks/target/spark-cp-benchmarks-0.1.0.jar "$CONF_FILE" &
     sleep 5
   elif [ "STOP_SPARK_PROCESSING" = "$OPERATION" ];
   then

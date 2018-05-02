@@ -110,6 +110,8 @@ object KafkaRedisAdvertisingStream {
     // since we're just counting use reduceByKey
     val totalEventsPerCampaignTime = campaign_timeStamp.mapValues(_ => 1).reduceByKey(_ + _)
 
+
+    totalEventsPerCampaignTime.print()
     //DStream[((String,Long), Int)]
     //each record: key:(campaign_id, window_time),  Value: number of events
 
