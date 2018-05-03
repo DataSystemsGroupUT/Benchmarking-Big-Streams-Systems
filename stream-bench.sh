@@ -18,7 +18,7 @@ SCALA_SUB_VERSION=${SCALA_SUB_VERSION:-"11"}
 STORM_VERSION=${STORM_VERSION:-"1.2.1"}
 FLINK_VERSION=${FLINK_VERSION:-"1.4.0"}
 SPARK_VERSION=${SPARK_VERSION:-"2.3.0"}
-HERON_VERSION=${HERON_VERSION:-"0.17.4"}
+HERON_VERSION=${HERON_VERSION:-"0.17.8"}
 
 STORM_DIR="apache-storm-$STORM_VERSION"
 REDIS_DIR="redis-$REDIS_VERSION"
@@ -181,7 +181,7 @@ run() {
     fetch_untar_file "$HERON_FILE" "https://github.com/twitter/heron/releases/download/$HERON_VERSION/heron-$HERON_VERSION-ubuntu.tar.gz"
   elif [ "START_STORM_ZK" = "$OPERATION" ];
   then
-    start_if_needed dev_zookeeper_storm ZooKeeperStorm 10 "$STORM_DIR/bin/storm" dev-zookeeper
+    start_if_needed dev_zookeeper_storm ZooKeeperStorm 10 "$STORM_DIR/bin/storm" dev-zookeeper_storm
   elif [ "STOP_STORM_ZK" = "$OPERATION" ];
   then
     stop_if_needed dev_zookeeper_storm ZooKeeperStorm
