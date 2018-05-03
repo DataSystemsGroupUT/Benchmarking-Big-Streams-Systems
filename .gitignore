@@ -23,5 +23,6 @@ redis-4.0.8
 dump.rdb
 nohup.out
 result
+result_old
 data/seen.txt
 data/updated.txt
