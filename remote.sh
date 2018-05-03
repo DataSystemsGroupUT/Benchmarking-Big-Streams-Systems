@@ -3,7 +3,7 @@
 
 TEST_TIME=180
 TPS="1000"
-BATCH="10000"
+BATCH="3000"
 SHORT_SLEEP=10
 LONG_SLEEP=20
 WAIT_AFTER_STOP_PRODUCER=12
@@ -37,8 +37,8 @@ STOP_FLINK_CMD="cd stream-benchmarking; ./flink-1.4.0/bin/stop-cluster.sh;"
 START_FLINK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_FLINK_PROCESSING;"
 STOP_FLINK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_FLINK_PROCESSING;"
 
-START_SPARK_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/start-all.sh;"
-STOP_SPARK_CMD="cd stream-benchmarking/spark-2.2.1-bin-hadoop2.6; ./sbin/stop-all.sh;"
+START_SPARK_CMD="cd stream-benchmarking/spark-2.3.0-bin-hadoop2.6; ./sbin/start-all.sh;"
+STOP_SPARK_CMD="cd stream-benchmarking/spark-2.3.0-bin-hadoop2.6; ./sbin/stop-all.sh;"
 START_SPARK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_PROCESSING;"
 STOP_SPARK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_PROCESSING;"
 

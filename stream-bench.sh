@@ -173,12 +173,19 @@ run() {
     #Fetch Storm
     STORM_FILE="$STORM_DIR.tar.gz"
     fetch_untar_file "$STORM_FILE" "$APACHE_MIRROR/storm/$STORM_DIR/$STORM_FILE"
-  elif [ "SETUP_HERON" = "$OPERATION" ];
+  elif [ "SETUP_HERON_UBUNTU" = "$OPERATION" ];
   then
     
     #Fetch Heron
     HERON_FILE="$HERON_DIR.tgz.gz"
     fetch_untar_file "$HERON_FILE" "https://github.com/twitter/heron/releases/download/$HERON_VERSION/heron-$HERON_VERSION-ubuntu.tar.gz"
+  elif [ "SETUP_HERON_DARWIN" = "$OPERATION" ];
+  then
+
+    #Fetch Heron
+    HERON_FILE="$HERON_DIR.tgz.gz"
+    fetch_untar_file "$HERON_FILE" "https://github.com/twitter/heron/releases/download/$HERON_VERSION/heron-$HERON_VERSION-darwin.tar.gz"
+
   elif [ "START_STORM_ZK" = "$OPERATION" ];
   then
     start_if_needed dev_zookeeper_storm ZooKeeperStorm 10 "$STORM_DIR/bin/storm" dev-zookeeper_storm
@@ -198,6 +205,11 @@ run() {
     start_if_needed redis-server Redis 1 "$REDIS_DIR/src/redis-server" --protected-mode no
     cd data
     $LEIN run -n --configPath ../$CONF_FILE
+    cd ..
+  elif [ "LOAD_FROM_REDIS" = "$OPERATION" ];
+  then
+    cd data
+    $LEIN run -g --configPath ../$CONF_FILE || true
     cd ..
   elif [ "STOP_REDIS" = "$OPERATION" ];
   then
@@ -288,24 +300,17 @@ run() {
     fi
   elif [ "START_HERON" = "$OPERATION" ];
       then
-      "$HERON_DIR/engine/src/main/scripts/heron" -e "launch -local -conf ./conf/heron.xml ./heron-benchmarks/target/heron_benchmark-1.0-SNAPSHOT.apa -exactMatch Heron_Benchmark"
-             sleep 5
+        "$HERON_DIR/bin/heron" submit standalone ./heron-benchmarks/target/heron-benchmarks-0.1.0.jar heron.benchmark.AdvertisingHeron test-topo -conf $CONF_FILE
+         sleep 5
   elif [ "STOP_HERON" = "$OPERATION" ];
        then
        pkill -f heron_benchmark
   elif [ "START_HERON_ON_YARN" = "$OPERATION" ];
        then
-        "$HERON_DIR/engine/src/main/scripts/heron" -e "launch ./heron-benchmarks/target/heron_benchmark-1.0-SNAPSHOT.apa -conf ./conf/heron.xml -exactMatch Heron_Benchmark"
+        "$HERON_DIR/bin/heron submit standalone ./heron-benchmarks/target/heron-benchmarks-0.1.0.jar heron.benchmark.AdvertisingHeron AdvertisingHeron test-topo -conf $CONF_FILE"
   elif [ "STOP_HERON_ON_YARN" = "$OPERATION" ];
        then
-       APP_ID=`"$HERON_DIR/engine/src/main/scripts/heron" -e "list-apps" | grep id | awk '{ print $2 }'| cut -c -1 ; true`
-       if [ "APP_ID" == "" ];
-       then
-         echo "Could not find streaming job to kill"
-       else
-        "$HERON_DIR/engine/src/main/scripts/heron" -e "kill-app $APP_ID"
-         sleep 3
-       fi
+       echo ""
   elif [ "STORM_TEST" = "$OPERATION" ];
   then
     run "START_ZK"

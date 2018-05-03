@@ -4,12 +4,22 @@
  */
 package heron.benchmark;
 
+import benchmark.common.Utils;
+import benchmark.common.advertising.CampaignProcessorCommon;
+import benchmark.common.advertising.RedisAdCampaignCache;
+import com.twitter.heron.api.Config;
 import com.twitter.heron.api.HeronSubmitter;
-import org.apache.storm.Config;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.log4j.Logger;
 import org.apache.storm.LocalCluster;
-import org.apache.storm.StormSubmitter;
+import org.apache.storm.kafka.KafkaSpout;
+import org.apache.storm.kafka.SpoutConfig;
+import org.apache.storm.kafka.StringScheme;
+import org.apache.storm.kafka.ZkHosts;
 import org.apache.storm.spout.SchemeAsMultiScheme;
-import org.apache.storm.spout.SpoutOutputCollector;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -18,24 +28,13 @@ import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
-//import backtype.storm.utils.Utils;
-import benchmark.common.Utils;
-import benchmark.common.advertising.CampaignProcessorCommon;
-import benchmark.common.advertising.RedisAdCampaignCache;
+import org.json.JSONObject;
+
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.List;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
-import org.apache.log4j.Logger;
-import org.json.JSONObject;
-import redis.clients.jedis.Jedis;
-import org.apache.storm.kafka.KafkaSpout;
-import org.apache.storm.kafka.SpoutConfig;
-import org.apache.storm.kafka.StringScheme;
-import org.apache.storm.kafka.ZkHosts;
+
+//import backtype.storm.utils.Utils;
 
 /**
  * This is a basic example of a Storm topology.
@@ -45,6 +44,7 @@ public class AdvertisingHeron {
   public static class DeserializeBolt extends BaseRichBolt {
     OutputCollector _collector;
 
+    private static final Logger logger = Logger.getLogger(DeserializeBolt.class);
 
     @Override
     public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
@@ -53,8 +53,8 @@ public class AdvertisingHeron {
 
     @Override
     public void execute(Tuple tuple) {
-
-      JSONObject obj = new JSONObject(tuple.getString(0));
+      logger.info(tuple.toString());
+      JSONObject obj = new JSONObject(tuple.getString(4));
       _collector.emit(tuple, new Values(obj.getString("user_id"),
               obj.getString("page_id"),
               obj.getString("ad_id"),
@@ -197,6 +197,7 @@ public class AdvertisingHeron {
 
       joined += s + ":" + port;
     }
+    System.out.println(joined);
     return joined;
   }
 
@@ -205,7 +206,6 @@ public class AdvertisingHeron {
 
     Options opts = new Options();
     opts.addOption("conf", true, "Path to the config file.");
-
     CommandLineParser parser = new DefaultParser();
     CommandLine cmd = parser.parse(opts, args);
     String configPath = cmd.getOptionValue("conf");
@@ -216,8 +216,6 @@ public class AdvertisingHeron {
     String redisServerHost = (String)commonConfig.get("redis.host");
     String kafkaTopic = (String)commonConfig.get("kafka.topic");
     int kafkaPartitions = ((Number)commonConfig.get("kafka.partitions")).intValue();
-    int workers = ((Number)commonConfig.get("storm.workers")).intValue();
-    int ackers = ((Number)commonConfig.get("storm.ackers")).intValue();
     int cores = ((Number)commonConfig.get("process.cores")).intValue();
     int timeDivisor = ((Number)commonConfig.get("time.divisor")).intValue();
     int parallel = Math.max(1, cores/7);
@@ -240,11 +238,9 @@ public class AdvertisingHeron {
             .fieldsGrouping("redis_join", new Fields("campaign_id"));
 
     Config conf = new Config();
-
+    conf.setDebug(true);
     if (args != null && args.length > 0) {
-      conf.setNumWorkers(workers);
-      conf.setNumAckers(ackers);
-     // HeronSubmitter.submitTopology(args[0], conf, builder.createTopology());
+      HeronSubmitter.submitTopology(args[0], conf, builder.createTopology().getStormTopology());
     }
     else {
 
