@@ -25,8 +25,14 @@ process.cores: 4
 storm.workers: 28
 storm.ackers: 2
 
+
+
 #Spark Specific
-spark.batchtime: 10000
+spark.batchtime: 1000
+spark.master: "stream-node01"
+spark.app.name: "KafkaRedisAdvertisingStream"
 
 #Time Divisor
 time.divisor: 10000
+
+

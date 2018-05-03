@@ -26,6 +26,7 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,8 @@ public class AdvertisingTopology {
     public static class DeserializeBolt extends BaseRichBolt {
         OutputCollector _collector;
 
+        private static final Logger logger = Logger.getLogger(DeserializeBolt.class);
+
         @Override
         public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
             _collector = collector;
@@ -47,8 +50,11 @@ public class AdvertisingTopology {
 
         @Override
         public void execute(Tuple tuple) {
-            System.out.println(tuple.toString());
-            JSONObject obj = new JSONObject(tuple.getString(0));
+            logger.info("selam");
+            logger.info(tuple.toString());
+            logger.info("tsw");
+            logger.info(tuple.getString(4));
+            JSONObject obj = new JSONObject(tuple.getString(4));
             _collector.emit(tuple, new Values(obj.getString("user_id"),
                     obj.getString("page_id"),
                     obj.getString("ad_id"),
@@ -67,7 +73,7 @@ public class AdvertisingTopology {
 
     public static class EventFilterBolt extends BaseRichBolt {
         OutputCollector _collector;
-
+        private static final Logger logger = Logger.getLogger(EventFilterBolt.class);
         @Override
         public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
             _collector = collector;
@@ -75,7 +81,7 @@ public class AdvertisingTopology {
 
         @Override
         public void execute(Tuple tuple) {
-            System.out.println(tuple.toString());
+            logger.info(tuple.toString());
             if (tuple.getStringByField("event_type").equals("view")) {
                 _collector.emit(tuple, tuple.getValues());
             }
@@ -90,7 +96,7 @@ public class AdvertisingTopology {
 
     public static class EventProjectionBolt extends BaseRichBolt {
         OutputCollector _collector;
-
+        private static final Logger logger = Logger.getLogger(EventProjectionBolt.class);
         @Override
         public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
             _collector = collector;
@@ -98,7 +104,7 @@ public class AdvertisingTopology {
 
         @Override
         public void execute(Tuple tuple) {
-            System.out.println(tuple.toString());
+            logger.info(tuple.toString());
             _collector.emit(tuple, new Values(tuple.getStringByField("ad_id"),
                     tuple.getStringByField("event_time")));
             _collector.ack(tuple);
@@ -111,6 +117,8 @@ public class AdvertisingTopology {
     }
 
     public static class RedisJoinBolt extends BaseRichBolt {
+
+        private static final Logger logger = Logger.getLogger(RedisJoinBolt.class);
         private OutputCollector _collector;
         transient RedisAdCampaignCache redisAdCampaignCache;
         private String redisServerHost;
@@ -127,7 +135,7 @@ public class AdvertisingTopology {
 
         @Override
         public void execute(Tuple tuple) {
-            System.out.println(tuple.toString());
+            logger.info(tuple.toString());
             String ad_id = tuple.getStringByField("ad_id");
             String campaign_id = this.redisAdCampaignCache.execute(ad_id);
             if (campaign_id == null) {
@@ -148,7 +156,7 @@ public class AdvertisingTopology {
 
     public static class CampaignProcessor extends BaseRichBolt {
 
-        private static final Logger LOG = Logger.getLogger(CampaignProcessor.class);
+        private static final Logger logger = Logger.getLogger(CampaignProcessor.class);
 
         private OutputCollector _collector;
         transient private CampaignProcessorCommon campaignProcessorCommon;
@@ -171,7 +179,7 @@ public class AdvertisingTopology {
 
             String campaign_id = tuple.getStringByField("campaign_id");
             String event_time = tuple.getStringByField("event_time");
-            System.out.println(tuple.toString());
+           logger.info(tuple.toString());
             this.campaignProcessorCommon.execute(campaign_id, event_time);
             _collector.ack(tuple);
         }
@@ -192,7 +200,7 @@ public class AdvertisingTopology {
 
             joined += s + ":" + port;
         }
-        System.out.println("HOSTS" + joined);
+//        logger.info("HOSTS " + joined);
         return joined;
     }
 
@@ -239,7 +247,6 @@ public class AdvertisingTopology {
                 .fieldsGrouping("redis_join", new Fields("campaign_id"));
 
         Config conf = new Config();
-
         if (args != null && args.length > 0) {
             conf.setNumWorkers(workers);
             conf.setNumAckers(ackers);

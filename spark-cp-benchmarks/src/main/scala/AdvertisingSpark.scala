@@ -53,8 +53,8 @@ object KafkaRedisAdvertisingStream {
 
   def main(args: Array[String]) {
 
-    val commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true).asInstanceOf[java.util.Map[String, Any]];
-
+//    val commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true).asInstanceOf[java.util.Map[String, Any]];
+    val commonConfig = Utils.findAndReadConfigFile(args(0), true).asInstanceOf[java.util.Map[String, Any]];
     val timeDivisor = commonConfig.get("time.divisor") match {
       case n: Number => n.longValue()
       case other => throw new ClassCastException(other + " not a Number")
@@ -74,13 +74,25 @@ object KafkaRedisAdvertisingStream {
       case other => throw new ClassCastException(other + " not a String")
     }
 
+    val appName = commonConfig.get("spark.app.name") match {
+      case s: String => s
+      case other => throw new ClassCastException(other + " not a String")
+    }
+
+
+    val masterHost = commonConfig.get("spark.master") match {
+      case s: String => s
+      case other => throw new ClassCastException(other + " not a String")
+    }
+
+
     // Create context with 2 second batch interval
     //    val sparkConf = new SparkConf().setAppName("KafkaRedisAdvertisingStream")
     //    val ssc = new StreamingContext(sparkConf, Milliseconds(batchSize))
 
 
-    val spark = SparkSession.builder().appName("KafkaRedisAdvertisingStream")
-      .master("local").getOrCreate()
+    val spark = SparkSession.builder().appName(appName)
+      .master(masterHost).getOrCreate()
 
     import spark.implicits._
 
@@ -121,7 +133,6 @@ object KafkaRedisAdvertisingStream {
 
     //Note that the Storm benchmark caches the results from Redis, we don't do that here yet
     val  redisJoined = projected.mapPartitions(queryRedisTopLevel(_, redisHost))
-//    val redisJoined = projected.mapPartitions(queryRedisTopLevel(_, redisHost), false)
 
 
     val campaign_timeStamp = redisJoined.map(event => AdsCalculated(event.ad_id, event.campaign_id,  timeDivisor * (event.event_time.toLong / timeDivisor)))

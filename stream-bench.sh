@@ -179,9 +179,16 @@ run() {
     #Fetch Heron
     HERON_FILE="$HERON_DIR.tgz.gz"
     fetch_untar_file "$HERON_FILE" "https://github.com/twitter/heron/releases/download/$HERON_VERSION/heron-$HERON_VERSION-ubuntu.tar.gz"
+  elif [ "START_STORM_ZK" = "$OPERATION" ];
+  then
+    start_if_needed dev_zookeeper_storm ZooKeeperStorm 10 "$STORM_DIR/bin/storm" dev-zookeeper
+  elif [ "STOP_STORM_ZK" = "$OPERATION" ];
+  then
+    stop_if_needed dev_zookeeper_storm ZooKeeperStorm
+    rm -rf /tmp/dev-storm-zookeeper
   elif [ "START_ZK" = "$OPERATION" ];
   then
-    start_if_needed dev_zookeeper ZooKeeper 10 "$STORM_DIR/bin/storm" dev-zookeeper
+    start_if_needed dev_zookeeper ZooKeeper 10 $KAFKA_DIR/bin/zookeeper-server-start.sh -daemon $KAFKA_DIR/config/zookeeper.properties
   elif [ "STOP_ZK" = "$OPERATION" ];
   then
     stop_if_needed dev_zookeeper ZooKeeper
@@ -203,15 +210,15 @@ run() {
   then
     start_if_needed daemon.name=nimbus "Storm Nimbus" 3 "$STORM_DIR/bin/storm" nimbus
     start_if_needed daemon.name=supervisor "Storm Supervisor" 3 "$STORM_DIR/bin/storm" supervisor
-    start_if_needed daemon.name=ui "Storm UI" 3 "$STORM_DIR/bin/storm" ui
-    start_if_needed daemon.name=logviewer "Storm LogViewer" 3 "$STORM_DIR/bin/storm" logviewer
+#    start_if_needed daemon.name=ui "Storm UI" 3 "$STORM_DIR/bin/storm" ui
+#    start_if_needed daemon.name=logviewer "Storm LogViewer" 3 "$STORM_DIR/bin/storm" logviewer
     sleep 20
   elif [ "STOP_STORM" = "$OPERATION" ];
   then
     stop_if_needed daemon.name=nimbus "Storm Nimbus"
     stop_if_needed daemon.name=supervisor "Storm Supervisor"
-    stop_if_needed daemon.name=ui "Storm UI"
-    stop_if_needed daemon.name=logviewer "Storm LogViewer"
+#    stop_if_needed daemon.name=ui "Storm UI"
+#    stop_if_needed daemon.name=logviewer "Storm LogViewer"
   elif [ "START_KAFKA" = "$OPERATION" ];
   then
     start_if_needed kafka\.Kafka Kafka 10 "$KAFKA_DIR/bin/kafka-server-start.sh" "$KAFKA_DIR/config/server.properties"
@@ -253,9 +260,16 @@ run() {
     sleep 10
   elif [ "START_SPARK_PROCESSING" = "$OPERATION" ];
   then
-    "$SPARK_DIR/bin/spark-submit" --master spark://steam-node01:7077 --class spark.benchmark.KafkaRedisAdvertisingStream ./spark-cp-benchmarks/target/spark-cp-benchmarks-0.1.0.jar "$CONF_FILE" &
+    "$SPARK_DIR/bin/spark-submit" --master spark://stream-node01:7077 --class spark.benchmark.KafkaRedisAdvertisingStream ./spark-benchmarks/target/spark-benchmarks-0.1.0.jar "$CONF_FILE" &
     sleep 5
   elif [ "STOP_SPARK_PROCESSING" = "$OPERATION" ];
+  then
+    stop_if_needed spark.benchmark.KafkaRedisAdvertisingStream "Spark Client Process"
+   elif [ "START_SPARK_CP_PROCESSING" = "$OPERATION" ];
+  then
+    "$SPARK_DIR/bin/spark-submit" --class spark.benchmark.KafkaRedisAdvertisingStream ./spark-cp-benchmarks/target/spark-cp-benchmarks-0.1.0.jar "$CONF_FILE" &
+    sleep 5
+  elif [ "STOP_SPARK_CP_PROCESSING" = "$OPERATION" ];
   then
     stop_if_needed spark.benchmark.KafkaRedisAdvertisingStream "Spark Client Process"
   elif [ "START_FLINK_PROCESSING" = "$OPERATION" ];

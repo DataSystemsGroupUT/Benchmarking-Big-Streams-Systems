@@ -11,8 +11,12 @@ kafka.topic: "ad-events"
 kafka.partitions: 1
 process.hosts: 1
 process.cores: 4
-storm.workers: 1
+storm.workers: 4
 storm.ackers: 2
-spark.batchtime: 2000
 
 time.divisor: 1000
+
+#Spark Specific
+spark.batchtime: 1000
+spark.master: "local"
+spark.app.name: "KafkaRedisAdvertisingStream"
