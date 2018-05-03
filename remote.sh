@@ -22,9 +22,10 @@ LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
 DELETE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh --delete --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic ad-events;"
 CREATE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 4 --topic ad-events;"
 
-START_MONITOR_PROCESS_CMD="top -b -d 1 | grep --line-buffered java > stream.process;"
-STOP_MONITOR_PROCESS_CMD="ps aux | grep top | awk {'print \$2'} | xargs sudo kill;"
-MONITOR_PID_CMD="ps aux | grep java > stream.pid"
+START_MONITOR_CPU="top -b -d 1 | grep --line-buffered Cpu > cpu.load;"
+STOP_MONITOR_CPU="ps aux | grep Cpu | awk {'print \$2'} | xargs sudo kill;"
+START_MONITOR_MEM="top -b -d 1 | grep --line-buffered 'KiB Mem' > mem.load;"
+STOP_MONITOR_MEM="ps aux | grep 'KiB Mem' | awk {'print \$2'} | xargs sudo kill;"
 
 START_STORM_NIMBUS_CMD="cd stream-benchmarking; ./apache-storm-1.2.1/bin/storm nimbus;"
 STOP_STORM_NIMBUS_CMD="ps aux | grep storm | awk {'print \$2'} | xargs sudo kill;"
@@ -221,13 +222,17 @@ function getProcessId(){
 }
 
 function startMonitoring(){
-    runCommandStreamServers "${START_MONITOR_PROCESS_CMD}" "nohup"
-    runCommandKafkaServers "${START_MONITOR_PROCESS_CMD}" "nohup"
+    runCommandStreamServers "${START_MONITOR_CPU}" "nohup"
+    runCommandStreamServers "${START_MONITOR_MEM}" "nohup"
+    runCommandKafkaServers "${START_MONITOR_CPU}" "nohup"
+    runCommandKafkaServers "${START_MONITOR_MEM}" "nohup"
 }
 
 function stopMonitoring(){
-    runCommandStreamServers "${STOP_MONITOR_PROCESS_CMD}"
-    runCommandKafkaServers "${STOP_MONITOR_PROCESS_CMD}"
+    runCommandStreamServers "${STOP_MONITOR_CPU}"
+    runCommandStreamServers "${STOP_MONITOR_MEM}"
+    runCommandKafkaServers "${STOP_MONITOR_CPU}"
+    runCommandKafkaServers "${STOP_MONITOR_MEM}"
 }
 
 function changeTps(){

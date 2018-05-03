@@ -86,8 +86,8 @@ function getResultFromStreamServer(){
     counter=1
     while [ ${counter} -le 8 ]
     do
-        scp ubuntu@stream-node0${counter}:~/stream.pid $1/stream-node0${counter}.pid
-        scp ubuntu@stream-node0${counter}:~/stream.process $1/stream-node0${counter}.process
+        scp ubuntu@stream-node0${counter}:~/cpu.load $1/stream-node0${counter}.cpu
+        scp ubuntu@stream-node0${counter}:~/mem.load $1/stream-node0${counter}.mem
         ((counter++))
     done
 }
@@ -96,8 +96,8 @@ function getResultFromKafkaServer(){
     counter=1
     while [ ${counter} -le 4 ]
     do
-        scp ubuntu@kafka-node0${counter}:~/stream.pid $1/kafka-node0${counter}.pid
-        scp ubuntu@kafka-node0${counter}:~/stream.process $1/kafka-node0${counter}.process
+        scp ubuntu@kafka-node0${counter}:~/cpu.load $1/kafka-node0${counter}.cpu
+        scp ubuntu@kafka-node0${counter}:~/mem.load $1/kafka-node0${counter}.mem
         ((counter++))
     done
 }
