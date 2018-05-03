@@ -388,6 +388,9 @@ case $1 in
     start)
         if [ "$2" == "storm" ]; then
             startStorm
+        elif [ "$2" == "spark" ]; then
+#            startSpark
+            startSparkProcessing $3
         fi
     ;;
     stop)
@@ -410,7 +413,7 @@ case $1 in
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
-        getBenchmarkResult spark dataset
+        Rscript --vanilla reporting.R "sdas"
         echo "Please Enter valid command"
 esac
 

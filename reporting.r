@@ -1,6 +1,8 @@
-
+#!/usr/bin/env Rscript
 library(ggplot2)
 library(scales)
+
+args[0]
 
 source('~/Desktop/EDU/THESIS/stream-benchmarking/StreamServerReport.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/KafkaServerReport.r')
@@ -13,16 +15,24 @@ generateStreamServerLoadReport("flink")
 generateKafkaServerLoadReport("flink")
 
 
-generateBenchmarkReport("spark_2000")
-generateStreamServerLoadReport("spark_2000")
-generateKafkaServerLoadReport("spark_2000")
+generateBenchmarkReport("spark_dataset_1000")
+generateStreamServerLoadReport("spark_dataset_1000")
+generateKafkaServerLoadReport("spark_dataset_1000")
 
 
-generateBenchmarkReport("spark_10000")
-generateStreamServerLoadReport("spark_10000")
-generateKafkaServerLoadReport("spark_10000")
+generateBenchmarkReport("spark_dstream_1000")
+generateStreamServerLoadReport("spark_dstream_1000")
+generateKafkaServerLoadReport("spark_dstream_1000")
 
 
+
+generateBenchmarkReport("spark_dataset_3000")
+generateStreamServerLoadReport("spark_dataset_3000")
+generateKafkaServerLoadReport("spark_dataset_3000")
+
+generateBenchmarkReport("spark_dstream_3000")
+generateStreamServerLoadReport("spark_dstream_3000")
+generateKafkaServerLoadReport("spark_dstream_3000")
 
 
 
