@@ -29,7 +29,7 @@ storm.ackers: 2
 
 #Spark Specific
 spark.batchtime: 1000
-spark.master: "stream-node01"
+spark.master: "local"
 spark.app.name: "KafkaRedisAdvertisingStream"
 
 #Time Divisor

@@ -378,7 +378,8 @@ case $1 in
     ;;
     all)
         benchmarkLoop "flink"
-        benchmarkLoop "spark"
+        benchmarkLoop "spark" "dataset"
+        benchmarkLoop "spark" "dstream"
         benchmarkLoop "storm"
     ;;
     prepare)
