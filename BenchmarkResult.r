@@ -5,12 +5,12 @@
 ##########################                                                                                  ##########################
 ######################################################################################################################################
 
-generateBenchmarkReport <- function(engine){
+generateBenchmarkReport <- function(engine, tps, duration){
   result = NULL
   for(i in 1:4) {
-    TPS = toString(1000*i)
+    TPS = toString(tps*i)
     reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
-    sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_1800/", sep = "")
+    sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
     Seen = read.table(paste(sourceFolder, "redis-seen.txt",sep=""),header=F,stringsAsFactors=F,sep=',')
     Updated = read.table(paste(sourceFolder, "redis-updated.txt",sep=""),header=F,stringsAsFactors=F,sep=',')
     

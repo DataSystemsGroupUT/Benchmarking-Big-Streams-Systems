@@ -6,12 +6,12 @@
 
 
 
-generateStreamServerLoadReport <- function(engine){
+generateStreamServerLoadReport <- function(engine, tps, duration){
   for(i in 1:4) {
-    TPS = toString(1000*i)
+    TPS = toString(tps*i)
     memoryUsage= NULL
     cpuUsage= NULL
-    sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_1800/", sep = "")
+    sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
     for(x in 1:8) {
       streamPid = read.table(paste(sourceFolder, "stream-node0", x,".pid",sep=""),header=F,stringsAsFactors=F,sep=',')
       dfPid <- data.frame(paste("Stream 0" , x, sep=""), streamPid$V1)
@@ -19,7 +19,8 @@ generateStreamServerLoadReport <- function(engine){
       
       if(engine == "flink"){
         dfPid = dfPid[grep("org.apache.flink.runtime", dfPid$PID),]
-      } else if(engine == "spark_2000" || engine == "spark_10000") {
+      } else if(engine == "spark_dstream_1000" || engine == "spark_dstream_3000" || engine == "spark_dstream_10000"
+                || engine == "spark_dataset_1000" || engine == "spark_dataset_3000" || engine == "spark_dataset_10000" ) {
         if(x == 1){
           dfPid = dfPid[grep("KafkaRedisAdvertisingStream", dfPid$PID),]
         }else{

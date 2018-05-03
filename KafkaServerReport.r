@@ -2,12 +2,12 @@
 ######################################################################################################################################
 ##########################                  Flink Benchmark Kafka Server Load                               ##########################
 ######################################################################################################################################
-generateKafkaServerLoadReport <- function(engine){
+generateKafkaServerLoadReport <- function(engine, tps, duration){
   for(i in 1:4) {
-    TPS = toString(1000*i)
+    TPS = toString(tps*i)
     memoryUsage= NULL
     cpuUsage= NULL
-    sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_1800/", sep = "")
+    sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
     for(x in 1:4) {
       kafkaNode = read.table(paste(sourceFolder, "kafka-node0", x,".process",sep=""),header=F,stringsAsFactors=F,sep=',')
       

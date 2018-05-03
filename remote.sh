@@ -271,9 +271,13 @@ function destroyEnvironment(){
 function getBenchmarkResult(){
 
     if [ "$1" == "spark" ]; then
-        PATH_RESULT=result/${1}_${2}_${BATCH}/TPS_${TPS}_DURATION_${TEST_TIME}
+        ENGINE_PATH=${1}_${2}_${BATCH}
+        SUB_PATH=TPS_${TPS}_DURATION_${TEST_TIME}
+        PATH_RESULT=result/${ENGINE_PATH}/${SUB_PATH}
     else
-        PATH_RESULT=result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}
+        ENGINE_PATH=${1}
+        SUB_PATH=TPS_${TPS}_DURATION_${TEST_TIME}
+        PATH_RESULT=result/${ENGINE_PATH}/${SUB_PATH}
     fi
     rm -rf ${PATH_RESULT};
     mkdir -p ${PATH_RESULT}
@@ -281,7 +285,7 @@ function getBenchmarkResult(){
     getResultFromKafkaServer "${PATH_RESULT}"
     getResultFromRedisServer "${PATH_RESULT}"
 
-    Rscript reporting.R
+    Rscript reporting.R ${ENGINE_PATH} ${TPS} ${TEST_TIME}
 
 }
 
@@ -386,15 +390,45 @@ case $1 in
         prepareEnvironment
     ;;
     start)
-        if [ "$2" == "storm" ]; then
-            startStorm
-        elif [ "$2" == "spark" ]; then
-#            startSpark
-            startSparkProcessing $3
-        fi
+        case $2 in
+            fling)
+                startFlink
+            ;;
+            spark)
+                startSpark
+            ;;
+            storm)
+                startStorm
+            ;;
+            process)
+                startStormProcessing
+            ;;
+            zoo)
+                startZK
+            ;;
+        esac
     ;;
     stop)
-        stopAll
+        case $2 in
+            fling)
+                stopFlink
+            ;;
+            spark)
+                stopSpark
+            ;;
+            storm)
+                stopStorm
+            ;;
+            process)
+                stopStormProcessing
+            ;;
+            zoo)
+                stopZK
+            ;;
+            all)
+                stopAll
+            ;;
+        esac
     ;;
     load)
         startLoadData
@@ -413,7 +447,7 @@ case $1 in
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
-        Rscript --vanilla reporting.R "sdas"
+        Rscript --vanilla reporting.R "flink"
         echo "Please Enter valid command"
 esac
 
