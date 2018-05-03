@@ -39,8 +39,14 @@ STOP_FLINK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_FLINK_PROCES
 
 START_SPARK_CMD="cd stream-benchmarking/spark-2.3.0-bin-hadoop2.6; ./sbin/start-all.sh;"
 STOP_SPARK_CMD="cd stream-benchmarking/spark-2.3.0-bin-hadoop2.6; ./sbin/stop-all.sh;"
-START_SPARK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_PROCESSING;"
-STOP_SPARK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_PROCESSING;"
+START_SPARK_RDD_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_CP_PROCESSING;"
+STOP_SPARK_RDD_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_CP_PROCESSING;"
+
+START_SPARK_DSTREAM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_PROCESSING;"
+STOP_SPARK_DSTREAM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_PROCESSING;"
+
+START_SPARK_DATASET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_CP_PROCESSING;"
+STOP_SPARK_DATASET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_CP_PROCESSING;"
 
 START_ZK_CMD="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/zookeeper-server-start.sh -daemon config/zookeeper.properties"
 STOP_ZK_CMD="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/zookeeper-server-stop.sh;"
@@ -156,12 +162,32 @@ function stopSpark {
 
 function startSparkProcessing {
     echo "Starting Spark processing"
-    runCommandMasterStreamServers "${START_SPARK_PROC_CMD}" "nohup"
+    case $1 in
+        dstream)
+            runCommandMasterStreamServers "${START_SPARK_DSTREAM_PROC_CMD}" "nohup"
+        ;;
+        dataset)
+            runCommandMasterStreamServers "${START_SPARK_DATASET_PROC_CMD}" "nohup"
+        ;;
+        *)
+            echo "Which spark processing would you like to start"
+        ;;
+    esac
 }
 
 function stopSparkProcessing {
     echo "Stopping Spark processing"
-    runCommandMasterStreamServers "${STOP_SPARK_PROC_CMD}" "nohup"
+     case $1 in
+        dstream)
+            runCommandMasterStreamServers "${STOP_SPARK_DSTREAM_PROC_CMD}" "nohup"
+        ;;
+        dataset)
+            runCommandMasterStreamServers "${STOP_SPARK_DATASET_PROC_CMD}" "nohup"
+        ;;
+        *)
+            echo "Which spark processing would you like to stop"
+        ;;
+    esac
 }
 
 function startStorm {
@@ -245,7 +271,7 @@ function destroyEnvironment(){
 function getBenchmarkResult(){
 
     if [ "$1" == "spark" ]; then
-        PATH_RESULT=result/${1}_${BATCH}/TPS_${TPS}_DURATION_${TEST_TIME}
+        PATH_RESULT=result/${1}_${2}_${BATCH}/TPS_${TPS}_DURATION_${TEST_TIME}
     else
         PATH_RESULT=result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}
     fi
@@ -307,7 +333,7 @@ function runSystem(){
         ;;
     esac
     destroyEnvironment
-    getBenchmarkResult $1
+    getBenchmarkResult $1 $2
 
 }
 

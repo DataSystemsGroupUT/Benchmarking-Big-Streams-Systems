@@ -177,6 +177,7 @@ object KafkaRedisAdvertisingStream {
 
     val writeToConsole = totalEventsPerCampaignTime
       .writeStream.foreach(writer)
+      .trigger(Trigger.ProcessingTime(batchSize))
       .outputMode("update").start()
 
 
