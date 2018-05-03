@@ -9,7 +9,7 @@ SHORT_SLEEP=5
 LONG_SLEEP=10
 WAIT_AFTER_STOP_PRODUCER=12
 
-CLEAN_LOAD_RESULT_CMD="rm stream.*;"
+CLEAN_LOAD_RESULT_CMD="rm *.load;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
 
 CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
