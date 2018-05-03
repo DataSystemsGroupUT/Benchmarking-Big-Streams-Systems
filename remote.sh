@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=30
+TEST_TIME=1800
 TPS="1000"
 INITIAL_TPS=${TPS}
 BATCH="1000"
-SHORT_SLEEP=5
-LONG_SLEEP=10
-WAIT_AFTER_STOP_PRODUCER=10
+SHORT_SLEEP=10
+LONG_SLEEP=20
+WAIT_AFTER_STOP_PRODUCER=120
 
 CLEAN_LOAD_RESULT_CMD="rm *.load;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
@@ -365,6 +365,7 @@ function benchmarkLoop (){
         runSystem $1 $2
         TPS=$[$TPS + 1000]
     done
+    TPS=${INITIAL_TPS}
 }
 
 
@@ -379,10 +380,10 @@ case $1 in
         benchmarkLoop "storm"
     ;;
     all)
-        benchmarkLoop "flink"
+        benchmarkLoop "storm"
         benchmarkLoop "spark" "dataset"
         benchmarkLoop "spark" "dstream"
-        benchmarkLoop "storm"
+        benchmarkLoop "flink"
     ;;
     prepare)
         prepareEnvironment
