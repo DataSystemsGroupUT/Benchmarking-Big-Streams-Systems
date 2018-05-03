@@ -316,9 +316,9 @@ function runSystem(){
         spark)
             startSpark
             sleep ${SHORT_SLEEP}
-            startSparkProcessing
+            startSparkProcessing $2
             benchmark $1
-            stopSparkProcessing
+            stopSparkProcessing $2
             sleep ${SHORT_SLEEP}
             stopSpark
         ;;
@@ -359,7 +359,7 @@ function benchmarkLoop (){
             break
         fi
         changeTps
-        runSystem $1
+        runSystem $1 $2
         TPS=$[$TPS + 1000]
     done
 }
@@ -370,7 +370,7 @@ case $1 in
         benchmarkLoop "flink"
     ;;
     spark)
-        benchmarkLoop "spark"
+        benchmarkLoop "spark" $2
     ;;
     storm)
         benchmarkLoop "storm"
