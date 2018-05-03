@@ -3,6 +3,7 @@
 
 TEST_TIME=100
 TPS="1000"
+INITIAL_TPS=${TPS}
 BATCH="1000"
 SHORT_SLEEP=5
 LONG_SLEEP=10
@@ -285,7 +286,7 @@ function getBenchmarkResult(){
     getResultFromKafkaServer "${PATH_RESULT}"
     getResultFromRedisServer "${PATH_RESULT}"
 
-    Rscript reporting.R ${ENGINE_PATH} ${TPS} ${TEST_TIME}
+    Rscript reporting.R ${ENGINE_PATH} ${INITIAL_TPS} ${TEST_TIME}
 
 }
 
