@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=100
+TEST_TIME=30
 TPS="1000"
 INITIAL_TPS=${TPS}
 BATCH="1000"
 SHORT_SLEEP=5
 LONG_SLEEP=10
-WAIT_AFTER_STOP_PRODUCER=12
+WAIT_AFTER_STOP_PRODUCER=10
 
 CLEAN_LOAD_RESULT_CMD="rm *.load;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
@@ -23,9 +23,8 @@ DELETE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh 
 CREATE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 4 --topic ad-events;"
 
 START_MONITOR_CPU="top -b -d 1 | grep --line-buffered Cpu > cpu.load;"
-STOP_MONITOR_CPU="ps aux | grep Cpu | awk {'print \$2'} | xargs sudo kill;"
 START_MONITOR_MEM="top -b -d 1 | grep --line-buffered 'KiB Mem' > mem.load;"
-STOP_MONITOR_MEM="ps aux | grep 'KiB Mem' | awk {'print \$2'} | xargs sudo kill;"
+STOP_MONITOR="ps aux | grep top | awk {'print \$2'} | xargs sudo kill;"
 
 START_STORM_NIMBUS_CMD="cd stream-benchmarking; ./apache-storm-1.2.1/bin/storm nimbus;"
 STOP_STORM_NIMBUS_CMD="ps aux | grep storm | awk {'print \$2'} | xargs sudo kill;"
@@ -216,12 +215,8 @@ function stopStormProcessing {
     runCommandMasterStreamServers "${STOP_STORM_PROC_CMD}" "nohup"
 }
 
-function getProcessId(){
-    runCommandStreamServers "${MONITOR_PID_CMD}"
-    runCommandKafkaServers "${MONITOR_PID_CMD}"
-}
-
 function startMonitoring(){
+    echo "Start Monitoring"
     runCommandStreamServers "${START_MONITOR_CPU}" "nohup"
     runCommandStreamServers "${START_MONITOR_MEM}" "nohup"
     runCommandKafkaServers "${START_MONITOR_CPU}" "nohup"
@@ -229,10 +224,9 @@ function startMonitoring(){
 }
 
 function stopMonitoring(){
-    runCommandStreamServers "${STOP_MONITOR_CPU}"
-    runCommandStreamServers "${STOP_MONITOR_MEM}"
-    runCommandKafkaServers "${STOP_MONITOR_CPU}"
-    runCommandKafkaServers "${STOP_MONITOR_MEM}"
+    echo "Stop Monitoring"
+    runCommandStreamServers "${STOP_MONITOR}"
+    runCommandKafkaServers "${STOP_MONITOR}"
 }
 
 function changeTps(){
@@ -306,8 +300,6 @@ function benchmark(){
     sleep ${LONG_SLEEP}
     stopMonitoring
     sleep ${WAIT_AFTER_STOP_PRODUCER}
-    getProcessId
-
 }
 
 
