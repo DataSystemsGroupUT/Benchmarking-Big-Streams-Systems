@@ -35,9 +35,9 @@ ZK_HOST="localhost"
 ZK_PORT="2181"
 ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
-PARTITIONS=${PARTITIONS:-10}
-LOAD=${LOAD:-1}
-CONF_FILE=./conf/localConf.yaml
+PARTITIONS=${PARTITIONS:-4}
+LOAD=${LOAD:-1000}
+CONF_FILE=./conf/benchmarkConf.yaml
 TEST_TIME=${TEST_TIME:-240}
 
 pid_match() {

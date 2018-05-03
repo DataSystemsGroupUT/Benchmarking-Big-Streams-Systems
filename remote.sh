@@ -276,7 +276,7 @@ function getBenchmarkResult(){
         PATH_RESULT=result/${1}/TPS_${TPS}_DURATION_${TEST_TIME}
     fi
     rm -rf ${PATH_RESULT};
-    mkdir ${PATH_RESULT}
+    mkdir -p ${PATH_RESULT}
     getResultFromStreamServer "${PATH_RESULT}"
     getResultFromKafkaServer "${PATH_RESULT}"
     getResultFromRedisServer "${PATH_RESULT}"
@@ -408,6 +408,7 @@ case $1 in
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
+        getBenchmarkResult spark dataset
         echo "Please Enter valid command"
 esac
 
