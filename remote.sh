@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=180
+TEST_TIME=100
 TPS="1000"
-BATCH="3000"
-SHORT_SLEEP=10
-LONG_SLEEP=20
+BATCH="1000"
+SHORT_SLEEP=5
+LONG_SLEEP=10
 WAIT_AFTER_STOP_PRODUCER=12
 
 CLEAN_LOAD_RESULT_CMD="rm stream.*;"
@@ -343,7 +343,8 @@ function stopAll (){
     stopMonitoring
     stopFlinkProcessing
     stopFlink
-    stopSparkProcessing
+    stopSparkProcessing "dataset"
+    stopSparkProcessing "dstream"
     stopSpark
     stopStormProcessing
     stopStorm
