@@ -1,12 +1,11 @@
 #!/usr/bin/env Rscript
 library(ggplot2)
 library(scales)
+theme_set(theme_bw())
 
 args <- commandArgs(TRUE)
 tps <- as.numeric(args[2])
 duration <- as.numeric(args[3])
-
-
 
 source('~/Desktop/EDU/THESIS/stream-benchmarking/StreamServerReport.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/KafkaServerReport.r')

@@ -7,7 +7,8 @@
 
 generateBenchmarkReport <- function(engine, tps, duration){
   result = NULL
-  for(i in 1:4) {
+  for(i in 1:3) {
+    
     TPS = toString(tps*i)
     reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
@@ -28,23 +29,21 @@ generateBenchmarkReport <- function(engine, tps, duration){
     names(df) <- c("TPS","Seen","Throughput", "Percentile")
     df = df[df$Throughput > 0,]
     ggplot(data=df, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
-      geom_line() +
-      scale_y_log10() +
+      geom_smooth(method="auto", se=F) + 
       guides(fill=FALSE) +
       xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
       ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
-      theme(plot.title = element_text(size = 15, face = "plain"), text = element_text(size = 12, face = "plain"))
+      theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
     ggsave( "BENCHMARK_RESULT.pdf", width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
   }
   names(result) <- c("TPS","Seen","Throughput", "Percentile")
   result = result[result$Throughput > 0,]
   ggplot(data=result, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
-    geom_line() +
-    scale_y_log10() +
+    geom_smooth(method="auto", se=F) + 
     guides(fill=FALSE) +
     xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
     ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
-    theme(plot.title = element_text(size = 15, face = "plain"), text = element_text(size = 12, face = "plain"))
+    theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
   ggsave("BENCHMARK_RESULT.pdf", width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
 
 }
