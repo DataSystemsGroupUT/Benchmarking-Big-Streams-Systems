@@ -16,10 +16,10 @@ generateBenchmarkReport <- function(engine, tps, duration){
     Updated = read.table(paste(sourceFolder, "redis-updated.txt",sep=""),header=F,stringsAsFactors=F,sep=',')
     
     SumProceed = c()
-    for(i in 1:length(Seen$V1)) {
-      SumProceed[i] = sum(Seen$V1[1:i])
+    for(c in 1:length(Seen$V1)) {
+      SumProceed[c] = sum(Seen$V1[1:c])
     }
-    df <- data.frame(TPS, Seen$V1, Updated$V1 - 10000, round(SumProceed*100/sum(Seen$V1),digits=0))
+    df <- data.frame(toString(tps*i*6), Seen$V1, Updated$V1 - 10000, round(SumProceed*100/sum(Seen$V1),digits=0))
     result <- rbind(result, df)
     
     if (length(Seen$V1)  != length(Updated$V1)){ 
@@ -34,7 +34,7 @@ generateBenchmarkReport <- function(engine, tps, duration){
       xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
       ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
       theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
-    ggsave( "BENCHMARK_RESULT.pdf", width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
+    ggsave( paste(engine, "_", toString(tps*i*6), ".pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
   }
   names(result) <- c("TPS","Seen","Throughput", "Percentile")
   result = result[result$Throughput > 0,]
@@ -44,6 +44,6 @@ generateBenchmarkReport <- function(engine, tps, duration){
     xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
     ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
     theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
-  ggsave("BENCHMARK_RESULT.pdf", width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
+  ggsave(paste(engine, ".pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
 
 }

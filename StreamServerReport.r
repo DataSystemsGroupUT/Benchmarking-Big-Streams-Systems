@@ -33,18 +33,20 @@ generateStreamServerLoadReport <- function(engine, tps, duration){
     ggplot(data=cpuUsage, aes(x=TIME, y=USAGE, group=NODE, colour=NODE)) + 
       geom_smooth(method="auto", se=F) + 
       guides(fill=FALSE) +
-      xlab("Seconds") + ylab("CPU load percentage") +
-      ggtitle(paste(toupper(engine), "BENCHMARK Stream Servers CPU load for TPS", TPS)) +
-      theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
+      labs(x="Seconds", y="CPU load percentage",
+           title=paste(toupper(engine), "BENCHMARK"),
+           subtitle=paste("Stream Servers CPU load with", toString(tps*i*6), "TPS"))
+      theme(plot.title = element_text(size = 15, face = "plain"), plot.subtitle = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
     ggsave(paste("STREAM", "CPU.pdf", sep = "_"), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
     
     names(memoryUsage) <- c("NODE","USAGE","TIME")
     ggplot(data=memoryUsage, aes(x=TIME, y=USAGE, group=NODE, colour=NODE)) + 
       geom_smooth(method="auto", se=F) + 
       guides(fill=FALSE) +
-      xlab("Seconds") + ylab("Memory load percentage") +
-      ggtitle(paste(toupper(engine), "BENCHMARK Stream Servers MEMORY load for TPS", TPS)) +
-      theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
+      labs(x="Seconds", y="Memory load percentage",
+           title=paste(toupper(engine), "BENCHMARK"),
+           subtitle=paste("Stream Servers Memory load with", toString(tps*i*6), "TPS"))
+      theme(plot.title = element_text(size = 15, face = "plain"), plot.subtitle = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
     ggsave(paste("STREAM", "MEMMORY.pdf", sep = "_"), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
   }
 }
