@@ -1,6 +1,7 @@
 
+
 ######################################################################################################################################
-##########################                  Flink Benchmark Kafka Server Load                               ##########################
+##########################                        Benchmark Kafka Server Load                               ##########################
 ######################################################################################################################################
 generateKafkaServerLoadReport <- function(engine, tps, duration){
   for(i in 1:4) {
@@ -9,15 +10,21 @@ generateKafkaServerLoadReport <- function(engine, tps, duration){
     cpuUsage= NULL
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
     for(x in 1:4) {
-      kafkaNode = read.table(paste(sourceFolder, "kafka-node0", x,".process",sep=""),header=F,stringsAsFactors=F,sep=',')
+      kafkaCpu = read.table(paste(sourceFolder, "kafka-node0", x,".cpu",sep=""),header=F,stringsAsFactors=F,sep=',')
+      kafkaMem = read.table(paste(sourceFolder, "kafka-node0", x,".mem",sep=""),header=F,stringsAsFactors=F,sep=',')
       
-      Seconds = c()
-      for(i in 1:length(kafkaNode$V1)) {
-        Seconds[i] = i
+      SecondsCpu = c()
+      for(i in 1:length(kafkaCpu$V1)) {
+        SecondsCpu[i] = i
       }
       
-      dfCpu <- data.frame(paste("Node 0" , x, sep=""), as.numeric(trim(substr(kafkaNode$V1, 48, 52))), Seconds)
-      dfMemory <- data.frame(paste("Node 0" , x, sep=""), as.numeric(trim(substr(kafkaNode$V1, 53, 57))), Seconds)
+      SecondsMem = c()
+      for(i in 1:length(kafkaMem$V1)) {
+        SecondsMem[i] = i
+      }
+      
+      dfCpu <- data.frame(paste("Node 0" , x, sep=""), as.numeric(trim(substr(kafkaCpu$V1, 11, 14))), SecondsCpu)
+      dfMemory <- data.frame(paste("Node 0" , x, sep=""), as.numeric(trim(substr(kafkaMem$V3, 3, 10)))/as.numeric(trim(substr(kafkaMem$V1, 11, 19))), SecondsMem)
       cpuUsage <- rbind(cpuUsage, dfCpu)
       memoryUsage <- rbind(memoryUsage, dfMemory)
     }
@@ -39,6 +46,5 @@ generateKafkaServerLoadReport <- function(engine, tps, duration){
       ggtitle(paste(toupper(engine), "BENCHMARK Kafka Servers MEMORY load for TPS", TPS)) +
       theme(plot.title = element_text(size = 15, face = "plain"), text = element_text(size = 12, face = "plain"))
     ggsave(paste("KAFKA", "MEMMORY.pdf", sep = "_"), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
-    
   }
 }

@@ -6,7 +6,6 @@ args <- commandArgs(TRUE)
 tps <- as.numeric(args[2])
 duration <- as.numeric(args[3])
 
-args
 
 
 source('~/Desktop/EDU/THESIS/stream-benchmarking/StreamServerReport.r')
@@ -24,4 +23,22 @@ generateKafkaServerLoadReport(args[1], tps, duration)
 
 
 
+if(length(args) == 0){
+  generateBenchmarkReport("flink", 1000, 1800)
+  generateStreamServerLoadReport("flink", 1000, 1800)
+  generateKafkaServerLoadReport("flink", 1000, 1800)
+  
+  generateBenchmarkReport("spark_dstream_1000", 1000, 1800)
+  generateStreamServerLoadReport("spark_dstream_1000", 1000, 1800)
+  generateKafkaServerLoadReport("spark_dstream_1000", 1000, 1800)
+  
+  generateBenchmarkReport("spark_dataset_1000", 1000, 1800)
+  generateStreamServerLoadReport("spark_dataset_1000", 1000, 1800)
+  generateKafkaServerLoadReport("spark_dataset_1000", 1000, 1800)
+  
+  generateBenchmarkReport("storm", 1000, 1800)
+  generateStreamServerLoadReport("storm", 1000, 1800)
+  generateKafkaServerLoadReport("storm", 1000, 1800)
+}
+  
 

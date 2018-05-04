@@ -446,7 +446,7 @@ case $1 in
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
-        Rscript --vanilla reporting.R "flink"
+        Rscript --vanilla reporting.R "flink" 1000 1800
         echo "Please Enter valid command"
 esac
 

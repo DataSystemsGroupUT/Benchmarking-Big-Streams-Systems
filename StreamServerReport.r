@@ -4,8 +4,6 @@
 ##########################                        Benchmark Stream Server Load                              ##########################
 ######################################################################################################################################
 
-
-
 generateStreamServerLoadReport <- function(engine, tps, duration){
   for(i in 1:4) {
     TPS = toString(tps*i)
@@ -13,32 +11,20 @@ generateStreamServerLoadReport <- function(engine, tps, duration){
     cpuUsage= NULL
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
     for(x in 1:8) {
-      streamPid = read.table(paste(sourceFolder, "stream-node0", x,".pid",sep=""),header=F,stringsAsFactors=F,sep=',')
-      dfPid <- data.frame(paste("Stream 0" , x, sep=""), streamPid$V1)
-      names(dfPid) <- c("NODE","PID")
+      streamCpu = read.table(paste(sourceFolder, "stream-node0", x,".cpu",sep=""),header=F,stringsAsFactors=F,sep=',')
+      streamMem = read.table(paste(sourceFolder, "stream-node0", x,".mem",sep=""),header=F,stringsAsFactors=F,sep=',')
       
-      if(engine == "flink"){
-        dfPid = dfPid[grep("org.apache.flink.runtime", dfPid$PID),]
-      } else if(engine == "spark_dstream_1000" || engine == "spark_dstream_3000" || engine == "spark_dstream_10000"
-                || engine == "spark_dataset_1000" || engine == "spark_dataset_3000" || engine == "spark_dataset_10000" ) {
-        if(x == 1){
-          dfPid = dfPid[grep("KafkaRedisAdvertisingStream", dfPid$PID),]
-        }else{
-          dfPid = dfPid[grep("CoarseGrainedExecutorBackend", dfPid$PID),]
-        }
+      SecondsCpu = c()
+      for(c in 1:length(streamCpu$V1)) {
+        SecondsCpu[c] = c
       }
-        
-      streamNode = read.table(paste(sourceFolder, "stream-node0", x,".process",sep=""),header=F,stringsAsFactors=F,sep=',')
       
-      streamFiltredNode <- data.frame(paste("Stream 0" , x, sep=""), streamNode$V1)
-      names(streamFiltredNode) <- c("NODE","PID")
-      streamFiltredNode = streamFiltredNode[grep(trim(substr(dfPid$PID, 9, 15)), streamFiltredNode$PID),]
-      Seconds = c()
-      for(i in 1:length(streamFiltredNode$PID)) {
-        Seconds[i] = i
+      SecondsMem = c()
+      for(m in 1:length(streamMem$V1)) {
+        SecondsMem[m] = m
       }
-      dfCpu <- data.frame(paste("Node 0" , x, sep=""), as.numeric(trim(substr(streamFiltredNode$PID, 48, 52))), Seconds)
-      dfMemory <- data.frame(paste("Node 0" , x, sep=""), as.numeric(trim(substr(streamFiltredNode$PID, 53, 57))), Seconds)
+      dfCpu <- data.frame(paste("Node 0" , x, sep=""), as.numeric(trim(substr(streamCpu$V1, 11, 14))), SecondsCpu)
+      dfMemory <- data.frame(paste("Node 0" , x, sep=""), as.numeric(trim(substr(streamMem$V3, 3, 10)))/as.numeric(trim(substr(streamMem$V1, 11, 19))), SecondsMem)
       cpuUsage <- rbind(cpuUsage, dfCpu)
       memoryUsage <- rbind(memoryUsage, dfMemory)
     }
