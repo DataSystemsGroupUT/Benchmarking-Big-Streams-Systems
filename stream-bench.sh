@@ -19,13 +19,16 @@ STORM_VERSION=${STORM_VERSION:-"1.2.1"}
 FLINK_VERSION=${FLINK_VERSION:-"1.4.0"}
 SPARK_VERSION=${SPARK_VERSION:-"2.3.0"}
 HERON_VERSION=${HERON_VERSION:-"0.17.8"}
+HAZELCAST_VERSION=${HAZELCAST_VERSION:-"0.6"}
+
 
 STORM_DIR="apache-storm-$STORM_VERSION"
 REDIS_DIR="redis-$REDIS_VERSION"
 KAFKA_DIR="kafka_$SCALA_BIN_VERSION-$KAFKA_VERSION"
 FLINK_DIR="flink-$FLINK_VERSION"
 SPARK_DIR="spark-$SPARK_VERSION-bin-hadoop2.6"
-HERON_DIR="heron-$HERON_VERSION"
+HAZELCAST_DIR="hazelcast-jet-$HAZELCAST_VERSION"
+
 
 #Get one of the closet apache mirrors
 APACHE_MIRROR=$(curl 'https://www.apache.org/dyn/closer.cgi' |   grep -o '<strong>[^<]*</strong>' |   sed 's/<[^>]*>//g' |   head -1)
@@ -173,6 +176,11 @@ run() {
     #Fetch Storm
     STORM_FILE="$STORM_DIR.tar.gz"
     fetch_untar_file "$STORM_FILE" "$APACHE_MIRROR/storm/$STORM_DIR/$STORM_FILE"
+  elif [ "SETUP_HAZELCAST" = "$OPERATION" ];
+  then
+    #Fetch Heron
+    HAZELCAST_FILE="$HAZELCAST_DIR.tar.gz"
+    fetch_untar_file "$HAZELCAST_FILE" "https://download.hazelcast.com/jet/$HAZELCAST_FILE"
   elif [ "SETUP_HERON_UBUNTU" = "$OPERATION" ];
   then
     

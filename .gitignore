@@ -12,6 +12,7 @@ download-cache
 bin
 apache-storm-1.2.0
 apache-storm-1.2.1
+hazelcast-jet-0.6
 flink-1.4.0
 heron-0.17.4
 heron-0.17.8
