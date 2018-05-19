@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=180
+TEST_TIME=1800
 TPS="1000"
 INITIAL_TPS=${TPS}
 BATCH="1000"
