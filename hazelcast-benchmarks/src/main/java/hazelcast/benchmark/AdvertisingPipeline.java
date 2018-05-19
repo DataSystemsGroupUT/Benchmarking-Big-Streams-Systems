@@ -105,7 +105,7 @@ public class AdvertisingPipeline {
 
 
 
-        Vertex consume = dag.newVertex("consume", KafkaSources.kafka(properties,kafkaTopic));
+//        Vertex consume = dag.newVertex("consume", KafkaSources.kafka(properties,kafkaTopic));
 
         Vertex enrich = dag.newVertex("enrich", () -> new RedisJoinBolt(redisServerHost));
         enrich.localParallelism(1);
