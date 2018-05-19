@@ -6,7 +6,6 @@ package benchmark.common.advertising;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import redis.clients.jedis.Jedis;
 
 import java.io.Serializable;
@@ -16,17 +15,28 @@ import java.util.Set;
 import java.util.UUID;
 
 
-public class CampaignProcessorCommon {
-    private static final Logger LOG = LoggerFactory.getLogger(CampaignProcessorCommon.class);
+public class CampaignSingletonProcessorCommon implements Serializable {
+    private static final Logger LOG = LoggerFactory.getLogger(CampaignSingletonProcessorCommon.class);
     private Jedis flush_jedis;
     // Bucket -> Campaign_id -> Window
     private LRUHashMap<Long, HashMap<String, Window>> campaign_windows;
     private Set<CampaignWindowPair> need_flush;
 
-
+    private static CampaignSingletonProcessorCommon instance;
     private Long time_divisor; // 10 second windows
 
-    public CampaignProcessorCommon(String redisServerHostname, Long time_divisor) {
+
+
+    public static CampaignSingletonProcessorCommon getInstance(String redisServerHostname, Long time_divisor){
+        if(instance == null){
+            instance = new CampaignSingletonProcessorCommon(redisServerHostname, time_divisor);
+        }
+        instance.prepare();
+        return instance;
+    }
+
+
+    public CampaignSingletonProcessorCommon(String redisServerHostname, Long time_divisor) {
 
         flush_jedis = new Jedis(redisServerHostname);
         this.time_divisor = time_divisor;
@@ -145,7 +155,7 @@ public class CampaignProcessorCommon {
 
 
     public static void main(String[] args){
-        CampaignProcessorCommon campaignProcessorCommon = new CampaignProcessorCommon("redis", 10000L);
+        CampaignSingletonProcessorCommon campaignProcessorCommon = new CampaignSingletonProcessorCommon("redis", 10000L);
         campaignProcessorCommon.prepare();
         campaignProcessorCommon.execute("1", "1522620341534");
         campaignProcessorCommon.execute("1", "1522620344534");
