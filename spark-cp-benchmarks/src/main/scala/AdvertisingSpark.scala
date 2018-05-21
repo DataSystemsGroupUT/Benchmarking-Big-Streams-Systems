@@ -161,7 +161,7 @@ object KafkaRedisAdvertisingStream {
 //    writeRedisTopLevel(myList, redisHost)
 
 //    myList.printSchema()
-    //campaign_timeStamp.show(10)
+   // redisJoined.show(10)
 
     object Holder {
       def ds() = {

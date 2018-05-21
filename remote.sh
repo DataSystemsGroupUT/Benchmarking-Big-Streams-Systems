@@ -385,9 +385,6 @@ case $1 in
         benchmarkLoop "spark" "dstream"
         benchmarkLoop "flink"
     ;;
-    prepare)
-        prepareEnvironment
-    ;;
     start)
         case $2 in
             fling)
@@ -404,6 +401,9 @@ case $1 in
             ;;
             zoo)
                 startZK
+            ;;
+            prepare)
+                prepareEnvironment
             ;;
         esac
     ;;
@@ -423,6 +423,9 @@ case $1 in
             ;;
             zoo)
                 stopZK
+            ;;
+            prepare)
+                destroyEnvironment
             ;;
             all)
                 stopAll
