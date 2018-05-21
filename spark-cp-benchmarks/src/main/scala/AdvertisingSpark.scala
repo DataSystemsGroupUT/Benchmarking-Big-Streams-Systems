@@ -12,10 +12,12 @@ import java.util.UUID
 
 import benchmark.common.Utils
 import benchmark.common.advertising.{CampaignProcessorCommon, CampaignSingletonProcessorCommon}
-import org.apache.spark.sql.{DataFrame, Dataset, Encoder, ForeachWriter, Row, SparkSession}
+import org.apache.spark.sql.{DataFrame, Dataset, Encoder, ForeachWriter, Row, SQLContext, SparkSession}
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.streaming.Trigger
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import org.apache.spark.sql.types._
+import org.apache.spark.sql.execution.streaming.Sink
+import org.apache.spark.sql.sources.StreamSinkProvider
 import org.json.JSONObject
 import org.sedis._
 import redis.clients.jedis._
@@ -163,36 +165,42 @@ object KafkaRedisAdvertisingStream {
 //    myList.printSchema()
    // redisJoined.show(10)
 
-    object Holder {
-      def ds() = {
-        val ds = new CampaignProcessorCommon(redisHost,timeDivisor)
-        ds.prepare()
-        ds
-      }
 
-    }
     val writer = new ForeachWriter[AdsEnriched] {
 
+//      object Holder {
+//        def ds() = {
+//          val ds = new CampaignProcessorCommon(redisHost,timeDivisor)
+//          ds.prepare()
+//          ds
+//        }
+//      }
+
+      var cpc:CampaignProcessorCommon = _
+
       override def open(partitionId: Long, version: Long) = {
+        cpc = new CampaignProcessorCommon(redisHost, timeDivisor)
+        cpc.prepare()
         true
       }
       override def process(value: AdsEnriched) = {
-        Holder.ds().execute(value.campaign_id, value.event_time)
+        cpc.execute(value.campaign_id, value.event_time)
       }
       override def close(errorOrNull: Throwable) = {
       }
     }
 
-    val output = redisJoined.map(adsEnriched => {
-      Holder.ds().execute(adsEnriched.campaign_id, adsEnriched.event_time)
-      adsEnriched
-    })
+//    val output = redisJoined.map(adsEnriched => {
+//      Holder.ds().execute(adsEnriched.campaign_id, adsEnriched.event_time)
+//      adsEnriched
+//    })
 
-    val writeToConsole = output
+    val writeToConsole = redisJoined
       .writeStream
+      .foreach(writer)
       .format("console")
       .outputMode("update")
-      .trigger(Trigger.Continuous("10 seconds"))
+      .trigger(Trigger.Continuous("1 seconds"))
       .start()
 
 
@@ -294,6 +302,5 @@ object KafkaRedisAdvertisingStream {
       dressUp.hset(windowUUID, "time_updated", currentTime.toString)
       return window_seenCount.toString
     }
-
   }
 }
