@@ -2,17 +2,11 @@
  * Copyright 2015, Yahoo Inc.
  * Licensed under the terms of the Apache License 2.0. Please see LICENSE file in the project root for terms.
  */
-package hazelcast.benchmark;
+package kafka.benchmark;
 
 import benchmark.common.Utils;
 import benchmark.common.advertising.CampaignProcessorCommon;
 import benchmark.common.advertising.RedisAdCampaignCache;
-import com.hazelcast.jet.Jet;
-import com.hazelcast.jet.JetInstance;
-import com.hazelcast.jet.core.AbstractProcessor;
-import com.hazelcast.jet.core.DAG;
-import com.hazelcast.jet.core.Edge;
-import com.hazelcast.jet.core.Vertex;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -28,7 +22,6 @@ import scala.Tuple7;
 
 import java.util.*;
 
-import static com.hazelcast.jet.core.processor.DiagnosticProcessors.writeLoggerP;
 
 public class AdvertisingPipeline {
 
@@ -72,9 +65,6 @@ public class AdvertisingPipeline {
 
 
 
-        JetInstance instance = Jet.newJetInstance();
-
-
 
         Properties properties = new Properties();
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
@@ -93,59 +83,8 @@ public class AdvertisingPipeline {
 //                .drainTo(Sinks.list("someList"));
 
 
-        DAG dag = new DAG();
 
 
-
-//        Vertex consume = dag.newVertex("consume", KafkaSources.kafka(properties,kafkaTopic));
-
-        Vertex enrich = dag.newVertex("enrich", () -> new RedisJoinBolt(redisServerHost));
-        enrich.localParallelism(1);
-
-        Vertex sink = dag.newVertex("sink", writeLoggerP(o -> Arrays.toString((Object[]) o)));
-
-
-        dag.edge(Edge.between(enrich,sink));
-
-
-
-        try {
-            instance.newJob(dag).join();
-        } finally {
-            Jet.shutdownAll();
-        }
-
-    }
-
-
-    public static class RedisJoinBolt extends AbstractProcessor  {
-
-        private static final Logger logger = LoggerFactory.getLogger(RedisJoinBolt.class);
-
-        private final String redisHost;
-
-        private transient RedisAdCampaignCache redisAdCampaignCache;
-
-        RedisJoinBolt(String redisHost) {
-            setCooperative(false);
-            this.redisHost = redisHost;
-        }
-
-        @Override
-        protected void init(Context context){
-            redisAdCampaignCache = new RedisAdCampaignCache(redisHost);
-        }
-
-        @Override
-        protected boolean tryProcess1(Object item){
-            Tuple2<String, String> tuple = (Tuple2<String, String>) item;
-            String ad_id = tuple._1();
-            String campaign_id = redisAdCampaignCache.execute(ad_id);
-            if(campaign_id == null){
-                return false;
-            }
-            return this.tryEmit(new Tuple3<>(campaign_id, ad_id, tuple._2));
-        }
     }
 
 //    public static class RedisJoinBolt implements DistributedFunction<Tuple2, Tuple3> {

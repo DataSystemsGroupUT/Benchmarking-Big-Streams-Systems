@@ -35,4 +35,9 @@ spark.app.name: "KafkaRedisAdvertisingStream"
 #Time Divisor
 time.divisor: 10000
 
+#Hazelcast Specific
+
+
+#Kafka Specific
+
 

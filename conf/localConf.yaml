@@ -14,7 +14,7 @@ process.cores: 4
 storm.workers: 4
 storm.ackers: 2
 
-time.divisor: 1000
+time.divisor: 10000
 
 #Spark Specific
 spark.batchtime: 1000

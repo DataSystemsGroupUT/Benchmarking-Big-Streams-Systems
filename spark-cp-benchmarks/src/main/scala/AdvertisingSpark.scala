@@ -55,8 +55,8 @@ object KafkaRedisAdvertisingStream {
 
   def main(args: Array[String]) {
 
-//    val commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true).asInstanceOf[java.util.Map[String, Any]];
-    val commonConfig = Utils.findAndReadConfigFile(args(0), true).asInstanceOf[java.util.Map[String, Any]];
+    val commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true).asInstanceOf[java.util.Map[String, Any]];
+//    val commonConfig = Utils.findAndReadConfigFile(args(0), true).asInstanceOf[java.util.Map[String, Any]];
     val timeDivisor = commonConfig.get("time.divisor") match {
       case n: Number => n.longValue()
       case other => throw new ClassCastException(other + " not a Number")
@@ -165,16 +165,18 @@ object KafkaRedisAdvertisingStream {
 //    myList.printSchema()
    // redisJoined.show(10)
 
+//    object Holder {
+//      def ds() = {
+//        val ds = new CampaignProcessorCommon(redisHost,timeDivisor)
+//        ds.prepare()
+//        ds
+//      }
+//    }
+
 
     val writer = new ForeachWriter[AdsEnriched] {
 
-//      object Holder {
-//        def ds() = {
-//          val ds = new CampaignProcessorCommon(redisHost,timeDivisor)
-//          ds.prepare()
-//          ds
-//        }
-//      }
+
 
       var cpc:CampaignProcessorCommon = _
 
@@ -195,11 +197,11 @@ object KafkaRedisAdvertisingStream {
 //      adsEnriched
 //    })
 
+
     val writeToConsole = redisJoined
       .writeStream
       .foreach(writer)
       .format("console")
-      .outputMode("update")
       .trigger(Trigger.Continuous("1 seconds"))
       .start()
 
