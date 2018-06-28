@@ -9,6 +9,8 @@ SHORT_SLEEP=10
 LONG_SLEEP=20
 WAIT_AFTER_STOP_PRODUCER=12
 
+KAFKA_FOLDER="kafka_2.11-1.1.0"
+
 CLEAN_LOAD_RESULT_CMD="rm *.load;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
 
@@ -20,8 +22,8 @@ CHANGE_TPS_CMD="sed -i “s/LOAD:-1000/LOAD:-$TPS/g” stream-benchmarking/strea
 LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
 
-DELETE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh --delete --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic ad-events;"
-CREATE_TOPIC="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 4 --topic ad-events;"
+DELETE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --delete --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic ad-events;"
+CREATE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 4 --topic ad-events;"
 
 START_MONITOR_CPU="top -b -d 1 | grep --line-buffered Cpu > cpu.load;"
 START_MONITOR_MEM="top -b -d 1 | grep --line-buffered 'KiB Mem' > mem.load;"
@@ -50,11 +52,11 @@ STOP_SPARK_DSTREAM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPAR
 START_SPARK_DATASET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_CP_PROCESSING;"
 STOP_SPARK_DATASET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_CP_PROCESSING;"
 
-START_ZK_CMD="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/zookeeper-server-start.sh -daemon config/zookeeper.properties"
-STOP_ZK_CMD="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/zookeeper-server-stop.sh;"
+START_ZK_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/zookeeper-server-start.sh -daemon config/zookeeper.properties"
+STOP_ZK_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/zookeeper-server-stop.sh;"
 
-START_KAFKA_CMD="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-server-start.sh -daemon config/server.properties"
-STOP_KAFKA_CMD="cd stream-benchmarking/kafka_2.11-0.11.0.2; ./bin/kafka-server-stop.sh;"
+START_KAFKA_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-server-start.sh -daemon config/server.properties"
+STOP_KAFKA_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-server-stop.sh;"
 
 START_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh START_REDIS;"
 STOP_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_REDIS;"
