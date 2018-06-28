@@ -80,7 +80,7 @@ public class AdvertisingPipeline {
         int workers = ((Number) commonConfig.get("storm.workers")).intValue();
         int ackers = ((Number) commonConfig.get("storm.ackers")).intValue();
         int cores = ((Number) commonConfig.get("process.cores")).intValue();
-        timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();ok
+        timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
         int parallel = Math.max(1, cores / 7);
 
         logger.info("******************");
@@ -89,7 +89,7 @@ public class AdvertisingPipeline {
         Properties config = new Properties();
         config.put(StreamsConfig.TIMESTAMP_EXTRACTOR_CLASS_CONFIG, TimestampExtractorImpl.class);
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "kafka-benchmark");
-        config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerHosts + "," + streamServerHosts);
+        config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerHosts);
         config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 

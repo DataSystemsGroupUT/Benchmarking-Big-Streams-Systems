@@ -13,6 +13,7 @@ CLEAN_LOAD_RESULT_CMD="rm *.load;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
 
 CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
+SETUP_KAFKA="cd stream-benchmarking; ./stream-bench.sh SETUP_KAFKA"
 
 CHANGE_TPS_CMD="sed -i “s/LOAD:-1000/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
 
@@ -449,7 +450,9 @@ case $1 in
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
+        runCommandStreamServers "${SETUP_KAFKA}" "nohup"
+        runCommandKafkaServers "${SETUP_KAFKA}" "nohup"
+        runCommandZKServers "${SETUP_KAFKA}" "nohup"
         Rscript --vanilla reporting.R "flink" 1000 1800
         echo "Please Enter valid command"
 esac
-

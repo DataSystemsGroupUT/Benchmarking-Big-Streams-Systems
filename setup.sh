@@ -54,15 +54,15 @@ echo "stream-node01" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/master
 
 
 sed -i 's/zookeeper.connect=zookeeper:2181/zookeeper.connect=zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181/g' /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/server.properties
-sed -i 's/zookeeper.connect=localhost:2181/zookeeper.connect=zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181/g' /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/server.properties
+sed -i 's/zookeeper.connect=localhost:2181/zookeeper.connect=zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181/g' /home/ubuntu/stream-benchmarking/kafka_2.11-1.1.0/config/server.properties
 
-sed -i 's/maxClientCnxns=0/maxClientCnxns=0/g' /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "tickTime=2000" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "initLimit=20" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "syncLimit=10" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "server.1=zookeeper-node01:2888:3888" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "server.2=zookeeper-node02:2888:3888" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "server.3=zookeeper-node03:2888:3888" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
+sed -i 's/maxClientCnxns=0/maxClientCnxns=0/g' /home/ubuntu/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "tickTime=2000" >> /home/ubuntu/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "initLimit=20" >> /home/ubuntu/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "syncLimit=10" >> /home/ubuntu/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "server.1=zookeeper-node01:2888:3888" >> /home/ubuntu/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "server.2=zookeeper-node02:2888:3888" >> /home/ubuntu/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "server.3=zookeeper-node03:2888:3888" >> /home/ubuntu/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
 
 mkdir /tmp/zookeeper/ -p
 touch /tmp/zookeeper/myid
