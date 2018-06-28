@@ -5,9 +5,9 @@ TEST_TIME=180
 TPS="1000"
 INITIAL_TPS=${TPS}
 BATCH="1000"
-SHORT_SLEEP=10
-LONG_SLEEP=20
-WAIT_AFTER_STOP_PRODUCER=12
+SHORT_SLEEP=5
+LONG_SLEEP=10
+WAIT_AFTER_STOP_PRODUCER=5
 
 KAFKA_FOLDER="kafka_2.11-1.1.0"
 
@@ -361,7 +361,7 @@ function benchmarkLoop (){
     while true; do
         pullRepository
         sleep ${SHORT_SLEEP}
-        if (("$TPS" > "4000")); then
+        if (("$TPS" > "1000")); then
             break
         fi
         changeTps
