@@ -9,7 +9,7 @@ SHORT_SLEEP=5
 LONG_SLEEP=10
 WAIT_AFTER_STOP_PRODUCER=5
 
-KAFKA_FOLDER="kafka_2.11-1.1.0"
+KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
