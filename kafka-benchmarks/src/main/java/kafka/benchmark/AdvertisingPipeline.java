@@ -11,26 +11,51 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.kstream.Transformer;
+import org.apache.kafka.streams.processor.AbstractProcessor;
+import org.apache.kafka.streams.processor.ProcessorContext;
+import org.apache.kafka.streams.processor.TimestampExtractor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.Tuple2;
 import scala.Tuple3;
 import scala.Tuple7;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 
 public class AdvertisingPipeline {
 
     private static final Logger logger = LoggerFactory.getLogger(AdvertisingPipeline.class);
-    private static final String deserializeBolt = "DeserializeBolt";
 
-    private static CampaignProcessorCommon campaignProcessorCommon;
-  private static RedisAdCampaignCache redisAdCampaignCache;
+    static int timeDivisor;
+    static  String redisServerHost;
+    public static class EnrichedData{
 
+        public EnrichedData(String ad_id, String event_time) {
+            this.ad_id = ad_id;
+            this.event_time = event_time;
+        }
+
+        public EnrichedData(String ad_id, String campaign_id, String event_time) {
+            this.ad_id = ad_id;
+            this.campaign_id = campaign_id;
+            this.event_time = event_time;
+        }
+
+        public String ad_id;
+        public String campaign_id;
+        public String event_time;
+    }
 
     public static void main(final String[] args) throws Exception {
 
@@ -44,7 +69,7 @@ public class AdvertisingPipeline {
 
         String zkServerHosts = joinHosts((List<String>) commonConfig.get("zookeeper.servers"),
                 Integer.toString((Integer) commonConfig.get("zookeeper.port")));
-        String redisServerHost = (String) commonConfig.get("redis.host");
+        redisServerHost = (String) commonConfig.get("redis.host");
         String kafkaTopic = (String) commonConfig.get("kafka.topic");
         String kafkaServerHosts = joinHosts((List<String>) commonConfig.get("kafka.brokers"),
                 Integer.toString((Integer) commonConfig.get("kafka.port")));
@@ -53,80 +78,105 @@ public class AdvertisingPipeline {
         int workers = ((Number) commonConfig.get("storm.workers")).intValue();
         int ackers = ((Number) commonConfig.get("storm.ackers")).intValue();
         int cores = ((Number) commonConfig.get("process.cores")).intValue();
-        int timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
+        timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
         int parallel = Math.max(1, cores / 7);
 
         logger.info("******************");
         logger.info(redisServerHost);
-//        campaignProcessorCommon = new CampaignProcessorCommon(redisServerHost, Long.valueOf(timeDivisor));
-//        redisAdCampaignCache= new RedisAdCampaignCache(redisServerHost);
-//        campaignProcessorCommon.prepare();
-//        redisAdCampaignCache.prepare();
 
+        Properties config = new Properties();
+        config.put(StreamsConfig.TIMESTAMP_EXTRACTOR_CLASS_CONFIG, TimestampExtractorImpl.class);
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "kafka-benchmark");
+        config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerHosts);
+        config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
+        StreamsBuilder builder = new StreamsBuilder();
+        builder.stream(kafkaTopic).mapValues(o -> deserializeBolt(o.toString()))
+                .filter((o, tuple7) -> tuple7._5().equals("view"))
+                .mapValues(tuple7 -> new EnrichedData(tuple7._3(), tuple7._6()))
+                .transform(RedisJoinBolt::new)
+                .process(CampaignProcessor::new);
 
+//        wordCounts.toStream().to("WordsWithCountsTopic", Produced.with(Serdes.String(), Serdes.Long()));
 
-        Properties properties = new Properties();
-        properties.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
-        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerHosts);
-        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getCanonicalName());
-        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getCanonicalName());
-        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-
-//        Pipeline pipeline = Pipeline.create();
-//        pipeline
-//                .drawFrom(KafkaSources.kafka(properties, kafkaTopic))
-//                .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
-//                .filter(tuple -> tuple._5().equals("view"))
-//                .map(tuple1 -> new Tuple2<>(tuple1._3(), tuple1._6()));
-//                .map(new RedisJoinBolt(redisServerHost).tryProcess(1))
-//                .drainTo(Sinks.list("someList"));
-
-
+        KafkaStreams streams = new KafkaStreams(builder.build(), config);
+        streams.start();
 
 
     }
 
-//    public static class RedisJoinBolt implements DistributedFunction<Tuple2, Tuple3> {
-//
-//        private final RedisAdCampaignCache redisAdCampaignCache;
-//
-//        public RedisJoinBolt(String redisHost) {
-//            this.redisAdCampaignCache = new RedisAdCampaignCache(redisHost);
-//        }
-//
-//        @Override
-//        public Tuple3 apply(Tuple2 tuple) {
-//            logger.info(tuple.toString());
-//            String ad_id = tuple._1().toString();
-//            String campaign_id = redisAdCampaignCache.execute(ad_id);
-//            if (campaign_id == null) {
-//                return null;
-//            }
-//            return new Tuple3<>(campaign_id, ad_id, tuple._2.toString());
-//        }
-//    }
+    public static class TimestampExtractorImpl implements TimestampExtractor {
 
-    private static void campaignProcessor(Tuple3 tuple) {
-        logger.info(tuple.toString());
+        public TimestampExtractorImpl() {
+        }
 
-        campaignProcessorCommon.execute(tuple._1().toString(), tuple._3().toString());
+        @Override
+        public long extract(ConsumerRecord<Object, Object> consumerRecord, long l) {
+            return new Date().getTime();
+        }
     }
 
 
-    private static Tuple3<String, String, String> redisJoinBolt(RedisAdCampaignCache redis, Tuple2 tuple) {
-        logger.info(tuple.toString());
-        String ad_id = tuple._1().toString();
-        String campaign_id = redis.execute(ad_id);
-        if (campaign_id == null) {
+    public static class RedisJoinBolt implements Transformer<Object, EnrichedData, KeyValue<String, EnrichedData>> {
+
+        RedisAdCampaignCache redisAdCampaignCache;
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void init(ProcessorContext context) {
+            this.redisAdCampaignCache = new RedisAdCampaignCache(redisServerHost);
+            this.redisAdCampaignCache.prepare();
+        }
+
+        @Override
+        public KeyValue<String, EnrichedData> transform(final Object s, final EnrichedData input) {
+
+            String campaign_id = this.redisAdCampaignCache.execute(input.ad_id);
+            if (campaign_id == null) {
+                return null;
+            }
+            input.campaign_id = campaign_id;
+
+            return KeyValue.pair(null, input);
+        }
+
+        @Override
+        public KeyValue<String, EnrichedData> punctuate(long l) {
             return null;
         }
-        return new Tuple3<>(campaign_id, ad_id, tuple._2.toString());
+
+        @Override
+        public void close() {
+
+        }
     }
 
-    public static Tuple7<String, String, String, String, String, String, String> deserializeBolt(String input) {
 
-        JSONObject obj = new JSONObject(input);
+
+    public static class CampaignProcessor extends AbstractProcessor<String, EnrichedData> {
+
+        CampaignProcessorCommon campaignProcessorCommon;
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void init(ProcessorContext context) {
+            this.campaignProcessorCommon = new CampaignProcessorCommon(redisServerHost, Long.valueOf(timeDivisor));
+            this.campaignProcessorCommon.prepare();
+        }
+
+
+        @Override
+        public void process(String s, EnrichedData enrichedData) {
+            this.campaignProcessorCommon.execute(enrichedData.campaign_id, enrichedData.event_time);
+
+        }
+    }
+
+
+    public static Tuple7<String, String, String, String, String, String, String> deserializeBolt(String value) {
+
+        JSONObject obj = new JSONObject(value);
         Tuple7<String, String, String, String, String, String, String> tuple =
                 new Tuple7<>(
                         obj.getString("user_id"),

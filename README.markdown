@@ -34,7 +34,7 @@ It takes a list of operations to perform, and options are passed into the script
 ### The Test
 The initial test is a simple advertising use case.
 
-Ad events arrive through kafka in a JSON format.  They are parsed to a more usable format, filtered for the ad view events that this processing cares about, the unneeded fields are removed, and then new fields are added by joining the event with campaign data stored in Redis.  Finally the ad views are aggregated by campaign and by time window and stored back into redis, along with a timestamp to indicate when they are updated.
+Ad events arrive through kafka in a JSON format.  They are parsed to a more usable format, filtered for the ad view events that this processing cares about, the unneeded fields are removed, and then new fields are added by joining the event with campaign data stored in Redis.  Finally the ad views are aggregated by campaign and by time window and stored back into redis, along with a event_time to indicate when they are updated.
 
 
 ### Results

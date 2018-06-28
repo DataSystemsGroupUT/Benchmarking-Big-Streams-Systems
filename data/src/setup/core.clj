@@ -97,7 +97,7 @@
                 (.write kafka-o (str json-str "\n"))
                 (send p (record "ad-events" (.getBytes json-str))))))))))))
 
-;; Returns a map campaign-id->(timestamp->count)
+;; Returns a map campaign-id->(event_time->count)
 (defn dostats []
   (println "Getting Stats!")
   (let [json-string-mapper (map json/parse-string)
@@ -217,23 +217,23 @@
     (println "Checking Redis!")
     (redis/with-server {:host redis-host}
       (doseq [[campaign c-stats] stats]
-        (doseq [[timestamp val] c-stats]
-          (let [timestamp-key (redis/hget campaign (str (* timestamp time-divisor)))]
-            (if timestamp-key
-              (let [seen-count (Long. (redis/hget timestamp-key "seen_count"))]
+        (doseq [[event_time val] c-stats]
+          (let [event_time-key (redis/hget campaign (str (* event_time time-divisor)))]
+            (if event_time-key
+              (let [seen-count (Long. (redis/hget event_time-key "seen_count"))]
                 (if (not= seen-count val)  ;when
                   (println (str
                             "Campaign: " (pr-str campaign)
-                            " has an entry for Timestamp: " (pr-str timestamp)
+                            " has an entry for Timestamp: " (pr-str event_time)
                             " DIFFER in seen count: (" (pr-str seen-count) ", " (pr-str val) ")"))
                   (println (str
                              "Campaign: " (pr-str campaign)
-                             " has an entry for Timestamp: " (pr-str timestamp)
+                             " has an entry for Timestamp: " (pr-str event_time)
                              " CORRECT in seen count: (" (pr-str seen-count) ", " (pr-str val) ")"))
                   ))
               (println (str
                         "Campaign: " (pr-str campaign)
-                        " has no entry for Timestamp: " (str timestamp ) " , was expecting " (pr-str val))))))))))
+                        " has no entry for Timestamp: " (str event_time ) " , was expecting " (pr-str val))))))))))
 
 (defn do-setup [conf]
   (let [{campaigns :campaigns ads :ads} (load-ids)]

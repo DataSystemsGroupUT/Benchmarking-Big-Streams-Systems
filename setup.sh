@@ -96,6 +96,8 @@ git pull
 ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 4 --topic ad-events
 ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 4 --topic sample-test
 
+./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 2 --topic ad-events
+
 #Producer
 ./bin/kafka-console-producer.sh --broker-list  kafka-node01:9092,kafka-node02:9092,kafka-node03:9092,kafka-node04:9092 --topic sample-test
 
