@@ -387,7 +387,7 @@ case $1 in
     ;;
     start)
         case $2 in
-            fling)
+            flink)
                 startFlink
             ;;
             spark)

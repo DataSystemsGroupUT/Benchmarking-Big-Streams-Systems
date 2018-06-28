@@ -24,7 +24,6 @@ import org.apache.kafka.streams.processor.TimestampExtractor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.Tuple3;
 import scala.Tuple7;
 
 import java.util.Date;
@@ -38,8 +37,9 @@ public class AdvertisingPipeline {
     private static final Logger logger = LoggerFactory.getLogger(AdvertisingPipeline.class);
 
     static int timeDivisor;
-    static  String redisServerHost;
-    public static class EnrichedData{
+    static String redisServerHost;
+
+    public static class EnrichedData {
 
         public EnrichedData(String ad_id, String event_time) {
             this.ad_id = ad_id;
@@ -73,12 +73,14 @@ public class AdvertisingPipeline {
         String kafkaTopic = (String) commonConfig.get("kafka.topic");
         String kafkaServerHosts = joinHosts((List<String>) commonConfig.get("kafka.brokers"),
                 Integer.toString((Integer) commonConfig.get("kafka.port")));
+        String streamServerHosts = joinHosts((List<String>) commonConfig.get("stream.servers"),
+                Integer.toString((Integer) commonConfig.get("kafka.port")));
 
         int kafkaPartitions = ((Number) commonConfig.get("kafka.partitions")).intValue();
         int workers = ((Number) commonConfig.get("storm.workers")).intValue();
         int ackers = ((Number) commonConfig.get("storm.ackers")).intValue();
         int cores = ((Number) commonConfig.get("process.cores")).intValue();
-        timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
+        timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();ok
         int parallel = Math.max(1, cores / 7);
 
         logger.info("******************");
@@ -87,7 +89,7 @@ public class AdvertisingPipeline {
         Properties config = new Properties();
         config.put(StreamsConfig.TIMESTAMP_EXTRACTOR_CLASS_CONFIG, TimestampExtractorImpl.class);
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "kafka-benchmark");
-        config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerHosts);
+        config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerHosts + "," + streamServerHosts);
         config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
@@ -98,7 +100,6 @@ public class AdvertisingPipeline {
                 .transform(RedisJoinBolt::new)
                 .process(CampaignProcessor::new);
 
-//        wordCounts.toStream().to("WordsWithCountsTopic", Produced.with(Serdes.String(), Serdes.Long()));
 
         KafkaStreams streams = new KafkaStreams(builder.build(), config);
         streams.start();
@@ -151,7 +152,6 @@ public class AdvertisingPipeline {
 
         }
     }
-
 
 
     public static class CampaignProcessor extends AbstractProcessor<String, EnrichedData> {

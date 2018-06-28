@@ -1,6 +1,18 @@
 # Copyright 2015, Yahoo Inc.
 # Licensed under the terms of the Apache License 2.0. Please see LICENSE file in the project root for terms.
 
+
+stream.servers:
+    - "stream-node01"
+    - "stream-node02"
+    - "stream-node03"
+    - "stream-node04"
+    - "stream-node05"
+    - "stream-node06"
+    - "stream-node07"
+    - "stream-node08"
+
+
 kafka.brokers:
     - "kafka-node01"
     - "kafka-node02"
