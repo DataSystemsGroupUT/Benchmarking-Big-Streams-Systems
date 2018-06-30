@@ -1,7 +1,9 @@
 #! /usr/bin/env bash
-ssh-keygen -t rsa -P ""
 sudo apt-get upgrade
-sudo add-apt-repository ppa:webupd8team/java 
+sudo apt-get update
+sudo apt-get install git
+ssh-keygen -t rsa -P ""
+sudo add-apt-repository ppa:webupd8team/java
 sudo apt-get update
 sudo apt-get install oracle-java8-installer
 sudo apt-get install maven
@@ -30,6 +32,5 @@ sudo chmod a+x /usr/local/bin/lein
 export PATH=$PATH:/usr/local/bin
 lein repl
 
-sudo apt-get update
-sudo apt-get install git
-sudo reboot
+
+
