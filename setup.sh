@@ -2,39 +2,38 @@
 
 ./stream-bench.sh SETUP
 
-sed -i 's/taskmanager.heap.mb: 1024/taskmanager.heap.mb: 6144/g' /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/flink-conf.yaml
-sed -i 's/taskmanager.numberOfTaskSlots: 1/taskmanager.numberOfTaskSlots: 4/g' /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/flink-conf.yaml
-sed -i 's/jobmanager.rpc.address: localhost/jobmanager.rpc.address: stream-node01/g' /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/flink-conf.yaml
-cp /dev/null /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-echo "stream-node02" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-echo "stream-node03" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-echo "stream-node04" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-echo "stream-node05" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-echo "stream-node06" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-echo "stream-node07" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-echo "stream-node08" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-echo "stream-node09" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-echo "stream-node10" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-echo "stream-node11" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
-cp /dev/null /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/masters
-echo "stream-node01" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/masters
+sed -i 's/taskmanager.heap.mb: 1024/taskmanager.heap.mb: 6144/g' /root/stream-benchmarking/flink-1.4.0/conf/flink-conf.yaml
+sed -i 's/taskmanager.numberOfTaskSlots: 1/taskmanager.numberOfTaskSlots: 4/g' /root/stream-benchmarking/flink-1.4.0/conf/flink-conf.yaml
+sed -i 's/jobmanager.rpc.address: localhost/jobmanager.rpc.address: stream-node01/g' /root/stream-benchmarking/flink-1.4.0/conf/flink-conf.yaml
+cp /dev/null /root/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node02" >> /root/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node03" >> /root/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node04" >> /root/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node05" >> /root/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node06" >> /root/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node07" >> /root/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node08" >> /root/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node09" >> /root/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node10" >> /root/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node11" >> /root/stream-benchmarking/flink-1.4.0/conf/slaves
+cp /dev/null /root/stream-benchmarking/flink-1.4.0/conf/masters
+echo "stream-node01" >> /root/stream-benchmarking/flink-1.4.0/conf/masters
 
 
-sed -i 's/zookeeper.connect=zookeeper:2181/zookeeper.connect=zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181/g' /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/server.properties
-sed -i 's/zookeeper.connect=localhost:2181/zookeeper.connect=zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181/g' /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/server.properties
+sed -i 's/zookeeper.connect=zookeeper:2181/zookeeper.connect=zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181/g' /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/server.properties
 
-sed -i 's/maxClientCnxns=0/maxClientCnxns=0/g' /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "tickTime=2000" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "initLimit=20" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "syncLimit=10" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "server.1=zookeeper-node01:2888:3888" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "server.2=zookeeper-node02:2888:3888" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
-echo "server.3=zookeeper-node03:2888:3888" >> /home/ubuntu/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
+sed -i 's/maxClientCnxns=0/maxClientCnxns=0/g' /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
+echo "tickTime=2000" >> /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
+echo "initLimit=20" >> /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
+echo "syncLimit=10" >> /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
+echo "server.1=zookeeper-node01:2888:3888" >> /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
+echo "server.2=zookeeper-node02:2888:3888" >> /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
+echo "server.3=zookeeper-node03:2888:3888" >> /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
 
 mkdir /tmp/zookeeper/ -p
 touch /tmp/zookeeper/myid
 
-echo '1' >> myid
+echo '1' >> /tmp/zookeeper/myid
 
 
 ##Spark
