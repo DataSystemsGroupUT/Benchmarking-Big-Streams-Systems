@@ -19,7 +19,7 @@ Licensed under the terms of the Apache License 2.0. Please see LICENSE file in t
         <spark-cp.version>2.3.0</spark-cp.version>
         <kafka.version>0.11.0.2</kafka.version>
         <kafka.stream.version>1.1.0</kafka.stream.version>
-        <flink.version>1.4.0</flink.version>
+        <flink.version>1.5.0</flink.version>
         <hazelcast.version>0.6</hazelcast.version>
         <storm.version>1.2.1</storm.version>
         <scala.binary.version>2.11</scala.binary.version>
