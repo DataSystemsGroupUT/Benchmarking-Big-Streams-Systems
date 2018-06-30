@@ -4,8 +4,6 @@ git clone git@bitbucket.org:elkhan_shahverdi/stream-benchmarking.git
 cd stream-benchmarking
 ./stream-bench.sh SETUP
 
-
-
 sed -i 's/taskmanager.heap.mb: 1024/taskmanager.heap.mb: 6144/g' /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/flink-conf.yaml
 sed -i 's/taskmanager.numberOfTaskSlots: 1/taskmanager.numberOfTaskSlots: 4/g' /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/flink-conf.yaml
 sed -i 's/jobmanager.rpc.address: localhost/jobmanager.rpc.address: stream-node01/g' /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/flink-conf.yaml
@@ -40,10 +38,6 @@ touch /tmp/zookeeper/myid
 
 echo '1' >> myid
 
-
-git remote set-url origin git@bitbucket.org:elkhan_shahverdi/stream-benchmarking.git
-git reset --hard HEAD
-git pull
 
 ##Spark
 #./sbin/start-master.sh -h stream-node01 -p 7077
