@@ -49,6 +49,9 @@ echo "stream-node05" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
 echo "stream-node06" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
 echo "stream-node07" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
 echo "stream-node08" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node09" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node10" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
+echo "stream-node11" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/slaves
 cp /dev/null /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/masters
 echo "stream-node01" >> /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/masters
 
