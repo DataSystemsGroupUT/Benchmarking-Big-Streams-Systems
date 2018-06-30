@@ -2,7 +2,6 @@
 sudo apt-get upgrade
 sudo apt-get update
 sudo apt-get install git
-ssh-keygen -t rsa -P ""
 sudo add-apt-repository ppa:webupd8team/java
 sudo apt-get update
 sudo apt-get install oracle-java8-installer
@@ -33,4 +32,4 @@ export PATH=$PATH:/usr/local/bin
 lein repl
 
 
-
+sudo reboot
