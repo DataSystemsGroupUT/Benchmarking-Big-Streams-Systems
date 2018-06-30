@@ -2,7 +2,11 @@
 
 
 TEST_TIME=180
-TPS="1000"
+
+TPS="100"
+TPS_RANGE=100
+TPS_LIMIT=200
+
 INITIAL_TPS=${TPS}
 BATCH="1000"
 SHORT_SLEEP=5
@@ -361,12 +365,12 @@ function benchmarkLoop (){
     while true; do
         pullRepository
         sleep ${SHORT_SLEEP}
-        if (("$TPS" > "1000")); then
+        if (("$TPS" > "$TPS_LIMIT")); then
             break
         fi
         changeTps
         runSystem $1 $2
-        TPS=$[$TPS + 1000]
+        TPS=$[$TPS + $TPS_RANGE]
     done
     TPS=${INITIAL_TPS}
 }
