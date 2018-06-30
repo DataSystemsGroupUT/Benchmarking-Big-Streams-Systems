@@ -1,7 +1,5 @@
 #! /usr/bin/env bash
 
-git clone git@bitbucket.org:elkhan_shahverdi/stream-benchmarking.git
-cd stream-benchmarking
 ./stream-bench.sh SETUP
 
 sed -i 's/taskmanager.heap.mb: 1024/taskmanager.heap.mb: 6144/g' /home/ubuntu/stream-benchmarking/flink-1.4.0/conf/flink-conf.yaml
