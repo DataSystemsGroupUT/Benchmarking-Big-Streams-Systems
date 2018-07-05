@@ -12,7 +12,7 @@ BATCH="1000"
 SHORT_SLEEP=5
 LONG_SLEEP=10
 WAIT_AFTER_STOP_PRODUCER=5
-
+SSH_USER="root"
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load;"
@@ -135,7 +135,7 @@ function cleanResult {
     echo "Cleaning previous benchmark result"
     runCommandStreamServers "${CLEAN_LOAD_RESULT_CMD}"
     runCommandKafkaServers "${CLEAN_LOAD_RESULT_CMD}"
-    ssh ubuntu@redis ${CLEAN_RESULT_CMD}
+    ssh ${SSH_USER}@redisdo ${CLEAN_RESULT_CMD}
 }
 
 function startFlink {
