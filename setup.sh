@@ -3,6 +3,7 @@
 
 ./stream-bench.sh SETUP
 
+#FLINK SETUP
 sed -i 's/taskmanager.heap.mb: 1024/taskmanager.heap.mb: 6144/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
 sed -i 's/taskmanager.numberOfTaskSlots: 1/taskmanager.numberOfTaskSlots: 4/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
 sed -i 's/jobmanager.rpc.address: localhost/jobmanager.rpc.address: stream-node01/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
@@ -26,6 +27,7 @@ echo "stream-node10" >> /root/stream-benchmarking/flink-1.5.0/conf/slaves
 cp /dev/null /root/stream-benchmarking/flink-1.5.0/conf/masters
 echo "stream-node01" >> /root/stream-benchmarking/flink-1.5.0/conf/masters
 
+#SPARK SETUP
 cp /dev/null /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
 echo "stream-node02" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
 echo "stream-node03" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6conf/slaves
@@ -48,8 +50,20 @@ echo "SPARK_WORKER_MEMORY=15g" >> /root/stream-benchmarking/spark-2.3.0-bin-hado
 echo "SPARK_DAEMON_MEMORY=15g" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
 chmod +x /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
 
+#STORM SETUP
+cp /dev/null /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "storm.zookeeper.servers:" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "    - \"zookeeper-node01\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "    - \"zookeeper-node02\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "    - \"zookeeper-node03\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "storm.zookeeper.port: 2181" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "nimbus.childopts: \"-Xmx3g\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "nimbus.seeds: [\"stream-node01\"]" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "supervisor.childopts: \"-Xmx1g -Djava.net.preferIPv4Stack=true]\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "worker.childopts: \"-Xmx1g -Djava.net.preferIPv4Stack=true\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
 
 
+#KAFKA SETUP
 sed -i 's/zookeeper.connect=localhost:2181/zookeeper.connect=zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181/g' /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/server.properties
 
 sed -i 's/maxClientCnxns=0/maxClientCnxns=0/g' /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties

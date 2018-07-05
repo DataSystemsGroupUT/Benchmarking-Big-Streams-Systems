@@ -11,6 +11,8 @@ stream.servers:
     - "stream-node06"
     - "stream-node07"
     - "stream-node08"
+    - "stream-node09"
+    - "stream-node10"
 
 
 kafka.brokers:
@@ -18,6 +20,7 @@ kafka.brokers:
     - "kafka-node02"
     - "kafka-node03"
     - "kafka-node04"
+    - "kafka-node05"
 
 zookeeper.servers:
     - "zookeeper-node01"
@@ -28,14 +31,14 @@ kafka.port: 9092
 zookeeper.port: 2181
 redis.host: "redis"
 kafka.topic: "ad-events"
-kafka.partitions: 4
+kafka.partitions: 5
 
-process.hosts: 7
-process.cores: 4
+process.hosts: 9
+process.cores: 8
 
 #STORM Specific
-storm.workers: 28
-storm.ackers: 2
+storm.workers: 56
+storm.ackers: 4
 
 
 
