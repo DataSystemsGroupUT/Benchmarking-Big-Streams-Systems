@@ -6,6 +6,11 @@
 sed -i 's/taskmanager.heap.mb: 1024/taskmanager.heap.mb: 6144/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
 sed -i 's/taskmanager.numberOfTaskSlots: 1/taskmanager.numberOfTaskSlots: 4/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
 sed -i 's/jobmanager.rpc.address: localhost/jobmanager.rpc.address: stream-node01/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
+
+sed -i 's/taskmanager.heap.mb: 6144/taskmanager.heap.mb: 15360/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
+sed -i 's/taskmanager.numberOfTaskSlots: 4/taskmanager.numberOfTaskSlots: 8/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
+
+
 cp /dev/null /root/stream-benchmarking/flink-1.5.0/conf/slaves
 echo "stream-node02" >> /root/stream-benchmarking/flink-1.5.0/conf/slaves
 echo "stream-node03" >> /root/stream-benchmarking/flink-1.5.0/conf/slaves
@@ -16,12 +21,36 @@ echo "stream-node07" >> /root/stream-benchmarking/flink-1.5.0/conf/slaves
 echo "stream-node08" >> /root/stream-benchmarking/flink-1.5.0/conf/slaves
 echo "stream-node09" >> /root/stream-benchmarking/flink-1.5.0/conf/slaves
 echo "stream-node10" >> /root/stream-benchmarking/flink-1.5.0/conf/slaves
-echo "stream-node11" >> /root/stream-benchmarking/flink-1.5.0/conf/slaves
+
+
 cp /dev/null /root/stream-benchmarking/flink-1.5.0/conf/masters
 echo "stream-node01" >> /root/stream-benchmarking/flink-1.5.0/conf/masters
 
+cp /dev/null /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
+echo "stream-node02" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
+echo "stream-node03" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6conf/slaves
+echo "stream-node04" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
+echo "stream-node05" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
+echo "stream-node06" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
+echo "stream-node07" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
+echo "stream-node08" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
+echo "stream-node09" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
+echo "stream-node10" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/slaves
 
-sed -i 's/zookeeper.connect=zookeeper:2181/zookeeper.connect=zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181/g' /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/server.properties
+
+cp /dev/null /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "#!/usr/bin/env bash" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_DRIVER_MEMORY=15G" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_EXECUTOR_CORES=8" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_EXECUTOR_MEMORY=15G" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_WORKER_CORES=8" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_WORKER_MEMORY=15g" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_DAEMON_MEMORY=15g" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+chmod +x /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+
+
+
+sed -i 's/zookeeper.connect=localhost:2181/zookeeper.connect=zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181/g' /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/server.properties
 
 sed -i 's/maxClientCnxns=0/maxClientCnxns=0/g' /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
 echo "tickTime=2000" >> /root/stream-benchmarking/kafka_2.11-0.11.0.2/config/zookeeper.properties
