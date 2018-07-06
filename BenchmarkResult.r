@@ -5,11 +5,11 @@
 ##########################                                                                                  ##########################
 ######################################################################################################################################
 
-generateBenchmarkReport <- function(engine, tps, range, duration){
+generateBenchmarkReport <- function(engine, tps, duration){
   result = NULL
   for(i in 1:10) {
     
-    TPS = toString(tps + range)
+    TPS = toString(tps * i)
     reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
     Seen = read.table(paste(sourceFolder, "redis-seen.txt",sep=""),header=F,stringsAsFactors=F,sep=',')
@@ -19,7 +19,7 @@ generateBenchmarkReport <- function(engine, tps, range, duration){
     for(c in 1:length(Seen$V1)) {
       SumProceed[c] = sum(Seen$V1[1:c])
     }
-    df <- data.frame(toString(tps*i*6), Seen$V1, Updated$V1 - 10000, round(SumProceed*100/sum(Seen$V1),digits=0))
+    df <- data.frame(toString(tps*i*10), Seen$V1, Updated$V1 - 10000, round(SumProceed*100/sum(Seen$V1),digits=0))
     result <- rbind(result, df)
     
     if (length(Seen$V1)  != length(Updated$V1)){ 
@@ -34,7 +34,7 @@ generateBenchmarkReport <- function(engine, tps, range, duration){
       xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
       ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
       theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
-    ggsave( paste(engine, "_", toString(tps*i*6), ".pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
+    ggsave( paste(engine, "_", toString(tps*i*10), ".pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
   }
   names(result) <- c("TPS","Seen","Throughput", "Percentile")
   result = result[result$Throughput > 0,]

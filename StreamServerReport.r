@@ -4,9 +4,9 @@
 ##########################                        Benchmark Stream Server Load                              ##########################
 ######################################################################################################################################
 
-generateStreamServerLoadReport <- function(engine, tps, range, duration){
+generateStreamServerLoadReport <- function(engine, tps, duration){
   for(i in 1:10) {
-    TPS = toString(tps+range)
+    TPS = toString(tps*i)
     memoryUsage= NULL
     cpuUsage= NULL
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")

@@ -3,9 +3,9 @@
 
 TEST_TIME=60
 
-TPS="5000"
+TPS="1000"
 TPS_RANGE=1000
-TPS_LIMIT=15000
+TPS_LIMIT=10000
 
 INITIAL_TPS=${TPS}
 BATCH="1000"
@@ -281,7 +281,7 @@ function getBenchmarkResult(){
     getResultFromKafkaServer "${PATH_RESULT}"
     getResultFromRedisServer "${PATH_RESULT}"
 
-    Rscript reporting.R ${ENGINE_PATH} ${INITIAL_TPS} ${TPS_RANGE} ${TEST_TIME}
+    Rscript reporting.R ${ENGINE_PATH} ${INITIAL_TPS} ${TPS_RANGE} ${TPS_LIMIT} ${TEST_TIME}
 
 }
 
