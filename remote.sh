@@ -85,23 +85,12 @@ function stopLoadData {
     runCommandLoadServers "${LOAD_STOP_CMD}" "nohup"
 }
 
-function stopZkLoadData {
-    echo "Zookeeper loaders stopping"
-    runCommandZKServers "${LOAD_STOP_CMD}" "nohup"
-}
-
 
 function startLoadData {
     echo "Main loaders starting"
     runCommandLoadServers "${LOAD_START_CMD}" "nohup"
 
 }
-
-function startZkLoadData {
-    echo "Zookeeper loaders starting"
-    runCommandZKServers "${LOAD_START_CMD}" "nohup"
-}
-
 
 function cleanKafka {
     echo "Deleted kafka topic"
@@ -300,9 +289,7 @@ function benchmark(){
     sleep ${LONG_SLEEP}
     startMonitoring
     startLoadData
-    startZkLoadData
     sleep ${TEST_TIME}
-    stopZkLoadData
     stopLoadData
     sleep ${LONG_SLEEP}
     stopMonitoring
@@ -347,8 +334,6 @@ function runSystem(){
 }
 
 function stopAll (){
-    stopKafka
-    stopZkLoadData
     stopLoadData
     stopMonitoring
     stopFlinkProcessing
@@ -432,6 +417,9 @@ case $1 in
             zoo)
                 stopZK
             ;;
+            kafka)
+                stopKafka
+            ;;
             prepare)
                 destroyEnvironment
             ;;
@@ -442,7 +430,6 @@ case $1 in
     ;;
     load)
         startLoadData
-        startZkLoadData
     ;;
     push)
         git add --all
