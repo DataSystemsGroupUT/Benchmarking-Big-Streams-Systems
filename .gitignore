@@ -14,6 +14,7 @@ apache-storm-1.2.0
 apache-storm-1.2.1
 hazelcast-jet-0.6
 flink-1.4.0
+flink-1.5.0
 heron-0.17.4
 heron-0.17.8
 kafka_2.11-0.11.0.2
