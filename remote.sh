@@ -3,9 +3,9 @@
 
 TEST_TIME=60
 
-TPS="1000"
+TPS="5000"
 TPS_RANGE=1000
-TPS_LIMIT=10000
+TPS_LIMIT=15000
 
 INITIAL_TPS=${TPS}
 BATCH="1000"
@@ -21,7 +21,7 @@ CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
 CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
 SETUP_KAFKA="cd stream-benchmarking; ./stream-bench.sh SETUP_KAFKA"
 
-CHANGE_TPS_CMD="sed -i “s/LOAD:-1000/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
+CHANGE_TPS_CMD="sed -i “s/LOAD:-5000/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
 
 LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
@@ -281,7 +281,7 @@ function getBenchmarkResult(){
     getResultFromKafkaServer "${PATH_RESULT}"
     getResultFromRedisServer "${PATH_RESULT}"
 
-    Rscript reporting.R ${ENGINE_PATH} ${INITIAL_TPS} ${TEST_TIME}
+    Rscript reporting.R ${ENGINE_PATH} ${INITIAL_TPS} ${TPS_RANGE} ${TEST_TIME}
 
 }
 

@@ -4,9 +4,9 @@
 ##########################                        Benchmark Stream Server Load                              ##########################
 ######################################################################################################################################
 
-generateStreamServerLoadReport <- function(engine, tps, duration){
+generateStreamServerLoadReport <- function(engine, tps, range, duration){
   for(i in 1:10) {
-    TPS = toString(tps*i)
+    TPS = toString(tps+range)
     memoryUsage= NULL
     cpuUsage= NULL
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
@@ -23,8 +23,8 @@ generateStreamServerLoadReport <- function(engine, tps, duration){
       for(m in 1:length(streamMem$V1)) {
         SecondsMem[m] = m
       }
-      dfCpu <- data.frame(paste("Node 0" , x, sep=""), as.numeric(trim(substr(streamCpu$V1, 9, 14))), SecondsCpu)
-      dfMemory <- data.frame(paste("Node 0" , x, sep=""), as.numeric(trim(substr(streamMem$V3, 2, 10)))*100/as.numeric(trim(substr(streamMem$V1, 11, 19))), SecondsMem)
+      dfCpu <- data.frame(paste("Node " , x, sep=""), as.numeric(trim(substr(streamCpu$V1, 9, 14))), SecondsCpu)
+      dfMemory <- data.frame(paste("Node " , x, sep=""), as.numeric(trim(substr(streamMem$V3, 2, 10)))*100/as.numeric(trim(substr(streamMem$V1, 11, 19))), SecondsMem)
       cpuUsage <- rbind(cpuUsage, dfCpu)
       memoryUsage <- rbind(memoryUsage, dfMemory)
     }
