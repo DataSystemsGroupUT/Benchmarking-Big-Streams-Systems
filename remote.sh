@@ -281,7 +281,7 @@ function getBenchmarkResult(){
     getResultFromKafkaServer "${PATH_RESULT}"
     getResultFromRedisServer "${PATH_RESULT}"
 
-    Rscript reporting.R ${ENGINE_PATH} ${INITIAL_TPS} ${TPS_RANGE} ${TPS_LIMIT} ${TEST_TIME}
+    Rscript reporting.R ${ENGINE_PATH} ${INITIAL_TPS} ${TEST_TIME}
 
 }
 
