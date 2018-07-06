@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=120
+TEST_TIME=60
 
 TPS="1000"
 TPS_RANGE=1000
@@ -444,9 +444,6 @@ case $1 in
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
-        runCommandStreamServers "${SETUP_KAFKA}" "nohup"
-        runCommandKafkaServers "${SETUP_KAFKA}" "nohup"
-        runCommandZKServers "${SETUP_KAFKA}" "nohup"
-        Rscript --vanilla reporting.R "flink" 1000 1800
+        Rscript --vanilla reporting.R "flink" 1000 120
         echo "Please Enter valid command"
 esac

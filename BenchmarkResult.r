@@ -7,7 +7,7 @@
 
 generateBenchmarkReport <- function(engine, tps, duration){
   result = NULL
-  for(i in 1:3) {
+  for(i in 1:10) {
     
     TPS = toString(tps*i)
     reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
