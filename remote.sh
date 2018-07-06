@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=60
+TEST_TIME=1800
 
 TPS="1000"
 TPS_RANGE=1000
@@ -9,9 +9,9 @@ TPS_LIMIT=10000
 
 INITIAL_TPS=${TPS}
 BATCH="1000"
-SHORT_SLEEP=5
-LONG_SLEEP=10
-WAIT_AFTER_STOP_PRODUCER=20
+SHORT_SLEEP=10
+LONG_SLEEP=15
+WAIT_AFTER_STOP_PRODUCER=120
 SSH_USER="root"
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
@@ -21,7 +21,7 @@ CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;"
 CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
 SETUP_KAFKA="cd stream-benchmarking; ./stream-bench.sh SETUP_KAFKA"
 
-CHANGE_TPS_CMD="sed -i “s/LOAD:-5000/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
+CHANGE_TPS_CMD="sed -i “s/LOAD:-1000/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
 
 LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"

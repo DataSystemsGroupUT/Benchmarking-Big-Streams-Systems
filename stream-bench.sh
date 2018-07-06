@@ -44,7 +44,7 @@ ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
 PARTITIONS=${PARTITIONS:-5}
 LOAD=${LOAD:-1000}
 CONF_FILE=./conf/benchmarkConf.yaml
-TEST_TIME=${TEST_TIME:-240}
+TEST_TIME=${TEST_TIME:-1800}
 
 pid_match() {
    local VAL=`ps -aef | grep "$1" | grep -v grep | awk '{print $2}'`

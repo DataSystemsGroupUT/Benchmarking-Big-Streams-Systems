@@ -17,11 +17,6 @@ generateBenchmarkReport(args[1], tps, duration)
 generateStreamServerLoadReport(args[1], tps, duration)
 generateKafkaServerLoadReport(args[1], tps, duration)
 
-
-
-
-
-
 if(length(args) == 0){
   generateBenchmarkReport("flink", 1000, 1800)
   generateStreamServerLoadReport("flink", 1000, 1800)

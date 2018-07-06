@@ -52,7 +52,21 @@ time.divisor: 10000
 
 #Hazelcast Specific
 
-
 #Kafka Specific
+
+
+#Benchmark Specific
+test.time: 60
+
+tps.tps: 1000
+tps.range: 1000
+tps.limit: 10000
+
+time.short: 5
+time.long: 10
+time.wait: =20
+
+ssh.user: "root"
+kafka.folder: "kafka_2.11-0.11.0.2"
 
 
