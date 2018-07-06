@@ -90,7 +90,7 @@ function runCommandRedisServer(){
 
 function getResultFromStreamServer(){
     counter=1
-    while [ ${counter} -le 8 ]
+    while [ ${counter} -le ${STREAM_SERVER_COUNT} ]
     do
         scp ${SSH_USER}@stream-node-0${counter}:~/cpu.load $1/stream-node-0${counter}.cpu
         scp ${SSH_USER}@stream-node-0${counter}:~/mem.load $1/stream-node-0${counter}.mem
@@ -100,7 +100,7 @@ function getResultFromStreamServer(){
 
 function getResultFromKafkaServer(){
     counter=1
-    while [ ${counter} -le 4 ]
+    while [ ${counter} -le ${KAFKA_SERVER_COUNT} ]
     do
         scp ${SSH_USER}@kafka-node-0${counter}:~/cpu.load $1/kafka-node-0${counter}.cpu
         scp ${SSH_USER}@kafka-node-0${counter}:~/mem.load $1/kafka-node-0${counter}.mem
