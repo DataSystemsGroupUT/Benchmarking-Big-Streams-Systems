@@ -24,7 +24,6 @@ spark-2.2.1-bin-hadoop2.6
 spark-2.3.0-bin-hadoop2.6
 dump.rdb
 nohup.out
-result
 result_old
 data/seen.txt
 data/updated.txt

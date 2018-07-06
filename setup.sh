@@ -76,7 +76,6 @@ echo "server.3=zookeeper-node03:2888:3888" >> /root/stream-benchmarking/kafka_2.
 
 mkdir /tmp/zookeeper/ -p
 touch /tmp/zookeeper/myid
-
 echo '1' >> /tmp/zookeeper/myid
 
 
