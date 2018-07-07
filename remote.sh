@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=1800
+TEST_TIME=60
 
 TPS="1000"
 TPS_RANGE=1000
@@ -9,9 +9,9 @@ TPS_LIMIT=10000
 
 INITIAL_TPS=${TPS}
 BATCH="1000"
-SHORT_SLEEP=10
-LONG_SLEEP=15
-WAIT_AFTER_STOP_PRODUCER=120
+SHORT_SLEEP=3
+LONG_SLEEP=6
+WAIT_AFTER_STOP_PRODUCER=20
 SSH_USER="root"
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
@@ -227,7 +227,6 @@ function stopMonitoring(){
 
 function changeTps(){
     runCommandLoadServers "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
-    runCommandZKServers "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
 }
 
 
