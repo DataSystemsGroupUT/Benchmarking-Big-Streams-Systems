@@ -3,7 +3,7 @@
 
 TEST_TIME=60
 
-TPS="1000"
+TPS="10000"
 TPS_RANGE=1000
 TPS_LIMIT=10000
 
@@ -445,4 +445,5 @@ case $1 in
     *)
         Rscript --vanilla reporting.R "flink" 1000 120
         echo "Please Enter valid command"
+
 esac
