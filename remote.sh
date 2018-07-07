@@ -3,7 +3,7 @@
 
 TEST_TIME=60
 
-TPS="10000"
+TPS="1000"
 TPS_RANGE=1000
 TPS_LIMIT=10000
 
@@ -27,7 +27,7 @@ LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
 
 DELETE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --delete --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic ad-events;"
-CREATE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 5 --topic ad-events;"
+CREATE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 3 --partitions 15 --topic ad-events;"
 
 START_MONITOR_CPU="top -b -d 1 | grep --line-buffered Cpu > cpu.load;"
 START_MONITOR_MEM="top -b -d 1 | grep --line-buffered 'KiB Mem' > mem.load;"
@@ -443,7 +443,10 @@ case $1 in
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
-        Rscript --vanilla reporting.R "flink" 1000 120
+        Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
+        Rscript --vanilla reporting.R "spark_dataset_1000" 1000 60
+        Rscript --vanilla reporting.R "flink" 1000 60
+        Rscript --vanilla reporting.R "storm" 1000 60
         echo "Please Enter valid command"
 
 esac

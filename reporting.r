@@ -2,7 +2,7 @@
 library(ggplot2)
 library(scales)
 theme_set(theme_bw())
-
+options("scipen"=10)
 args <- commandArgs(TRUE)
 tps <- as.numeric(args[2])
 duration <- as.numeric(args[3])
