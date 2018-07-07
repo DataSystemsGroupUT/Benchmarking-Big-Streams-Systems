@@ -92,8 +92,8 @@ function getResultFromStreamServer(){
     counter=1
     while [ ${counter} -le ${STREAM_SERVER_COUNT} ]
     do
-        scp ${SSH_USER}@stream-node-0${counter}:~/cpu.load $1/stream-node-0${counter}.cpu
-        scp ${SSH_USER}@stream-node-0${counter}:~/mem.load $1/stream-node-0${counter}.mem
+        nohup scp ${SSH_USER}@stream-node-0${counter}:~/cpu.load $1/stream-node-0${counter}.cpu &
+        nohup scp ${SSH_USER}@stream-node-0${counter}:~/mem.load $1/stream-node-0${counter}.mem &
         ((counter++))
     done
 }
@@ -102,8 +102,8 @@ function getResultFromKafkaServer(){
     counter=1
     while [ ${counter} -le ${KAFKA_SERVER_COUNT} ]
     do
-        scp ${SSH_USER}@kafka-node-0${counter}:~/cpu.load $1/kafka-node-0${counter}.cpu
-        scp ${SSH_USER}@kafka-node-0${counter}:~/mem.load $1/kafka-node-0${counter}.mem
+        nohup scp ${SSH_USER}@kafka-node-0${counter}:~/cpu.load $1/kafka-node-0${counter}.cpu &
+        nohup scp ${SSH_USER}@kafka-node-0${counter}:~/mem.load $1/kafka-node-0${counter}.mem &
         ((counter++))
     done
 }
