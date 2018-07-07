@@ -122,8 +122,8 @@ function stopKafka {
 
 function cleanResult {
     echo "Cleaning previous benchmark result"
-    runCommandStreamServers "${CLEAN_LOAD_RESULT_CMD}"
-    runCommandKafkaServers "${CLEAN_LOAD_RESULT_CMD}"
+    runCommandStreamServers "${CLEAN_LOAD_RESULT_CMD}" "nohup"
+    runCommandKafkaServers "${CLEAN_LOAD_RESULT_CMD}" "nohup"
     ssh ${SSH_USER}@redisdo ${CLEAN_RESULT_CMD}
 }
 
@@ -230,7 +230,7 @@ function stopMonitoring(){
 }
 
 function changeTps(){
-    runCommandLoadServers "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh"
+    runCommandLoadServers "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh" "nohup"
 }
 
 
