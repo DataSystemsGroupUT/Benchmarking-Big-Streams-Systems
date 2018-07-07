@@ -37,7 +37,7 @@ process.hosts: 9
 process.cores: 8
 
 #STORM Specific
-storm.workers: 72
+storm.workers: 56
 storm.ackers: 8
 
 
