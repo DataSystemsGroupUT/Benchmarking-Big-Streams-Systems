@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=61
+TEST_TIME=1800
 
 TPS="1000"
 TPS_RANGE=1000
@@ -9,9 +9,9 @@ TPS_LIMIT=10000
 
 INITIAL_TPS=${TPS}
 BATCH="1000"
-SHORT_SLEEP=2
-LONG_SLEEP=5
-WAIT_AFTER_STOP_PRODUCER=10
+SHORT_SLEEP=5
+LONG_SLEEP=10
+WAIT_AFTER_STOP_PRODUCER=120
 SSH_USER="root"
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
@@ -372,10 +372,10 @@ case $1 in
         benchmarkLoop "storm"
     ;;
     all)
-        benchmarkLoop "flink"
-        benchmarkLoop "storm"
         benchmarkLoop "spark" "dataset"
         benchmarkLoop "spark" "dstream"
+        benchmarkLoop "storm"
+        benchmarkLoop "flink"
     ;;
     start)
         case $2 in
