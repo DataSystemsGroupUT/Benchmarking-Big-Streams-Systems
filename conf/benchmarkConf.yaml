@@ -34,11 +34,11 @@ kafka.topic: "ad-events"
 kafka.partitions: 5
 
 process.hosts: 9
-process.cores: 8
+process.cores: 72
 
 #STORM Specific
-storm.workers: 72
-storm.ackers: 0
+storm.workers: 63
+storm.ackers: 9
 
 
 
