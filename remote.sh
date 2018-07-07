@@ -351,7 +351,7 @@ function stopAll (){
 
 
 function benchmarkLoop (){
-    while true; do
+   # while true; do
         pullRepository
         sleep ${SHORT_SLEEP}
         if (("$TPS" > "$TPS_LIMIT")); then
@@ -360,7 +360,7 @@ function benchmarkLoop (){
         changeTps
         runSystem $1 $2
         TPS=$[$TPS + $TPS_RANGE]
-    done
+  #  done
     TPS=${INITIAL_TPS}
 }
 
