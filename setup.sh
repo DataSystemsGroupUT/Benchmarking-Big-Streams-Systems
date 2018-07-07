@@ -59,8 +59,8 @@ echo "    - \"zookeeper-node03\"" >> /root/stream-benchmarking/apache-storm-1.2.
 echo "storm.zookeeper.port: 2181" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
 echo "nimbus.childopts: \"-Xmx3g\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
 echo "nimbus.seeds: [\"stream-node01\"]" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
-echo "supervisor.childopts: \"-Xmx3g -Djava.net.preferIPv4Stack=true\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
-echo "worker.childopts: \"-Xmx3g -Djava.net.preferIPv4Stack=true\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "supervisor.childopts: \"-Xmx1g -Djava.net.preferIPv4Stack=true]\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
+echo "worker.childopts: \"-Xmx1g -Djava.net.preferIPv4Stack=true\"" >> /root/stream-benchmarking/apache-storm-1.2.1/conf/storm.yaml
 
 
 #KAFKA SETUP
