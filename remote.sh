@@ -201,6 +201,8 @@ function stopStorm {
     runCommandSlaveStreamServers "${STOP_STORM_SUPERVISOR_CMD}" "nohup"
     sleep ${SHORT_SLEEP}
     runCommandMasterStreamServers "${STOP_STORM_NIMBUS_CMD}" "nohup"
+    sleep ${SHORT_SLEEP}
+    runCommandMasterStreamServers "${STOP_ZK_CMD}" "nohup"
 }
 
 function startStormProcessing {
