@@ -189,8 +189,6 @@ function stopSparkProcessing {
 
 function startStorm {
     echo "Starting Storm"
-    #runCommandMasterStreamServers "${START_ZK_CMD}" "nohup"
-    #sleep ${SHORT_SLEEP}
     runCommandMasterStreamServers "${START_STORM_NIMBUS_CMD}" "nohup"
     sleep ${SHORT_SLEEP}
     runCommandSlaveStreamServers "${START_STORM_SUPERVISOR_CMD}" "nohup"
@@ -201,8 +199,6 @@ function stopStorm {
     runCommandSlaveStreamServers "${STOP_STORM_SUPERVISOR_CMD}" "nohup"
     sleep ${SHORT_SLEEP}
     runCommandMasterStreamServers "${STOP_STORM_NIMBUS_CMD}" "nohup"
-    #sleep ${SHORT_SLEEP}
-    #runCommandMasterStreamServers "${STOP_ZK_CMD}" "nohup"
 }
 
 function startStormProcessing {
