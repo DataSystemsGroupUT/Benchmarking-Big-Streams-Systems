@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=62
+TEST_TIME=63
 
 TPS="1000"
 TPS_RANGE=1000
