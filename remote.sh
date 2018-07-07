@@ -124,7 +124,7 @@ function cleanResult {
     echo "Cleaning previous benchmark result"
     runCommandStreamServers "${CLEAN_LOAD_RESULT_CMD}" "nohup"
     runCommandKafkaServers "${CLEAN_LOAD_RESULT_CMD}" "nohup"
-    ssh ${SSH_USER}@redisdo ${CLEAN_RESULT_CMD}
+    nohup ssh ${SSH_USER}@redisdo ${CLEAN_RESULT_CMD} &
 }
 
 function startFlink {
