@@ -12,10 +12,12 @@ BATCH="1000"
 SHORT_SLEEP=2
 LONG_SLEEP=5
 WAIT_AFTER_STOP_PRODUCER=20
+WAIT_AFTER_REBOOT_SERVER=20
 SSH_USER="root"
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load;"
+REBOOT_CMD="reboot;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;rm -rf /tmp/zookeeper/version-2;"
 
 CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
@@ -71,6 +73,14 @@ PULL_GIT="cd stream-benchmarking; git reset --hard HEAD; git pull origin master;
 
 
 . ./remoteInvocation.sh --source-only
+
+function rebootServer {
+    runCommandStreamServers "${REBOOT_CMD}" "nohup"
+    runCommandZKServers "${REBOOT_CMD}" "nohup"
+    runCommandKafkaServers "${REBOOT_CMD}" "nohup"
+    runCommandLoadServers "${REBOOT_CMD}" "nohup"
+    runCommandRedisServer "${REBOOT_CMD}" "nohup"
+}
 
 function pullRepository {
     runCommandStreamServers "${PULL_GIT}" "nohup"
@@ -280,9 +290,9 @@ function getBenchmarkResult(){
     getResultFromStreamServer "${PATH_RESULT}"
     getResultFromKafkaServer "${PATH_RESULT}"
     getResultFromRedisServer "${PATH_RESULT}"
-
+    rebootServer
+    sleep ${WAIT_AFTER_REBOOT_SERVER}
     Rscript reporting.R ${ENGINE_PATH} ${INITIAL_TPS} ${TEST_TIME}
-
 }
 
 function benchmark(){
