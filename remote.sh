@@ -430,6 +430,7 @@ case $1 in
     kafka)
         KAFKA_FOLDER="kafka_2.11-1.1.0"
         benchmarkLoop "kafka"
+        KAFKA_FOLDER="kafka_2.11-0.11.0.2"
     ;;
     all)
         benchmarkLoop "spark" "dataset"

@@ -79,6 +79,21 @@ touch /tmp/zookeeper/myid
 echo '1' >> /tmp/zookeeper/myid
 
 
+
+sed -i 's/maxClientCnxns=0/maxClientCnxns=0/g' /root/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "tickTime=2000" >> /root/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "initLimit=20" >> /root/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "syncLimit=10" >> /root/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "dataDir=/root/zookeeper" >> /root/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "server.1=zookeeper-node01:2888:3888" >> /root/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "server.2=zookeeper-node02:2888:3888" >> /root/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+echo "server.3=zookeeper-node03:2888:3888" >> /root/stream-benchmarking/kafka_2.11-1.1.0/config/zookeeper.properties
+
+mkdir /root/zookeeper/ -p
+touch /root/zookeeper/myid
+echo '1' >> /root/zookeeper/myid
+
+
 ##Spark
 #./sbin/start-master.sh -h stream-node01 -p 7077
 #./sbin/start-slave.sh spark://stream-node01:7077
