@@ -14,7 +14,8 @@ LONG_SLEEP=5
 WAIT_AFTER_STOP_PRODUCER=20
 WAIT_AFTER_REBOOT_SERVER=30
 SSH_USER="root"
-KAFKA_FOLDER="kafka_2.11-0.11.0.2"
+#KAFKA_FOLDER="kafka_2.11-0.11.0.2"
+KAFKA_FOLDER="kafka_2.11-1.1.0"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load;rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
@@ -429,7 +430,6 @@ case $1 in
         benchmarkLoop "storm"
     ;;
     kafka)
-        KAFKA_FOLDER="kafka_2.11-1.1.0"
         benchmarkLoop "kafka"
     ;;
     all)
