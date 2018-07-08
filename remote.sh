@@ -110,8 +110,9 @@ function startLoadData {
 }
 
 function cleanKafka {
-#    echo "Deleted kafka topic"
-#    runCommandRedisServer "${DELETE_TOPIC}"
+    #FIXME delete for Kafka benchmark
+    echo "Deleted kafka topic"
+    runCommandRedisServer "${DELETE_TOPIC}"
     echo "Created kafka topic"
     runCommandRedisServer "${CREATE_TOPIC}"
 }
