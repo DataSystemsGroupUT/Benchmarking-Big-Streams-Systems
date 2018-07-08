@@ -38,8 +38,6 @@ public class AdvertisingTopology {
     public static class DeserializeBolt extends BaseRichBolt {
         OutputCollector _collector;
 
-
-
         @Override
         public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
             _collector = collector;
