@@ -115,23 +115,23 @@ function cleanKafka {
 
 function startZK {
     echo "Starting Zookeepers"
-    runCommandZKServers "${START_ZK_CMD}"
+    runCommandZKServers "${START_ZK_CMD}" "nohup"
 }
 
 function stopZK {
     echo "Stopping Zookeepers"
-    runCommandZKServers "${STOP_ZK_CMD}"
+    runCommandZKServers "${STOP_ZK_CMD}" "nohup"
 }
 
 
 function startKafka {
     echo "Starting Kafka nodes"
-    runCommandKafkaServers "${START_KAFKA_CMD}"
+    runCommandKafkaServers "${START_KAFKA_CMD}" "nohup"
 }
 
 function stopKafka {
     echo "Stopping Kafka nodes"
-    runCommandKafkaServers "${STOP_KAFKA_CMD}"
+    runCommandKafkaServers "${STOP_KAFKA_CMD}" "nohup"
 }
 
 function cleanResult {
