@@ -9,8 +9,8 @@ TPS_LIMIT=10000
 
 INITIAL_TPS=${TPS}
 BATCH="1000"
-SHORT_SLEEP=4
-LONG_SLEEP=8
+SHORT_SLEEP=5
+LONG_SLEEP=10
 WAIT_AFTER_STOP_PRODUCER=20
 WAIT_AFTER_REBOOT_SERVER=30
 SSH_USER="root"
@@ -116,12 +116,12 @@ function cleanKafka {
 
 function startZK {
     echo "Starting Zookeepers"
-    runCommandZKServers "${START_ZK_CMD}" "nohup"
+    runCommandZKServers "${START_ZK_CMD}"
 }
 
 function stopZK {
     echo "Stopping Zookeepers"
-    runCommandZKServers "${STOP_ZK_CMD}" "nohup"
+    runCommandZKServers "${STOP_ZK_CMD}"
 }
 
 
