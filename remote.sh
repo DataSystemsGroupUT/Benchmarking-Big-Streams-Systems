@@ -11,8 +11,10 @@ INITIAL_TPS=${TPS}
 BATCH="1000"
 SHORT_SLEEP=5
 LONG_SLEEP=10
+
 WAIT_AFTER_STOP_PRODUCER=20
 WAIT_AFTER_REBOOT_SERVER=30
+
 SSH_USER="root"
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 #KAFKA_FOLDER="kafka_2.11-1.1.0"
@@ -30,7 +32,7 @@ LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
 
 DELETE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --delete --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic ad-events;"
-CREATE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 150 --topic ad-events;"
+CREATE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 15 --topic ad-events;"
 
 START_MONITOR_CPU="top -b -d 1 | grep --line-buffered Cpu > cpu.load;"
 START_MONITOR_MEM="top -b -d 1 | grep --line-buffered 'KiB Mem' > mem.load;"
@@ -127,12 +129,12 @@ function stopZK {
 
 function startKafka {
     echo "Starting Kafka nodes"
-    runCommandKafkaServers "${START_KAFKA_CMD}" "nohup"
+    runCommandKafkaServers "${START_KAFKA_CMD}"
 }
 
 function stopKafka {
     echo "Stopping Kafka nodes"
-    runCommandKafkaServers "${STOP_KAFKA_CMD}" "nohup"
+    runCommandKafkaServers "${STOP_KAFKA_CMD}"
 }
 
 function cleanResult {
