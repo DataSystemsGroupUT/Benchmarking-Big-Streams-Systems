@@ -15,7 +15,7 @@
 (def num-campaigns 100)
 (def view-capacity-per-window 10)
 (def kafka-event-count  (* 10 1000000)) ; N millions
-(def time-divisor 1000)               ; 1 seconds
+(def time-divisor 10000)               ; 1 seconds
 
 (defn make-ids [n]
   (for [n (range n)]
@@ -250,7 +250,7 @@
   (let [conf (yaml/parse-string (slurp confPath))
         redis-host (get conf :redis.host)
         kafka-port (get conf :kafka.port)
-        kafka-hosts (clojure.string/join (interpose "," (for [broker (get conf :kafka.brokers)]
+        kafka-hosts (clojure.string/join (interpose "," (for [broker (get conf :kafka.stream.brokers)]
                                                           (str broker ":" kafka-port))))]
     (println {:redis-host redis-host :kakfa-brokers kafka-hosts})
     {:redis-host redis-host :kakfa-brokers kafka-hosts}))

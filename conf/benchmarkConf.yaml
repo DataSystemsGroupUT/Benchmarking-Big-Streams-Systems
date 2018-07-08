@@ -2,7 +2,7 @@
 # Licensed under the terms of the Apache License 2.0. Please see LICENSE file in the project root for terms.
 
 
-stream.servers:
+kafka.stream.brokers:
     - "stream-node01"
     - "stream-node02"
     - "stream-node03"
@@ -13,7 +13,11 @@ stream.servers:
     - "stream-node08"
     - "stream-node09"
     - "stream-node10"
-
+    - "kafka-node01"
+    - "kafka-node02"
+    - "kafka-node03"
+    - "kafka-node04"
+    - "kafka-node05"
 
 kafka.brokers:
     - "kafka-node01"

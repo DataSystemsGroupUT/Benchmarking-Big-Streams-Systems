@@ -65,23 +65,15 @@ public class AdvertisingPipeline {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(opts, args);
         String configPath = cmd.getOptionValue("conf");
-        Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
+        Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
 
-        String zkServerHosts = joinHosts((List<String>) commonConfig.get("zookeeper.servers"),
-                Integer.toString((Integer) commonConfig.get("zookeeper.port")));
         redisServerHost = (String) commonConfig.get("redis.host");
         String kafkaTopic = (String) commonConfig.get("kafka.topic");
-        String kafkaServerHosts = joinHosts((List<String>) commonConfig.get("kafka.brokers"),
-                Integer.toString((Integer) commonConfig.get("kafka.port")));
-        String streamServerHosts = joinHosts((List<String>) commonConfig.get("stream.servers"),
+        String kafkaServerHosts = joinHosts((List<String>) commonConfig.get("kafka.stream.brokers"),
                 Integer.toString((Integer) commonConfig.get("kafka.port")));
 
-        int kafkaPartitions = ((Number) commonConfig.get("kafka.partitions")).intValue();
-        int workers = ((Number) commonConfig.get("storm.workers")).intValue();
-        int ackers = ((Number) commonConfig.get("storm.ackers")).intValue();
-        int cores = ((Number) commonConfig.get("process.cores")).intValue();
         timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
-        int parallel = Math.max(1, cores / 7);
+
 
         logger.info("******************");
         logger.info(redisServerHost);

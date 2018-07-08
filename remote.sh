@@ -58,11 +58,15 @@ STOP_SPARK_DSTREAM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPAR
 START_SPARK_DATASET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_CP_PROCESSING;"
 STOP_SPARK_DATASET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_CP_PROCESSING;"
 
+
 START_ZK_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/zookeeper-server-start.sh -daemon config/zookeeper.properties"
 STOP_ZK_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/zookeeper-server-stop.sh;"
 
 START_KAFKA_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-server-start.sh -daemon config/server.properties"
 STOP_KAFKA_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-server-stop.sh;"
+
+START_KAFKA_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_CP_PROCESSING;"
+STOP_KAFKA_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_CP_PROCESSING;"
 
 START_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh START_REDIS;"
 STOP_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_REDIS;"
@@ -198,6 +202,27 @@ function stopSparkProcessing {
     esac
 }
 
+
+function startKafkaStream {
+    echo "Starting Kafka Stream"
+    runCommandStreamServers "${START_KAFKA_CMD}" "nohup"
+}
+
+function stopKafkaStream {
+    echo "Stopping Kafka Stream"
+    runCommandStreamServers "${STOP_KAFKA_CMD}" "nohup"
+}
+
+function startKafkaProcessing {
+    echo "Starting Kafka processing"
+    runCommandMasterStreamServers "${START_KAFKA_PROC_CMD}" "nohup"
+}
+
+function stopKafkaProcessing {
+    echo "Stopping Kafka processing"
+    runCommandMasterStreamServers "${STOP_KAFKA_PROC_CMD}" "nohup"
+}
+
 function startStorm {
     echo "Starting Storm"
     runCommandMasterStreamServers "${START_STORM_NIMBUS_CMD}" "nohup"
@@ -307,9 +332,10 @@ function benchmark(){
 
 
 function runSystem(){
-    prepareEnvironment
+
     case $1 in
         flink)
+            prepareEnvironment
             startFlink
             sleep ${SHORT_SLEEP}
             startFlinkProcessing
@@ -319,6 +345,7 @@ function runSystem(){
             stopFlink
         ;;
         spark)
+            prepareEnvironment
             startSpark
             sleep ${SHORT_SLEEP}
             startSparkProcessing $2
@@ -328,6 +355,7 @@ function runSystem(){
             stopSpark
         ;;
         storm)
+            prepareEnvironment
             startStorm
             sleep ${SHORT_SLEEP}
             startStormProcessing
@@ -335,6 +363,22 @@ function runSystem(){
             stopStormProcessing
             sleep ${SHORT_SLEEP}
             stopStorm
+        ;;
+        kafka)
+            cleanResult
+            startZK
+            sleep ${LONG_SLEEP}
+            startKafka
+            startKafkaStream
+            sleep ${LONG_SLEEP}
+            cleanKafka
+            startRedis
+            sleep ${LONG_SLEEP}
+            startKafkaProcessing
+            benchmark $1
+            stopKafkaProcessing
+            sleep ${SHORT_SLEEP}
+            stopKafkaStream
         ;;
     esac
     destroyEnvironment
@@ -382,6 +426,10 @@ case $1 in
     ;;
     storm)
         benchmarkLoop "storm"
+    ;;
+    kafka)
+        KAFKA_FOLDER="kafka_2.11-1.1.0"
+        benchmarkLoop "kafka"
     ;;
     all)
         benchmarkLoop "spark" "dataset"
