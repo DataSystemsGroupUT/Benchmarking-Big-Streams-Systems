@@ -16,7 +16,7 @@ SSH_USER="root"
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load;"
-CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;rm -rf /tmp/zookeeper/*;"
+CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;rm -rf /tmp/zookeeper/version-2;"
 
 CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
 SETUP_KAFKA="cd stream-benchmarking; ./stream-bench.sh SETUP_KAFKA"
@@ -124,7 +124,8 @@ function cleanResult {
     echo "Cleaning previous benchmark result"
     runCommandStreamServers "${CLEAN_LOAD_RESULT_CMD}" "nohup"
     runCommandKafkaServers "${CLEAN_LOAD_RESULT_CMD}" "nohup"
-    nohup ssh ${SSH_USER}@redisdo ${CLEAN_RESULT_CMD} &
+    runCommandRedisServer ${CLEAN_RESULT_CMD} "nohup"
+    runCommandZKServers ${CLEAN_RESULT_CMD} "nohup"
 }
 
 function startFlink {

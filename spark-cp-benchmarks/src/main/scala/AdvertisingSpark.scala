@@ -180,28 +180,6 @@ object KafkaRedisAdvertisingStream {
       .trigger(Trigger.ProcessingTime(batchSize))
       .outputMode("update").start()
 
-
-//    val writeToConsole = totalEventsPerCampaignTime
-//      .writeStream
-//      .format("console")
-//      .option("truncate", "false") //prevent trimming output fields
-//      .trigger(Trigger.ProcessingTime(1000))
-//      .queryName("kafka spark streaming console")
-//      .outputMode("update")
-//      .start()
-//    totalEventsPerCampaignTime.show()
-    //DStream[((String,Long), Int)]
-    //each record: key:(campaign_id, window_time),  Value: number of events
-
-    //Repartition here if desired to use more or less executors
-    //    val totalEventsPerCampaignTime_repartitioned = totalEventsPerCampaignTime.repartition(20)
-
-//    totalEventsPerCampaignTime.foreachRDD { rdd =>
-//      rdd.foreachPartition(writeRedisTopLevel(_, redisHost))
-//    }
-
-    // Start the computation
-//    spark.start
     spark.streams.awaitAnyTermination()
   }
 
