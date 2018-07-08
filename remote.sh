@@ -507,7 +507,7 @@ case $1 in
     ;;
     *)
         changeTps 7000
-        runSystem "kafka"
+        runSystem "flink"
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
         #Rscript --vanilla reporting.R "spark_dataset_1000" 1000 60
         #Rscript --vanilla reporting.R "flink" 1000 60
