@@ -309,7 +309,7 @@ run() {
     sleep 3
   elif [ "STOP_KAFKA_PROCESSING" = "$OPERATION" ];
   then
-    stop_if_needed kafka.stream "Kafka Processing"
+    ps aux | grep kafka-benchmarks | awk '{print $2}' | xargs kill
   elif [ "START_FLINK_PROCESSING" = "$OPERATION" ];
   then
     "$FLINK_DIR/bin/flink" run ./flink-benchmarks/target/flink-benchmarks-0.1.0.jar --confPath $CONF_FILE &
