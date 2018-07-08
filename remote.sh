@@ -30,7 +30,7 @@ LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
 
 DELETE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --delete --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic ad-events;"
-CREATE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 300 --topic ad-events;"
+CREATE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 15 --topic ad-events;"
 
 START_MONITOR_CPU="top -b -d 1 | grep --line-buffered Cpu > cpu.load;"
 START_MONITOR_MEM="top -b -d 1 | grep --line-buffered 'KiB Mem' > mem.load;"
@@ -403,7 +403,7 @@ function stopAll (){
 
 
 function benchmarkLoop (){
-    while true; do
+#    while true; do
         pullRepository
         sleep ${SHORT_SLEEP}
         if (("$TPS" > "$TPS_LIMIT")); then
@@ -412,7 +412,7 @@ function benchmarkLoop (){
         changeTps
         runSystem $1 $2
         TPS=$[$TPS + $TPS_RANGE]
-    done
+#    done
 #    rebootServer
 #    sleep ${WAIT_AFTER_REBOOT_SERVER}
     TPS=${INITIAL_TPS}
