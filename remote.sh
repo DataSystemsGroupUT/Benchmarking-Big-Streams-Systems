@@ -126,12 +126,12 @@ function stopZK {
 
 function startKafka {
     echo "Starting Kafka nodes"
-    runCommandKafkaServers "${START_KAFKA_CMD}" "nohup"
+    runCommandKafkaServers "${START_KAFKA_CMD}"
 }
 
 function stopKafka {
     echo "Stopping Kafka nodes"
-    runCommandKafkaServers "${STOP_KAFKA_CMD}" "nohup"
+    runCommandKafkaServers "${STOP_KAFKA_CMD}"
 }
 
 function cleanResult {
@@ -205,12 +205,12 @@ function stopSparkProcessing {
 
 function startKafkaStream {
     echo "Starting Kafka Stream"
-    runCommandStreamServers "${START_KAFKA_CMD}" "nohup"
+    runCommandStreamServers "${START_KAFKA_CMD}"
 }
 
 function stopKafkaStream {
     echo "Stopping Kafka Stream"
-    runCommandStreamServers "${STOP_KAFKA_CMD}" "nohup"
+    runCommandStreamServers "${STOP_KAFKA_CMD}"
 }
 
 function startKafkaProcessing {
