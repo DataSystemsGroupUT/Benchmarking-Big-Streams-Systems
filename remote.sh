@@ -65,8 +65,8 @@ STOP_ZK_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/zookeeper-server-stop.s
 START_KAFKA_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-server-start.sh -daemon config/server.properties"
 STOP_KAFKA_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-server-stop.sh;"
 
-START_KAFKA_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_CP_PROCESSING;"
-STOP_KAFKA_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_CP_PROCESSING;"
+START_KAFKA_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_KAFKA_PROCESSING;"
+STOP_KAFKA_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_KAFKA_PROCESSING;"
 
 START_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh START_REDIS;"
 STOP_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_REDIS;"
@@ -332,7 +332,6 @@ function benchmark(){
 
 
 function runSystem(){
-
     case $1 in
         flink)
             prepareEnvironment
