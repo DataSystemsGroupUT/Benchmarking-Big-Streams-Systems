@@ -409,7 +409,7 @@ function benchmarkLoop (){
         if (("$TPS" > "$TPS_LIMIT")); then
             break
         fi
-        changeTps $TPS
+        changeTps "${TPS}"
         runSystem $1 $2
         TPS=$[$TPS + $TPS_RANGE]
     done
@@ -437,6 +437,8 @@ case $1 in
         benchmarkLoop "spark" "dstream"
         benchmarkLoop "storm"
         benchmarkLoop "flink"
+        KAFKA_FOLDER="kafka_2.11-1.1.0"
+        benchmarkLoop "kafka"
     ;;
     start)
         case $2 in
