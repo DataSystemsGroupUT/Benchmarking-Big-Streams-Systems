@@ -16,7 +16,7 @@ WAIT_AFTER_REBOOT_SERVER=30
 SSH_USER="root"
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
-CLEAN_LOAD_RESULT_CMD="rm *.load;"
+CLEAN_LOAD_RESULT_CMD="rm *.load;rm -rf /root/kafka-logs/*"
 REBOOT_CMD="reboot;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;rm -rf /root/zookeeper/version-2;"
 
@@ -103,8 +103,8 @@ function startLoadData {
 }
 
 function cleanKafka {
-    echo "Deleted kafka topic"
-    runCommandRedisServer "${DELETE_TOPIC}"
+#    echo "Deleted kafka topic"
+#    runCommandRedisServer "${DELETE_TOPIC}"
     echo "Created kafka topic"
     runCommandRedisServer "${CREATE_TOPIC}"
 }
@@ -267,7 +267,6 @@ function prepareEnvironment(){
 
 function destroyEnvironment(){
     sleep ${SHORT_SLEEP}
-    runCommandRedisServer "${DELETE_TOPIC}"
     stopRedis
     stopKafka
     sleep ${SHORT_SLEEP}
@@ -367,9 +366,9 @@ function benchmarkLoop (){
         changeTps
         runSystem $1 $2
         TPS=$[$TPS + $TPS_RANGE]
-        rebootServer
-        sleep ${WAIT_AFTER_REBOOT_SERVER}
 #    done
+#    rebootServer
+#    sleep ${WAIT_AFTER_REBOOT_SERVER}
     TPS=${INITIAL_TPS}
 }
 
