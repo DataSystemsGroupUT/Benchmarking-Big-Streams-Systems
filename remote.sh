@@ -18,7 +18,7 @@ KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load;"
 REBOOT_CMD="reboot;"
-CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;rm -rf /root/zookeeper/version-2;"
+CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt;rm -rf /root/zookeeper/version-2;rm -rf /root/kafka-logs/*"
 
 CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
 SETUP_KAFKA="cd stream-benchmarking; ./stream-bench.sh SETUP_KAFKA"
@@ -267,6 +267,7 @@ function prepareEnvironment(){
 
 function destroyEnvironment(){
     sleep ${SHORT_SLEEP}
+    runCommandRedisServer "${DELETE_TOPIC}"
     stopRedis
     stopKafka
     sleep ${SHORT_SLEEP}
@@ -358,7 +359,7 @@ function stopAll (){
 
 
 function benchmarkLoop (){
-    while true; do
+#    while true; do
         pullRepository
         sleep ${SHORT_SLEEP}
         if (("$TPS" > "$TPS_LIMIT")); then
@@ -367,7 +368,7 @@ function benchmarkLoop (){
         changeTps
         runSystem $1 $2
         TPS=$[$TPS + $TPS_RANGE]
-    done
+#    done
     TPS=${INITIAL_TPS}
 }
 
