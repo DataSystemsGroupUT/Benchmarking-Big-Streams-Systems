@@ -437,8 +437,6 @@ case $1 in
         benchmarkLoop "spark" "dstream"
         benchmarkLoop "storm"
         benchmarkLoop "flink"
-        KAFKA_FOLDER="kafka_2.11-1.1.0"
-        benchmarkLoop "kafka"
     ;;
     start)
         case $2 in
