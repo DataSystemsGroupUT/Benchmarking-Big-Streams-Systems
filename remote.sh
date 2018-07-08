@@ -14,8 +14,8 @@ LONG_SLEEP=5
 WAIT_AFTER_STOP_PRODUCER=20
 WAIT_AFTER_REBOOT_SERVER=30
 SSH_USER="root"
-#KAFKA_FOLDER="kafka_2.11-0.11.0.2"
-KAFKA_FOLDER="kafka_2.11-1.1.0"
+KAFKA_FOLDER="kafka_2.11-0.11.0.2"
+#KAFKA_FOLDER="kafka_2.11-1.1.0"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load;rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
@@ -30,7 +30,7 @@ LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
 
 DELETE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --delete --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic ad-events;"
-CREATE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 100 --topic ad-events;"
+CREATE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions 300 --topic ad-events;"
 
 START_MONITOR_CPU="top -b -d 1 | grep --line-buffered Cpu > cpu.load;"
 START_MONITOR_MEM="top -b -d 1 | grep --line-buffered 'KiB Mem' > mem.load;"
@@ -116,23 +116,23 @@ function cleanKafka {
 
 function startZK {
     echo "Starting Zookeepers"
-    runCommandZKServers "${START_ZK_CMD}"
+    runCommandZKServers "${START_ZK_CMD}" "nohup"
 }
 
 function stopZK {
     echo "Stopping Zookeepers"
-    runCommandZKServers "${STOP_ZK_CMD}"
+    runCommandZKServers "${STOP_ZK_CMD}" "nohup"
 }
 
 
 function startKafka {
     echo "Starting Kafka nodes"
-    runCommandKafkaServers "${START_KAFKA_CMD}"
+    runCommandKafkaServers "${START_KAFKA_CMD}" "nohup"
 }
 
 function stopKafka {
     echo "Stopping Kafka nodes"
-    runCommandKafkaServers "${STOP_KAFKA_CMD}"
+    runCommandKafkaServers "${STOP_KAFKA_CMD}" "nohup"
 }
 
 function cleanResult {
@@ -206,12 +206,12 @@ function stopSparkProcessing {
 
 function startKafkaStream {
     echo "Starting Kafka Stream"
-    runCommandStreamServers "${START_KAFKA_CMD}"
+    runCommandStreamServers "${START_KAFKA_CMD}" "nohup"
 }
 
 function stopKafkaStream {
     echo "Stopping Kafka Stream"
-    runCommandStreamServers "${STOP_KAFKA_CMD}"
+    runCommandStreamServers "${STOP_KAFKA_CMD}" "nohup"
 }
 
 function startKafkaProcessing {
