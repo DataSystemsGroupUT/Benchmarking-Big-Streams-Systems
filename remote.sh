@@ -388,6 +388,8 @@ function runSystem(){
 function stopAll (){
     stopLoadData
     stopMonitoring
+    stopKafkaProcessing
+    stopKafkaStream
     stopFlinkProcessing
     stopFlink
     stopSparkProcessing "dataset"
