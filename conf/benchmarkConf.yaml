@@ -38,7 +38,7 @@ kafka.topic: "ad-events"
 kafka.partitions: 5
 
 process.hosts: 9
-process.cores: 8
+process.cores: 16
 
 #STORM Specific
 storm.workers: 36

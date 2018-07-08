@@ -30,6 +30,8 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.System.out;
+
 /**
  * This is a basic example of a Storm topology.
  */
@@ -206,7 +208,7 @@ public class AdvertisingTopology {
         int timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
         int parallel = Math.max(1, cores / 7);
 
-        System.out.println("Configuration loading  ");
+        out.println("Configuration loading  ");
         KafkaSpout kafkaSpout = new KafkaSpout(KafkaSpoutConfig.builder(kafkaServerHosts, kafkaTopic).build());
 
         builder.setSpout("ads", kafkaSpout, kafkaPartitions);
@@ -231,6 +233,6 @@ public class AdvertisingTopology {
             cluster.shutdown();
         }
 
-        System.out.println("Configuration done ");
+        out.println("Configuration done ");
     }
 }
