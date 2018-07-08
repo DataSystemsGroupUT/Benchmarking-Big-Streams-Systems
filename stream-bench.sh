@@ -305,7 +305,7 @@ run() {
     stop_if_needed spark.benchmark.KafkaRedisAdvertisingStream "Spark Client Process"
   elif [ "START_KAFKA_PROCESSING" = "$OPERATION" ];
   then
-    start_if_needed kafka.stream "Kafka Processing" 3 java ./kafka-benchmarks/target/kafka-benchmarks-0.1.0.jar -conf $CONF_FILE
+    start_if_needed kafka.stream "Kafka Processing" 3 java -jar ./kafka-benchmarks/target/kafka-benchmarks-0.1.0.jar -conf $CONF_FILE
     sleep 3
   elif [ "STOP_KAFKA_PROCESSING" = "$OPERATION" ];
   then
