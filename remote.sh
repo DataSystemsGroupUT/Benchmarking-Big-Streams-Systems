@@ -14,8 +14,8 @@ LONG_SLEEP=8
 WAIT_AFTER_STOP_PRODUCER=20
 WAIT_AFTER_REBOOT_SERVER=30
 SSH_USER="root"
-#KAFKA_FOLDER="kafka_2.11-0.11.0.2"
-KAFKA_FOLDER="kafka_2.11-1.1.0"
+KAFKA_FOLDER="kafka_2.11-0.11.0.2"
+#KAFKA_FOLDER="kafka_2.11-1.1.0"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load;rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
@@ -263,7 +263,7 @@ function stopMonitoring(){
 }
 
 function changeTps(){
-    runCommandLoadServers "sed -i \"s/LOAD:-1000/LOAD:-$TPS/g\" stream-benchmarking/stream-bench.sh" "nohup"
+    runCommandLoadServers "sed -i \"s/LOAD:-1000/LOAD:-$1/g\" stream-benchmarking/stream-bench.sh" "nohup"
 }
 
 
@@ -409,7 +409,7 @@ function benchmarkLoop (){
         if (("$TPS" > "$TPS_LIMIT")); then
             break
         fi
-        changeTps
+        changeTps $TPS
         runSystem $1 $2
         TPS=$[$TPS + $TPS_RANGE]
     done
@@ -504,10 +504,12 @@ case $1 in
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
-        Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
-        Rscript --vanilla reporting.R "spark_dataset_1000" 1000 60
-        Rscript --vanilla reporting.R "flink" 1000 60
-        Rscript --vanilla reporting.R "storm" 1000 60
+        changeTps 7000
+        runSystem "kafka"
+        #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
+        #Rscript --vanilla reporting.R "spark_dataset_1000" 1000 60
+        #Rscript --vanilla reporting.R "flink" 1000 60
+        #Rscript --vanilla reporting.R "storm" 1000 60
         echo "Please Enter valid command"
 
 esac
