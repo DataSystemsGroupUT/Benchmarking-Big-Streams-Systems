@@ -41,13 +41,13 @@ process.hosts: 9
 process.cores: 8
 
 #STORM Specific
-storm.workers: 36
+storm.workers: 72
 storm.ackers: 9
 
 
 
 #Spark Specific
-spark.batchtime: 3000
+spark.batchtime: 1000
 spark.master: "spark://stream-node01:7077"
 spark.app.name: "KafkaRedisAdvertisingStream"
 
