@@ -53,8 +53,8 @@ object KafkaRedisAdvertisingStream {
 
   def main(args: Array[String]) {
 
-//    val commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true).asInstanceOf[java.util.Map[String, Any]];
-    val commonConfig = Utils.findAndReadConfigFile(args(0), true).asInstanceOf[java.util.Map[String, Any]];
+    val commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true).asInstanceOf[java.util.Map[String, Any]];
+//    val commonConfig = Utils.findAndReadConfigFile(args(0), true).asInstanceOf[java.util.Map[String, Any]];
     val timeDivisor = commonConfig.get("time.divisor") match {
       case n: Number => n.longValue()
       case other => throw new ClassCastException(other + " not a Number")
@@ -169,7 +169,7 @@ object KafkaRedisAdvertisingStream {
         true
       }
       override def process(value: Row) = {
-        writeRedisTopLevel(AdsCounted(value.getString(1), value.getLong(0), value.getLong(2)), redisHost)
+        writeRedisTopLevel(AdsCounted(value.getString(0), value.getLong(1), value.getLong(2)), redisHost)
       }
       override def close(errorOrNull: Throwable) = {
       }
