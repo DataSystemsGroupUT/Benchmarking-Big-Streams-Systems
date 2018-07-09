@@ -143,7 +143,7 @@ object KafkaRedisAdvertisingStream {
 
 //    val campaign_timeStamp = redisJoined.map(campaignTime(_, timeDivisor))
 
-    val totalEventsPerCampaignTime = campaign_timeStamp.groupBy("window_time", "campaign_id")
+    val totalEventsPerCampaignTime = campaign_timeStamp.groupBy("campaign_id", "window_time")
       .count().alias("count")
 
 
@@ -211,7 +211,7 @@ object KafkaRedisAdvertisingStream {
           AdsEnriched(campaign_id, event.ad_id, event.event_time)
           //campaign_id, ad_id, event_time
         } else {
-          AdsEnriched("Campaign_ID not found in either cache nore Redis for the given ad_id!", event.ad_id, event.event_time)
+          null
         }
       }
     } else {

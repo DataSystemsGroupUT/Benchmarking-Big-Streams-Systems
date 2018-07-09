@@ -1,3 +1,7 @@
+kafka.stream.brokers:
+    - "localhost"
+    - "stream-node-01"
+
 kafka.brokers:
     - "localhost"
 
