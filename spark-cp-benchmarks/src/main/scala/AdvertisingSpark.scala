@@ -211,7 +211,7 @@ object KafkaRedisAdvertisingStream {
           AdsEnriched(campaign_id, event.ad_id, event.event_time)
           //campaign_id, ad_id, event_time
         } else {
-          null
+          AdsEnriched("Campaign_ID not found in either cache nore Redis for the given ad_id!", event.ad_id, event.event_time)
         }
       }
     } else {
