@@ -42,7 +42,7 @@ process.cores: 8
 
 #STORM Specific
 storm.workers: 72
-storm.ackers: 9
+storm.ackers: 18
 
 
 
