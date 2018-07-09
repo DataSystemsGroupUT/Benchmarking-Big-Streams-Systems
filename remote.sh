@@ -497,7 +497,7 @@ case $1 in
     ;;
     push)
         git add --all
-        git commit -am "Automatic push message"
+        git commit -am "$2"
         git push origin master
         pullRepository
     ;;
