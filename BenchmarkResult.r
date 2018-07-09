@@ -44,6 +44,6 @@ generateBenchmarkReport <- function(engine, tps, duration){
     xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
     ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
     theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
-  ggsave(paste(engine, ".pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
+  ggsave(paste(engine,"_", duration, ".pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
 
 }
