@@ -362,6 +362,7 @@ function runSystem(){
             startStorm
             sleep ${SHORT_SLEEP}
             startStormProcessing
+            sleep ${LONG_SLEEP}
             benchmark $1
             stopStormProcessing
             sleep ${SHORT_SLEEP}
