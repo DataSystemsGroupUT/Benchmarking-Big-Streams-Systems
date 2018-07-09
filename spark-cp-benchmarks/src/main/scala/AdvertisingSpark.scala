@@ -143,7 +143,7 @@ object KafkaRedisAdvertisingStream {
 
 //    val campaign_timeStamp = redisJoined.map(campaignTime(_, timeDivisor))
 
-    val totalEventsPerCampaignTime = campaign_timeStamp.groupBy("campaign_id", "window_time")
+    val totalEventsPerCampaignTime = campaign_timeStamp.groupBy("window_time", "campaign_id")
       .count().alias("count")
 
 
@@ -169,7 +169,7 @@ object KafkaRedisAdvertisingStream {
         true
       }
       override def process(value: Row) = {
-        writeRedisTopLevel(AdsCounted(value.getString(0), value.getLong(1), value.getLong(2)), redisHost)
+        writeRedisTopLevel(AdsCounted(value.getString(1), value.getLong(0), value.getLong(2)), redisHost)
       }
       override def close(errorOrNull: Throwable) = {
       }
