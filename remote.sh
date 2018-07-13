@@ -16,7 +16,7 @@ WAIT_AFTER_STOP_PRODUCER=20
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
-KAFKA_PARTITION=150
+KAFKA_PARTITION=100
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 #KAFKA_FOLDER="kafka_2.11-1.1.0"
 
@@ -438,10 +438,11 @@ case $1 in
         benchmarkLoop "kafka"
     ;;
     all)
-        benchmarkLoop "storm"
+        benchmarkLoop "flink"
         benchmarkLoop "spark" "dataset"
         benchmarkLoop "spark" "dstream"
-        benchmarkLoop "flink"
+        benchmarkLoop "storm"
+
     ;;
     start)
         case $2 in

@@ -11,6 +11,9 @@ sed -i 's/jobmanager.rpc.address: localhost/jobmanager.rpc.address: stream-node0
 sed -i 's/taskmanager.heap.mb: 6144/taskmanager.heap.mb: 15360/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
 sed -i 's/taskmanager.numberOfTaskSlots: 4/taskmanager.numberOfTaskSlots: 8/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
 
+sed -i 's/taskmanager.heap.mb: 15360/taskmanager.heap.mb: 30720/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
+sed -i 's/taskmanager.numberOfTaskSlots: 8/taskmanager.numberOfTaskSlots: 16/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
+sed -i 's/jobmanager.heap.mb: 1024/jobmanager.heap.mb: 15360/g' /root/stream-benchmarking/flink-1.5.0/conf/flink-conf.yaml
 
 cp /dev/null /root/stream-benchmarking/flink-1.5.0/conf/slaves
 echo "stream-node02" >> /root/stream-benchmarking/flink-1.5.0/conf/slaves
@@ -42,12 +45,12 @@ echo "stream-node10" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf
 
 cp /dev/null /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
 echo "#!/usr/bin/env bash" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
-echo "SPARK_DRIVER_MEMORY=15G" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
-echo "SPARK_EXECUTOR_CORES=8" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
-echo "SPARK_EXECUTOR_MEMORY=15G" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
-echo "SPARK_WORKER_CORES=8" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
-echo "SPARK_WORKER_MEMORY=15g" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
-echo "SPARK_DAEMON_MEMORY=15g" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_DRIVER_MEMORY=30G" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_EXECUTOR_CORES=16" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_EXECUTOR_MEMORY=30G" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_WORKER_CORES=16" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_WORKER_MEMORY=30g" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
+echo "SPARK_DAEMON_MEMORY=30g" >> /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
 chmod +x /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/conf/spark-env.sh
 
 #STORM SETUP
