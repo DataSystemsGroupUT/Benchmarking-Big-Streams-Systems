@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=1800
+TEST_TIME=600
 
 TPS="1000"
 TPS_RANGE=1000
@@ -12,7 +12,7 @@ BATCH="1000"
 SHORT_SLEEP=10
 LONG_SLEEP=20
 
-WAIT_AFTER_STOP_PRODUCER=120
+WAIT_AFTER_STOP_PRODUCER=60
 WAIT_AFTER_REBOOT_SERVER=60
 
 SSH_USER="root"
@@ -510,7 +510,7 @@ case $1 in
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
-        changeTps 7000
+        changeTps 5000
         runSystem "flink"
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
         #Rscript --vanilla reporting.R "spark_dataset_1000" 1000 60
