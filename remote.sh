@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=600
+TEST_TIME=60
 
 TPS="1000"
 TPS_RANGE=1000
@@ -12,7 +12,7 @@ BATCH="1000"
 SHORT_SLEEP=5
 LONG_SLEEP=10
 
-WAIT_AFTER_STOP_PRODUCER=60
+WAIT_AFTER_STOP_PRODUCER=6
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
@@ -326,14 +326,13 @@ function getBenchmarkResult(){
 }
 
 function benchmark(){
-    sleep ${LONG_SLEEP}
     startMonitoring
+    sleep ${LONG_SLEEP}
     startLoadData
     sleep ${TEST_TIME}
     stopLoadData
-    sleep ${LONG_SLEEP}
-    stopMonitoring
     sleep ${WAIT_AFTER_STOP_PRODUCER}
+    stopMonitoring
 }
 
 
@@ -439,10 +438,10 @@ case $1 in
         benchmarkLoop "kafka"
     ;;
     all)
-        benchmarkLoop "flink"
-        benchmarkLoop "spark" "dataset"
         benchmarkLoop "spark" "dstream"
         benchmarkLoop "storm"
+        benchmarkLoop "spark" "dataset"
+
 
     ;;
     start)
