@@ -286,6 +286,7 @@ function stopRedis {
 
 function prepareEnvironment(){
     cleanResult
+    sleep ${SHORT_SLEEP}
     startZK
     sleep ${LONG_SLEEP}
     startKafka
