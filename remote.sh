@@ -510,8 +510,9 @@ case $1 in
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     *)
-        changeTps 5000
-        runSystem "flink"
+        TPS=$[10000]
+        changeTps ${TPS}
+        runSystem "storm"
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
         #Rscript --vanilla reporting.R "spark_dataset_1000" 1000 60
         #Rscript --vanilla reporting.R "flink" 1000 60
