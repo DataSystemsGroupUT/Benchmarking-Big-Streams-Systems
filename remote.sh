@@ -9,16 +9,16 @@ TPS_LIMIT=10000
 
 INITIAL_TPS=${TPS}
 BATCH="1000"
-SHORT_SLEEP=10
-LONG_SLEEP=20
+SHORT_SLEEP=5
+LONG_SLEEP=10
 
 WAIT_AFTER_STOP_PRODUCER=60
-WAIT_AFTER_REBOOT_SERVER=60
+WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
-KAFKA_PARTITION=100
-KAFKA_FOLDER="kafka_2.11-0.11.0.2"
-#KAFKA_FOLDER="kafka_2.11-1.1.0"
+KAFKA_PARTITION=150
+#KAFKA_FOLDER="kafka_2.11-0.11.0.2"
+KAFKA_FOLDER="kafka_2.11-1.1.0"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load; rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
@@ -120,23 +120,23 @@ function cleanKafka {
 
 function startZK {
     echo "Starting Zookeepers"
-    runCommandZKServers "${START_ZK_CMD}"
+    runCommandZKServers "${START_ZK_CMD}" "nohup"
 }
 
 function stopZK {
     echo "Stopping Zookeepers"
-    runCommandZKServers "${STOP_ZK_CMD}"
+    runCommandZKServers "${STOP_ZK_CMD}" "nohup"
 }
 
 
 function startKafka {
     echo "Starting Kafka nodes"
-    runCommandKafkaServers "${START_KAFKA_CMD}"
+    runCommandKafkaServers "${START_KAFKA_CMD}" "nohup"
 }
 
 function stopKafka {
     echo "Stopping Kafka nodes"
-    runCommandKafkaServers "${STOP_KAFKA_CMD}"
+    runCommandKafkaServers "${STOP_KAFKA_CMD}" "nohup"
 }
 
 function cleanResult {
@@ -262,8 +262,8 @@ function startMonitoring(){
 
 function stopMonitoring(){
     echo "Stop Monitoring"
-    runCommandStreamServers "${STOP_MONITOR}"
-    runCommandKafkaServers "${STOP_MONITOR}"
+    runCommandStreamServers "${STOP_MONITOR}" "nohup"
+    runCommandKafkaServers "${STOP_MONITOR}" "nohup"
 }
 
 function changeTps(){
