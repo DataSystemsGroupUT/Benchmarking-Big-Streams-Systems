@@ -232,6 +232,7 @@ public class AdvertisingHeron {
 //
 //    StaticHosts staticHosts = new StaticHosts(partitionInfo);
 
+
     SpoutConfig spoutConfig = new SpoutConfig(hosts,  kafkaTopic, "/" + kafkaTopic, UUID.randomUUID().toString());
     spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
     spoutConfig.zkServers = Arrays.asList("127.0.0.1");
@@ -248,6 +249,12 @@ public class AdvertisingHeron {
 
     Config conf = new Config();
     conf.setDebug(true);
+
+    conf.put("storm.zookeeper.session.timeout", 20000);
+    conf.put("storm.zookeeper.connection.timeout", 15000);
+    conf.put("storm.zookeeper.retry.times", 5);
+    conf.put("storm.zookeeper.retry.interval", 1000);
+
     if (args != null && args.length > 0) {
       HeronSubmitter.submitTopology(args[0], conf, builder.createTopology().getStormTopology());
     }

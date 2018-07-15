@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=600
+TEST_TIME=60
 
 TPS="1000"
 TPS_RANGE=1000
@@ -12,7 +12,7 @@ BATCH="3000"
 SHORT_SLEEP=5
 LONG_SLEEP=10
 
-WAIT_AFTER_STOP_PRODUCER=60
+WAIT_AFTER_STOP_PRODUCER=6
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
@@ -517,10 +517,10 @@ case $1 in
         cleanResult
     ;;
     test)
-        runSystem $2 $3
-#        TPS=$[10000]
-#        changeTps ${TPS}
 #        runSystem $2 $3
+        TPS=$[10000]
+        changeTps ${TPS}
+        runSystem $2 $3
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
         #Rscript --vanilla reporting.R "spark_dataset_1000" 1000 60
         #Rscript --vanilla reporting.R "flink" 1000 60
