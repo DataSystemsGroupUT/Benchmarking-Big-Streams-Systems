@@ -12,7 +12,7 @@ import java.util.UUID
 
 import benchmark.common.Utils
 import org.apache.spark.sql.streaming.Trigger
-import org.apache.spark.sql.{DataFrame, Dataset, ForeachWriter, Row, SparkSession}
+import org.apache.spark.sql.{DataFrame, Dataset, ForeachWriter, SparkSession}
 import org.json.JSONObject
 import org.sedis._
 import redis.clients.jedis._
@@ -176,6 +176,11 @@ object KafkaRedisAdvertisingStream {
       }
     }
 
+//    totalEventsPerCampaignTime.writeStream
+//      .outputMode("complete")
+//      .format("console")
+//      .start()
+////
     val writeToConsole = totalEventsPerCampaignTime
       .writeStream.foreach(writer)
       .trigger(Trigger.ProcessingTime(batchSize))
