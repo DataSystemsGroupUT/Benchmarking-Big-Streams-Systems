@@ -441,8 +441,8 @@ case $1 in
         benchmarkLoop "kafka"
     ;;
     all)
-        benchmarkLoop "storm"
         benchmarkLoop "spark" "dstream"
+        benchmarkLoop "storm"
         benchmarkLoop "spark" "dataset"
     ;;
     start)
