@@ -208,8 +208,8 @@ public class AdvertisingHeron {
     CommandLineParser parser = new DefaultParser();
     CommandLine cmd = parser.parse(opts, args);
     String configPath = cmd.getOptionValue("conf");
-//    Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
-    Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
+    Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
+//    Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
     String zkServerHosts = joinHosts((List<String>)commonConfig.get("zookeeper.servers"),
             Integer.toString((Integer)commonConfig.get("zookeeper.port")));
     String kafkaServerHosts = joinHosts((List<String>) commonConfig.get("kafka.brokers"),
@@ -250,6 +250,7 @@ public class AdvertisingHeron {
     Config conf = new Config();
     conf.setDebug(true);
 
+    conf.setNumStmgrs(1);;
     conf.put("storm.zookeeper.session.timeout", 20000);
     conf.put("storm.zookeeper.connection.timeout", 15000);
     conf.put("storm.zookeeper.retry.times", 5);
