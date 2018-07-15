@@ -24,7 +24,6 @@ import org.apache.kafka.streams.processor.TimestampExtractor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.Tuple7;
 
 import java.util.Date;
 import java.util.List;
@@ -57,6 +56,28 @@ public class AdvertisingPipeline {
         public String event_time;
     }
 
+
+    public static class RowData {
+
+        public RowData(String user_id, String page_id, String ad_id, String ad_type, String event_type, String event_time, String ip_address) {
+            this.user_id = user_id;
+            this.page_id = page_id;
+            this.ad_id = ad_id;
+            this.ad_type = ad_type;
+            this.event_type = event_type;
+            this.event_time = event_time;
+            this.ip_address = ip_address;
+        }
+
+        public String user_id;
+        public String page_id;
+        public String ad_id;
+        public String ad_type;
+        public String event_type;
+        public String event_time;
+        public String ip_address;
+    }
+
     public static void main(final String[] args) throws Exception {
 
         Options opts = new Options();
@@ -87,8 +108,8 @@ public class AdvertisingPipeline {
 
         StreamsBuilder builder = new StreamsBuilder();
         builder.stream(kafkaTopic).mapValues(o -> deserializeBolt(o.toString()))
-                .filter((o, tuple7) -> tuple7._5().equals("view"))
-                .mapValues(tuple7 -> new EnrichedData(tuple7._3(), tuple7._6()))
+                .filter((o, rowData) -> rowData.event_type.equals("view"))
+                .mapValues(rowData -> new EnrichedData(rowData.ad_id, rowData.event_time))
                 .transform(RedisJoinBolt::new)
                 .process(CampaignProcessor::new);
 
@@ -166,19 +187,15 @@ public class AdvertisingPipeline {
     }
 
 
-    public static Tuple7<String, String, String, String, String, String, String> deserializeBolt(String value) {
-
+    public static RowData deserializeBolt(String value) {
         JSONObject obj = new JSONObject(value);
-        Tuple7<String, String, String, String, String, String, String> tuple =
-                new Tuple7<>(
-                        obj.getString("user_id"),
-                        obj.getString("page_id"),
-                        obj.getString("ad_id"),
-                        obj.getString("ad_type"),
-                        obj.getString("event_type"),
-                        obj.getString("event_time"),
-                        obj.getString("ip_address"));
-        return tuple;
+        return new RowData(obj.getString("user_id"),
+                obj.getString("page_id"),
+                obj.getString("ad_id"),
+                obj.getString("ad_type"),
+                obj.getString("event_type"),
+                obj.getString("event_time"),
+                obj.getString("ip_address"));
     }
 
 
