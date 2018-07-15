@@ -20,7 +20,7 @@ KAFKA_PARTITION=100
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 #KAFKA_FOLDER="kafka_2.11-1.1.0"
 
-CLEAN_LOAD_RESULT_CMD="rm *.load;rm -rf /root/stream-benchmarking/apache-storm-1.2.1/logs/*;rm -rf /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/work/*;rm -rf /root/kafka-logs/*;"
+CLEAN_LOAD_RESULT_CMD="rm *.load; rm -rf /root/stream-benchmarking/apache-storm-1.2.1/logs/*; rm -rf /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/work/*; rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt; rm -rf /root/zookeeper/version-2;"
 
@@ -404,7 +404,9 @@ function stopAll (){
     stopSpark
     stopStormProcessing
     stopStorm
+    cleanKafka
     destroyEnvironment
+    cleanResult
 }
 
 
@@ -504,6 +506,9 @@ case $1 in
     ;;
     report)
         Rscript reporting.R
+    ;;
+    reboot)
+        rebootServer
     ;;
     build)
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
