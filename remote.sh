@@ -518,9 +518,9 @@ case $1 in
     ;;
     test)
         runSystem $2 $3
-        TPS=$[10000]
-        changeTps ${TPS}
-        runSystem $2 $3
+#        TPS=$[10000]
+#        changeTps ${TPS}
+#        runSystem $2 $3
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
         #Rscript --vanilla reporting.R "spark_dataset_1000" 1000 60
         #Rscript --vanilla reporting.R "flink" 1000 60
