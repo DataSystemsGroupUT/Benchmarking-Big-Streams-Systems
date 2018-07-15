@@ -114,6 +114,7 @@ function cleanKafka {
     #FIXME delete for Kafka benchmark
     echo "Deleted kafka topic"
     runCommandRedisServer "${DELETE_TOPIC}"
+    sleep
     echo "Created kafka topic"
     runCommandRedisServer "${CREATE_TOPIC}"
 }
