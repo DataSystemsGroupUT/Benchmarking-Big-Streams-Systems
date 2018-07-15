@@ -16,7 +16,7 @@ WAIT_AFTER_STOP_PRODUCER=6
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
-KAFKA_PARTITION=1000
+KAFKA_PARTITION=100
 #KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 KAFKA_FOLDER="kafka_2.11-1.1.0"
 
@@ -508,10 +508,11 @@ case $1 in
     build)
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
-    *)
+    test)
+        runSystem $2 $3
         TPS=$[10000]
         changeTps ${TPS}
-        runSystem "storm"
+        runSystem $2 $3
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
         #Rscript --vanilla reporting.R "spark_dataset_1000" 1000 60
         #Rscript --vanilla reporting.R "flink" 1000 60
