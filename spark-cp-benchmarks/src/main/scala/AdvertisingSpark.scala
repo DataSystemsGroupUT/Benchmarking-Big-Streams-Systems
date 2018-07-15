@@ -143,8 +143,8 @@ object KafkaRedisAdvertisingStream {
     //    val campaign_timeStamp = redisJoined.map(campaignTime(_, timeDivisor))
 
 
-    val totalEventsPerCampaignTime = campaign_timeStamp.groupBy("ad_id", "campaign_id", "window_time")
-      .count().alias("count")
+    val totalEventsPerCampaignTime = campaign_timeStamp.groupByKey(p => (p.campaign_id, p.window_time))
+      .count().as("count")
 
 
     //    val schema = StructType(((String, Long), Int))
@@ -162,14 +162,14 @@ object KafkaRedisAdvertisingStream {
     //    myList.printSchema()
     //campaign_timeStamp.show(10)
 
-    val writer = new ForeachWriter[Row] {
+    val writer = new ForeachWriter[((String, Long), Long) ] {
 
       override def open(partitionId: Long, version: Long) = {
         true
       }
 
-      override def process(value: Row) = {
-        writeRedisTopLevel(AdsCounted(value.getString(0), value.getLong(1), value.getLong(2)), redisHost)
+      override def process(value: ((String, Long), Long)) = {
+        writeRedisTopLevel(AdsCounted(value._1._1, value._1._2, value._2), redisHost)
       }
 
       override def close(errorOrNull: Throwable) = {

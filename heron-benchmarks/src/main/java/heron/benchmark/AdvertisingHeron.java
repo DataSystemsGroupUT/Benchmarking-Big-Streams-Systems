@@ -15,10 +15,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.log4j.Logger;
 import org.apache.storm.LocalCluster;
-import org.apache.storm.kafka.KafkaSpout;
-import org.apache.storm.kafka.SpoutConfig;
-import org.apache.storm.kafka.StringScheme;
-import org.apache.storm.kafka.ZkHosts;
+import org.apache.storm.kafka.*;
+import org.apache.storm.kafka.trident.GlobalPartitionInformation;
 import org.apache.storm.spout.SchemeAsMultiScheme;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -30,6 +28,7 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -209,10 +208,12 @@ public class AdvertisingHeron {
     CommandLineParser parser = new DefaultParser();
     CommandLine cmd = parser.parse(opts, args);
     String configPath = cmd.getOptionValue("conf");
-    Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
-
+//    Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
+    Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
     String zkServerHosts = joinHosts((List<String>)commonConfig.get("zookeeper.servers"),
             Integer.toString((Integer)commonConfig.get("zookeeper.port")));
+    String kafkaServerHosts = joinHosts((List<String>) commonConfig.get("kafka.brokers"),
+            Integer.toString((Integer) commonConfig.get("kafka.port")));
     String redisServerHost = (String)commonConfig.get("redis.host");
     String kafkaTopic = (String)commonConfig.get("kafka.topic");
     int kafkaPartitions = ((Number)commonConfig.get("kafka.partitions")).intValue();
@@ -223,10 +224,18 @@ public class AdvertisingHeron {
     ZkHosts hosts = new ZkHosts(zkServerHosts);
 
 
+//    Broker brokerForPartition1 = new Broker("localhost", 9092);//localhost:9092 but we specified the port explicitly
+//
+//    GlobalPartitionInformation partitionInfo = new GlobalPartitionInformation();
+//
+//    partitionInfo.addPartition(0, brokerForPartition1);//mapping from partition 1 to brokerForPartition1
+//
+//    StaticHosts staticHosts = new StaticHosts(partitionInfo);
 
-
-    SpoutConfig spoutConfig = new SpoutConfig(hosts, kafkaTopic, "/" + kafkaTopic, UUID.randomUUID().toString());
+    SpoutConfig spoutConfig = new SpoutConfig(hosts,  kafkaTopic, "/" + kafkaTopic, UUID.randomUUID().toString());
     spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
+    spoutConfig.zkServers = Arrays.asList("127.0.0.1");
+    spoutConfig.zkPort = 2181;
     KafkaSpout kafkaSpout = new KafkaSpout(spoutConfig);
 
     builder.setSpout("ads", kafkaSpout, kafkaPartitions);
