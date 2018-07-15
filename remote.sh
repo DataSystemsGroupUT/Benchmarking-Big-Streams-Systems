@@ -22,7 +22,7 @@ KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load; rm -rf /root/stream-benchmarking/apache-storm-1.2.1/logs/*; rm -rf /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/work/*; rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
-CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt; rm -rf /root/zookeeper/version-2;"
+CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt; rm -rf /root/zookeeper/version-2/*;"
 
 CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
 SETUP_KAFKA="cd stream-benchmarking; ./stream-bench.sh SETUP_KAFKA"
@@ -144,8 +144,8 @@ function cleanResult {
     echo "Cleaning previous benchmark result"
     runCommandStreamServers "${CLEAN_LOAD_RESULT_CMD}" "nohup"
     runCommandKafkaServers "${CLEAN_LOAD_RESULT_CMD}" "nohup"
-    runCommandRedisServer ${CLEAN_RESULT_CMD} "nohup"
-    runCommandZKServers ${CLEAN_RESULT_CMD} "nohup"
+    runCommandRedisServer "${CLEAN_RESULT_CMD}" "nohup"
+    runCommandZKServers "${CLEAN_RESULT_CMD}" "nohup"
 }
 
 function startFlink {
@@ -512,6 +512,9 @@ case $1 in
     ;;
     build)
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
+    ;;
+    clean)
+        cleanResult
     ;;
     test)
         runSystem $2 $3

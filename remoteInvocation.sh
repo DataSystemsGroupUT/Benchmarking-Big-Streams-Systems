@@ -58,11 +58,11 @@ function runCommandZKServers(){
     while [ ${counter} -le ${ZOOKEEPER_SERVER_COUNT} ]
     do
        if [ "$2" != "nohup" ]; then
-            ssh ${SSH_USER}@zookeeper-node-0${counter} $1
-        else
-            nohup ssh ${SSH_USER}@zookeeper-node-0${counter} $1 &
-        fi
-        ((counter++))
+           ssh ${SSH_USER}@zookeeper-node-0${counter} $1
+       else
+           nohup ssh ${SSH_USER}@zookeeper-node-0${counter} $1 &
+       fi
+       ((counter++))
     done
 }
 
