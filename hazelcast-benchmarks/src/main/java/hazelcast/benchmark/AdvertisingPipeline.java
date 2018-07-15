@@ -86,7 +86,7 @@ public class AdvertisingPipeline {
                 .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
                 .filter(tuple -> tuple._5().equals("view"))
                 .map(tuple1 -> new Tuple2<>(tuple1._3(), tuple1._6()))
-                .drainTo(Sinks.list("someList"));
+                .drainTo(Sinks.logger());
 
 
 //                .map(new RedisJoinBolt(redisServerHost).tryProcess(1))
