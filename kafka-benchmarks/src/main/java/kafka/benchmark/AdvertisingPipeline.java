@@ -25,10 +25,13 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+
 
 
 public class AdvertisingPipeline {
@@ -37,6 +40,7 @@ public class AdvertisingPipeline {
 
     static int timeDivisor;
     static String redisServerHost;
+
 
     public static class EnrichedData {
 
@@ -57,7 +61,7 @@ public class AdvertisingPipeline {
     }
 
 
-    public static class RowData {
+    public static class RowData implements Serializable {
 
         public RowData(String user_id, String page_id, String ad_id, String ad_type, String event_type, String event_time, String ip_address) {
             this.user_id = user_id;
