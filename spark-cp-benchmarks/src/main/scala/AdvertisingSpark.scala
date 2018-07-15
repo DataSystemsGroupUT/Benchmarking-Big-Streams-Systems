@@ -52,7 +52,7 @@ object KafkaRedisAdvertisingStream {
 
   def main(args: Array[String]) {
 
-    //    val commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true).asInstanceOf[java.util.Map[String, Any]];
+//        val commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true).asInstanceOf[java.util.Map[String, Any]];
     val commonConfig = Utils.findAndReadConfigFile(args(0), true).asInstanceOf[java.util.Map[String, Any]];
     val timeDivisor = commonConfig.get("time.divisor") match {
       case n: Number => n.longValue()
@@ -123,15 +123,20 @@ object KafkaRedisAdvertisingStream {
 
     val kafkaData: Dataset[AdsEvent] = messages.selectExpr("CAST(value AS STRING)").map(r ⇒ AdsEvent(r.getString(0)))
 
+
     //Filter the records if event type is "view"
     val filteredOnView = kafkaData.filter("event_type = 'view'")
+
+
 
     //project the event, basically filter the fields.
     val projected = filteredOnView.select("ad_id", "event_time").map(row => AdsFiltered(row.getAs(0), row.getAs(1)))
 
 
+
     //Note that the Storm benchmark caches the results from Redis, we don't do that here yet
     val redisJoined = projected.mapPartitions(queryRedisTopLevel(_, redisHost))
+
 
 
     val campaign_timeStamp = redisJoined.map(event => AdsCalculated(event.ad_id, event.campaign_id, timeDivisor * (event.event_time.toLong / timeDivisor)))
@@ -145,8 +150,11 @@ object KafkaRedisAdvertisingStream {
 
     val totalEventsPerCampaignTime = campaign_timeStamp.groupByKey(p => (p.campaign_id, p.window_time))
       .count().as("count")
-
-
+//
+//    totalEventsPerCampaignTime.writeStream
+//      .outputMode("complete")
+//      .format("console")
+//      .start()
     //    val schema = StructType(((String, Long), Int))
     //
     //    val ds = spark.createDataFrame(List(), schema)
@@ -175,16 +183,16 @@ object KafkaRedisAdvertisingStream {
       override def close(errorOrNull: Throwable) = {
       }
     }
-
+//
 //    totalEventsPerCampaignTime.writeStream
-//      .outputMode("complete")
+//      .outputMode("update")
 //      .format("console")
 //      .start()
-////
+
     val writeToConsole = totalEventsPerCampaignTime
       .writeStream.foreach(writer)
       .trigger(Trigger.ProcessingTime(batchSize))
-      .outputMode("update").start()
+      .outputMode("complete").start()
 
     spark.streams.awaitAnyTermination()
   }

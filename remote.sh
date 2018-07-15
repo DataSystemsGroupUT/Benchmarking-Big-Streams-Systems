@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=600
+TEST_TIME=60
 
 TPS="1000"
 TPS_RANGE=1000
@@ -12,7 +12,7 @@ BATCH="3000"
 SHORT_SLEEP=5
 LONG_SLEEP=10
 
-WAIT_AFTER_STOP_PRODUCER=60
+WAIT_AFTER_STOP_PRODUCER=6
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
@@ -441,9 +441,9 @@ case $1 in
         benchmarkLoop "kafka"
     ;;
     all)
+        benchmarkLoop "spark" "dataset"
         benchmarkLoop "spark" "dstream"
         benchmarkLoop "storm"
-        benchmarkLoop "spark" "dataset"
     ;;
     start)
         case $2 in
@@ -517,7 +517,7 @@ case $1 in
         cleanResult
     ;;
     test)
-#        runSystem $2 $3
+        runSystem $2 $3
         TPS=$[10000]
         changeTps ${TPS}
         runSystem $2 $3
