@@ -203,26 +203,6 @@ public class AdvertisingPipeline {
     }
 
 
-    private static String getTimeDivisor(Map conf) {
-        if (!conf.containsKey("time.divisor")) {
-            throw new IllegalArgumentException("Not time divisor found!");
-        }
-        return String.valueOf(conf.get("time.divisor"));
-    }
-
-    private static String getKafkaTopic(Map conf) {
-        if (!conf.containsKey("kafka.topic")) {
-            throw new IllegalArgumentException("No kafka topic found!");
-        }
-        return (String) conf.get("kafka.topic");
-    }
-
-    private static String getRedisHost(Map conf) {
-        if (!conf.containsKey("redis.host")) {
-            throw new IllegalArgumentException("No redis host found!");
-        }
-        return (String) conf.get("redis.host");
-    }
 
     private static String joinHosts(List<String> hosts, String port) {
         String joined = null;
