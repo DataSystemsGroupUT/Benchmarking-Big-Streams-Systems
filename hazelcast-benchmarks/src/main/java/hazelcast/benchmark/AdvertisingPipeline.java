@@ -13,6 +13,9 @@ import com.hazelcast.jet.core.AbstractProcessor;
 import com.hazelcast.jet.core.DAG;
 import com.hazelcast.jet.core.Edge;
 import com.hazelcast.jet.core.Vertex;
+import com.hazelcast.jet.kafka.KafkaSources;
+import com.hazelcast.jet.pipeline.Pipeline;
+import com.hazelcast.jet.pipeline.Sinks;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -65,12 +68,6 @@ public class AdvertisingPipeline {
 
         logger.info("******************");
         logger.info(redisServerHost);
-//        campaignProcessorCommon = new CampaignProcessorCommon(redisServerHost, Long.valueOf(timeDivisor));
-//        redisAdCampaignCache= new RedisAdCampaignCache(redisServerHost);
-//        campaignProcessorCommon.prepare();
-//        redisAdCampaignCache.prepare();
-
-
 
         JetInstance instance = Jet.newJetInstance();
 
@@ -83,37 +80,31 @@ public class AdvertisingPipeline {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getCanonicalName());
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-//        Pipeline pipeline = Pipeline.create();
-//        pipeline
-//                .drawFrom(KafkaSources.kafka(properties, kafkaTopic))
-//                .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
-//                .filter(tuple -> tuple._5().equals("view"))
-//                .map(tuple1 -> new Tuple2<>(tuple1._3(), tuple1._6()));
+        Pipeline pipeline = Pipeline.create();
+        pipeline
+                .drawFrom(KafkaSources.kafka(properties, kafkaTopic))
+                .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
+                .filter(tuple -> tuple._5().equals("view"))
+                .map(tuple1 -> new Tuple2<>(tuple1._3(), tuple1._6()))
+                .drainTo(Sinks.list("someList"));
+
+
 //                .map(new RedisJoinBolt(redisServerHost).tryProcess(1))
-//                .drainTo(Sinks.list("someList"));
 
 
-        DAG dag = new DAG();
+//        DAG dag = new DAG();
 
 
 
 //        Vertex consume = dag.newVertex("consume", KafkaSources.kafka(properties,kafkaTopic));
 
-        Vertex enrich = dag.newVertex("enrich", () -> new RedisJoinBolt(redisServerHost));
-        enrich.localParallelism(1);
-
-        Vertex sink = dag.newVertex("sink", writeLoggerP(o -> Arrays.toString((Object[]) o)));
-
-
-        dag.edge(Edge.between(enrich,sink));
-
-
-
-        try {
-            instance.newJob(dag).join();
-        } finally {
-            Jet.shutdownAll();
-        }
+//        Vertex enrich = dag.newVertex("enrich", () -> new RedisJoinBolt(redisServerHost));
+//        enrich.localParallelism(1);
+//
+//        Vertex sink = dag.newVertex("sink", writeLoggerP(o -> Arrays.toString((Object[]) o)));
+//
+//
+//        dag.edge(Edge.between(enrich,sink));
 
     }
 
@@ -148,25 +139,6 @@ public class AdvertisingPipeline {
         }
     }
 
-//    public static class RedisJoinBolt implements DistributedFunction<Tuple2, Tuple3> {
-//
-//        private final RedisAdCampaignCache redisAdCampaignCache;
-//
-//        public RedisJoinBolt(String redisHost) {
-//            this.redisAdCampaignCache = new RedisAdCampaignCache(redisHost);
-//        }
-//
-//        @Override
-//        public Tuple3 apply(Tuple2 tuple) {
-//            logger.info(tuple.toString());
-//            String ad_id = tuple._1().toString();
-//            String campaign_id = redisAdCampaignCache.execute(ad_id);
-//            if (campaign_id == null) {
-//                return null;
-//            }
-//            return new Tuple3<>(campaign_id, ad_id, tuple._2.toString());
-//        }
-//    }
 
     private static void campaignProcessor(Tuple3 tuple) {
         logger.info(tuple.toString());
