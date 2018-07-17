@@ -10,12 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>heron-benchmarks</artifactId>
+
     <dependencies>
         <dependency>
-            <groupId>com.twitter.heron</groupId>
-            <artifactId>heron-api</artifactId>
-            <version>${heron.version}</version>
-            <scope>compile</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.5</version>
         </dependency>
         <dependency>
             <groupId>com.twitter.heron</groupId>
@@ -30,8 +30,11 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_${scala.binary.version}</artifactId>
-            <version>${kafka.version}</version>
             <exclusions>
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
@@ -41,6 +44,7 @@
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
+            <version>${kafka.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>

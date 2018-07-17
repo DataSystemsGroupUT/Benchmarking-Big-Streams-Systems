@@ -8,15 +8,16 @@ import benchmark.common.Utils;
 import benchmark.common.advertising.CampaignProcessorCommon;
 import benchmark.common.advertising.RedisAdCampaignCache;
 import com.twitter.heron.api.Config;
-import com.twitter.heron.api.HeronSubmitter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
-import org.apache.log4j.Logger;
 import org.apache.storm.LocalCluster;
-import org.apache.storm.kafka.*;
-import org.apache.storm.kafka.trident.GlobalPartitionInformation;
+import org.apache.storm.StormSubmitter;
+import org.apache.storm.kafka.KafkaSpout;
+import org.apache.storm.kafka.SpoutConfig;
+import org.apache.storm.kafka.StringScheme;
+import org.apache.storm.kafka.ZkHosts;
 import org.apache.storm.spout.SchemeAsMultiScheme;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -36,14 +37,12 @@ import java.util.UUID;
 //import backtype.storm.utils.Utils;
 
 /**
- * This is a basic example of a Storm topology.
+ * This is a basic example of a Heron topology.
  */
 public class AdvertisingHeron {
 
   public static class DeserializeBolt extends BaseRichBolt {
     OutputCollector _collector;
-
-    private static final Logger logger = Logger.getLogger(DeserializeBolt.class);
 
     @Override
     public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
@@ -52,8 +51,7 @@ public class AdvertisingHeron {
 
     @Override
     public void execute(Tuple tuple) {
-      logger.info(tuple.toString());
-      JSONObject obj = new JSONObject(tuple.getString(4));
+        JSONObject obj = new JSONObject(tuple.getString(0));
       _collector.emit(tuple, new Values(obj.getString("user_id"),
               obj.getString("page_id"),
               obj.getString("ad_id"),
@@ -151,7 +149,7 @@ public class AdvertisingHeron {
 
   public static class CampaignProcessor extends BaseRichBolt {
 
-    private static final Logger LOG = Logger.getLogger(CampaignProcessor.class);
+//    private static final Logger LOG = Logger.getLogger(CampaignProcessor.class);
 
     private OutputCollector _collector;
     transient private CampaignProcessorCommon campaignProcessorCommon;
@@ -208,8 +206,8 @@ public class AdvertisingHeron {
     CommandLineParser parser = new DefaultParser();
     CommandLine cmd = parser.parse(opts, args);
     String configPath = cmd.getOptionValue("conf");
-    Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
-//    Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
+//    Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
+      Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
     String zkServerHosts = joinHosts((List<String>)commonConfig.get("zookeeper.servers"),
             Integer.toString((Integer)commonConfig.get("zookeeper.port")));
     String kafkaServerHosts = joinHosts((List<String>) commonConfig.get("kafka.brokers"),
@@ -235,8 +233,10 @@ public class AdvertisingHeron {
 
     SpoutConfig spoutConfig = new SpoutConfig(hosts,  kafkaTopic, "/" + kafkaTopic, UUID.randomUUID().toString());
     spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
-    spoutConfig.zkServers = Arrays.asList("127.0.0.1");
+      spoutConfig.zkServers = Arrays.asList("localhost");
     spoutConfig.zkPort = 2181;
+      spoutConfig.startOffsetTime = kafka.api.OffsetRequest.LatestTime();
+
     KafkaSpout kafkaSpout = new KafkaSpout(spoutConfig);
 
     builder.setSpout("ads", kafkaSpout, kafkaPartitions);
@@ -250,14 +250,18 @@ public class AdvertisingHeron {
     Config conf = new Config();
     conf.setDebug(true);
 
-    conf.setNumStmgrs(1);;
+      conf.setNumStmgrs(2);
+
     conf.put("storm.zookeeper.session.timeout", 20000);
     conf.put("storm.zookeeper.connection.timeout", 15000);
     conf.put("storm.zookeeper.retry.times", 5);
     conf.put("storm.zookeeper.retry.interval", 1000);
 
+
     if (args != null && args.length > 0) {
-      HeronSubmitter.submitTopology(args[0], conf, builder.createTopology().getStormTopology());
+//      HeronSubmitter.submitTopology(args[0], conf, builder.createTopology().getStormTopology());
+        StormSubmitter.submitTopology("test-topo", conf, builder.createTopology());
+
     }
     else {
 
