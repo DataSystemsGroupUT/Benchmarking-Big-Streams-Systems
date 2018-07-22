@@ -46,8 +46,8 @@ STOP_STORM_SUPERVISOR_CMD="ps aux | grep storm | awk {'print \$2'} | xargs sudo 
 START_STORM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_STORM_TOPOLOGY;"
 STOP_STORM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_STORM_TOPOLOGY;"
 
-START_HERON_CMD="cd stream-benchmarking; ./stream-bench.sh START_HERON;"
-STOP_HERON_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_HERON;"
+START_HERON_CMD="heron-admin standalone cluster start;"
+STOP_HERON_CMD="yes yes | heron-admin standalone cluster stop;"
 START_HERON_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_HERON_PROCESSING;"
 STOP_HERON_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_HERON_PROCESSING;"
 
