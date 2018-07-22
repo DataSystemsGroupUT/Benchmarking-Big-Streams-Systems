@@ -1,0 +1,6 @@
+ubuntu     814  0.7  4.8 11211044 397580 ?     Sl   14:06   0:14 /usr/lib/jvm/java-8-oracle/bin/java -cp /home/ubuntu/stream-benchmarking/spark-2.2.1-bin-hadoop2.6/conf/:/home/ubuntu/stream-benchmarking/spark-2.2.1-bin-hadoop2.6/jars/* -Xmx7g org.apache.spark.deploy.master.Master --host stream-node01 --port 7077 --webui-port 8080
+ubuntu     946  8.2  7.3 10283224 598192 ?     Sl   14:06   2:30 /usr/lib/jvm/java-8-oracle/bin/java -cp /home/ubuntu/stream-benchmarking/spark-2.2.1-bin-hadoop2.6/conf/:/home/ubuntu/stream-benchmarking/spark-2.2.1-bin-hadoop2.6/jars/* -Xmx6G org.apache.spark.deploy.SparkSubmit --master spark://stream-node01:7077 --class spark.benchmark.KafkaRedisAdvertisingStream ./spark-benchmarks/target/spark-benchmarks-0.1.0.jar ./conf/localConf.yaml
+ubuntu    1097  0.0  0.0  11232  2920 ?        Ss   14:06   0:00 bash -c top -b -d 1 | grep --line-buffered java > stream.process;
+ubuntu    1099  0.0  0.0  12944   968 ?        S    14:06   0:00 grep --line-buffered java
+ubuntu    1296  0.0  0.0  11232  2944 ?        Ss   14:36   0:00 bash -c ps aux | grep java > stream.pid
+ubuntu    1298  0.0  0.0  12944   928 ?        S    14:36   0:00 grep java

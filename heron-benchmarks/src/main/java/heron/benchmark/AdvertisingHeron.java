@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 //import backtype.storm.utils.Utils;
 
@@ -233,7 +234,7 @@ public class AdvertisingHeron {
 
         SpoutConfig spoutConfig = new SpoutConfig(hosts, kafkaTopic, "/" + kafkaTopic, UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
-        spoutConfig.zkServers = zkServers;
+        spoutConfig.zkServers = zkServers.stream().map(host-> host+":"+2181).collect(Collectors.toList());
         spoutConfig.zkPort = 2181;
         spoutConfig.startOffsetTime = kafka.api.OffsetRequest.LatestTime();
 

@@ -400,7 +400,6 @@ function runSystem(){
         heron)
             prepareEnvironment
             startHeron
-            sleep 60
             startHeronProcessing
             sleep ${LONG_SLEEP}
             benchmark $1
