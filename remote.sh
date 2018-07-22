@@ -499,6 +499,9 @@ case $1 in
             storm)
                 startStorm
             ;;
+            heron)
+                startHeron
+            ;;
             process)
                 startStormProcessing
             ;;
