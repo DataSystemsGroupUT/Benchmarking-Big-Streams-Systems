@@ -511,6 +511,7 @@ case $1 in
                 startZK
                 sleep ${SHORT_SLEEP}
                 startHeron
+                startHeronProcessing
             ;;
             process)
                 startStormProcessing
@@ -537,6 +538,7 @@ case $1 in
                 stopZK
             ;;
             heron)
+                stopHeronProcessing
                 stopHeron
                 sleep ${SHORT_SLEEP}
                 stopZK
