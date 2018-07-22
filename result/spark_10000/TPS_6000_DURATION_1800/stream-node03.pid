@@ -1,6 +1,0 @@
-ubuntu   29323  0.6  3.2 11174156 262116 ?     Sl   14:06   0:11 /usr/lib/jvm/java-8-oracle/bin/java -cp /home/ubuntu/stream-benchmarking/spark-2.2.1-bin-hadoop2.6/conf/:/home/ubuntu/stream-benchmarking/spark-2.2.1-bin-hadoop2.6/jars/* -Xmx7g org.apache.spark.deploy.worker.Worker --webui-port 8081 spark://stream-node01:7077
-ubuntu   29381 14.9  7.1 10261556 588036 ?     Sl   14:06   4:33 /usr/lib/jvm/java-8-oracle/bin/java -cp /home/ubuntu/stream-benchmarking/spark-2.2.1-bin-hadoop2.6/conf/:/home/ubuntu/stream-benchmarking/spark-2.2.1-bin-hadoop2.6/jars/* -Xmx6144M -Dspark.driver.port=41190 org.apache.spark.executor.CoarseGrainedExecutorBackend --driver-url spark://CoarseGrainedScheduler@192.168.42.17:41190 --executor-id 1 --hostname 192.168.42.25 --cores 4 --app-id app-20180329140630-0000 --worker-url spark://Worker@192.168.42.25:46750
-ubuntu   29457  0.0  0.0  11232  2892 ?        Ss   14:06   0:00 bash -c top -b -d 1 | grep --line-buffered java > stream.process;
-ubuntu   29459  0.0  0.0  12944   920 ?        S    14:06   0:00 grep --line-buffered java
-ubuntu   29599  0.0  0.0  11232  2932 ?        Ss   14:36   0:00 bash -c ps aux | grep java > stream.pid
-ubuntu   29601  0.0  0.0  12944  1080 ?        S    14:36   0:00 grep java
