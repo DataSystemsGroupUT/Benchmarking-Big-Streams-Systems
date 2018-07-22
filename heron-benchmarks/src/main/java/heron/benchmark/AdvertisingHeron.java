@@ -251,7 +251,7 @@ public class AdvertisingHeron {
         Config conf = new Config();
         conf.setDebug(true);
 
-//        conf.setNumStmgrs(3);
+        conf.setNumStmgrs(28);
 
         conf.put("storm.zookeeper.session.timeout", 20000);
         conf.put("storm.zookeeper.connection.timeout", 15000);
