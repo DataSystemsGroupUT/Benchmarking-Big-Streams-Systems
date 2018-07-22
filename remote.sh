@@ -50,7 +50,8 @@ START_HERON_CMD="heron-admin standalone cluster start;"
 STOP_HERON_CMD="yes yes | heron-admin standalone cluster stop;"
 START_HERON_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_HERON_PROCESSING;"
 STOP_HERON_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_HERON_PROCESSING;"
-
+COMMENT_ZOO="sed -i \"s/heron.statemgr.connection.string/#heron.statemgr.connection.string/g\" ~/.heron/conf/standalone/statemgr.yaml;"
+ADD_ZOO="echo \"heron.statemgr.connection.string: zookeeper-node03:2181,zookeeper-node02:2181,zookeeper-node01:2181\" >> ~/.heron/conf/standalone/statemgr.yaml"
 
 START_FLINK_CMD="cd stream-benchmarking; ./flink-1.5.0/bin/start-cluster.sh;"
 STOP_FLINK_CMD="cd stream-benchmarking; ./flink-1.5.0/bin/stop-cluster.sh;"
@@ -158,6 +159,8 @@ function cleanResult {
 function startHeron {
     echo "Starting Heron"
     runCommandMasterStreamServers "${START_HERON_CMD}"
+    runCommandStreamServers "${COMMENT_ZOO}"
+    runCommandStreamServers "${ADD_ZOO}"
 }
 
 function stopHeron {
@@ -297,6 +300,8 @@ function stopMonitoring(){
 function changeTps(){
     runCommandLoadServers "sed -i \"s/LOAD:-1000/LOAD:-$1/g\" stream-benchmarking/stream-bench.sh" "nohup"
 }
+
+
 
 
 function startRedis {
