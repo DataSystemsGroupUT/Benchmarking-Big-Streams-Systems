@@ -39,6 +39,10 @@ if(length(args) == 0){
   generateBenchmarkReport("storm", 1000, 1800)
   generateStreamServerLoadReport("storm", 1000, 1800)
   generateKafkaServerLoadReport("storm", 1000, 1800)
+
+  generateBenchmarkReport("heron", 1000, 1800)
+  generateStreamServerLoadReport("heron", 1000, 1800)
+  generateKafkaServerLoadReport("heron", 1000, 1800)
 }
   
 

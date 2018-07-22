@@ -41,9 +41,9 @@ ZK_HOST="localhost"
 ZK_PORT="2181"
 ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
-PARTITIONS=${PARTITIONS:-1}
+PARTITIONS=${PARTITIONS:-100}
 LOAD=${LOAD:-1000}
-CONF_FILE=./conf/localConf.yaml
+CONF_FILE=./conf/benchmarkConf.yaml
 TEST_TIME=${TEST_TIME:-1800}
 
 pid_match() {
@@ -324,19 +324,19 @@ run() {
       "$FLINK_DIR/bin/flink" cancel $FLINK_ID
       sleep 3
     fi
-  elif [ "START_HERON" = "$OPERATION" ];
+  elif [ "START_HERON_PROCESSING" = "$OPERATION" ];
       then
-        "$HERON_DIR/bin/heron" submit standalone ./heron-benchmarks/target/heron-benchmarks-0.1.0.jar heron.benchmark.AdvertisingHeron test-topo -conf $CONF_FILE
-         sleep 5
+        heron submit standalone ./heron-benchmarks/target/heron-benchmarks-0.1.0.jar heron.benchmark.AdvertisingHeron test-topo -conf $CONF_FILE
+        sleep 5
+  elif [ "STOP_HERON_PROCESSING" = "$OPERATION" ];
+       then
+       heron kill standalone test-topo
+  elif [ "START_HERON" = "$OPERATION" ];
+       then
+        heron-admin standalone cluster start
   elif [ "STOP_HERON" = "$OPERATION" ];
        then
-       pkill -f heron_benchmark
-  elif [ "START_HERON_ON_YARN" = "$OPERATION" ];
-       then
-        "$HERON_DIR/bin/heron submit standalone ./heron-benchmarks/target/heron-benchmarks-0.1.0.jar heron.benchmark.AdvertisingHeron AdvertisingHeron test-topo -conf $CONF_FILE"
-  elif [ "STOP_HERON_ON_YARN" = "$OPERATION" ];
-       then
-       echo ""
+       yes yes | heron-admin standalone cluster stop
   elif [ "STORM_TEST" = "$OPERATION" ];
   then
     run "START_ZK"

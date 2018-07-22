@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=600
+TEST_TIME=60
 
 TPS="1000"
 TPS_RANGE=1000
@@ -12,11 +12,11 @@ BATCH="3000"
 SHORT_SLEEP=5
 LONG_SLEEP=10
 
-WAIT_AFTER_STOP_PRODUCER=60
+WAIT_AFTER_STOP_PRODUCER=6
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
-KAFKA_PARTITION=300
+KAFKA_PARTITION=100
 #KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 KAFKA_FOLDER="kafka_2.11-1.1.0"
 
@@ -45,6 +45,12 @@ START_STORM_SUPERVISOR_CMD="cd stream-benchmarking; ./apache-storm-1.2.1/bin/sto
 STOP_STORM_SUPERVISOR_CMD="ps aux | grep storm | awk {'print \$2'} | xargs sudo kill;"
 START_STORM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_STORM_TOPOLOGY;"
 STOP_STORM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_STORM_TOPOLOGY;"
+
+START_HERON_CMD="heron-admin standalone cluster start"
+STOP_HERON_CMD="yes yes | heron-admin standalone cluster stop"
+START_HERON_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_HERON_PROCESSING;"
+STOP_HERON_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_HERON_PROCESSING;"
+
 
 START_FLINK_CMD="cd stream-benchmarking; ./flink-1.5.0/bin/start-cluster.sh;"
 STOP_FLINK_CMD="cd stream-benchmarking; ./flink-1.5.0/bin/stop-cluster.sh;"
@@ -146,6 +152,27 @@ function cleanResult {
     runCommandKafkaServers "${CLEAN_LOAD_RESULT_CMD}" "nohup"
     runCommandRedisServer "${CLEAN_RESULT_CMD}" "nohup"
     runCommandZKServers "${CLEAN_RESULT_CMD}" "nohup"
+}
+
+
+function startHeron {
+    echo "Starting Heron"
+    runCommandMasterStreamServers "${START_HERON_CMD}"
+}
+
+function stopHeron {
+    echo "Stopping Heron"
+    runCommandMasterStreamServers "${STOP_HERON_CMD}"
+}
+
+function startHeronProcessing {
+    echo "Starting Heron Processing"
+    runCommandMasterStreamServers "${START_HERON_PROC_CMD}"
+}
+
+function stopHeronProcessing {
+    echo "Stopping Heron Processing"
+    runCommandMasterStreamServers "${STOP_HERON_PROC_CMD}"
 }
 
 function startFlink {
@@ -370,6 +397,17 @@ function runSystem(){
             sleep ${SHORT_SLEEP}
             stopStorm
         ;;
+        heron)
+            prepareEnvironment
+            startHeron
+            sleep ${SHORT_SLEEP}
+            startHeronProcessing
+            sleep ${LONG_SLEEP}
+            benchmark $1
+            stopHeronProcessing
+            sleep ${SHORT_SLEEP}
+            stopHeron
+        ;;
         kafka)
             cleanResult
             startZK
@@ -404,6 +442,8 @@ function stopAll (){
     stopSpark
     stopStormProcessing
     stopStorm
+    stopHeronProcessing
+    stopHeron
     cleanKafka
     destroyEnvironment
     cleanResult
@@ -439,6 +479,9 @@ case $1 in
     ;;
     kafka)
         benchmarkLoop "kafka"
+    ;;
+    heron)
+        benchmarkLoop "heron"
     ;;
     all)
         benchmarkLoop "spark" "dataset"
@@ -477,6 +520,9 @@ case $1 in
             ;;
             storm)
                 stopStorm
+            ;;
+            heron)
+                stopHeron
             ;;
             process)
                 stopStormProcessing
