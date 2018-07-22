@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=60
+TEST_TIME=600
 
 TPS="1000"
 TPS_RANGE=1000
@@ -47,9 +47,11 @@ START_STORM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_STORM_TOPO
 STOP_STORM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_STORM_TOPOLOGY;"
 
 START_HERON_CMD="heron-admin standalone cluster start;"
+START_HERON_API_CMD="heron-apiserver --cluster standalone;"
 STOP_HERON_CMD="yes yes | heron-admin standalone cluster stop;"
 START_HERON_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_HERON_PROCESSING;"
 STOP_HERON_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_HERON_PROCESSING;"
+
 COMMENT_ZOO="sed -i \"s/heron.statemgr.connection.string/#heron.statemgr.connection.string/g\" ~/.heron/conf/standalone/statemgr.yaml;"
 ADD_ZOO="echo \"heron.statemgr.connection.string: zookeeper-node03:2181,zookeeper-node02:2181,zookeeper-node01:2181\" >> ~/.heron/conf/standalone/statemgr.yaml"
 
@@ -158,16 +160,16 @@ function cleanResult {
 
 function startHeron {
     echo "Starting Heron"
-    #runCommandMasterStreamServers "${START_ZK_CMD}"
+    runCommandMasterStreamServers "${START_ZK_CMD}"
     runCommandMasterStreamServers "${START_HERON_CMD}"
-    runCommandMasterStreamServers "${COMMENT_ZOO}"
-    runCommandMasterStreamServers "${ADD_ZOO}"
+    #runCommandMasterStreamServers "${COMMENT_ZOO}"
+    #runCommandMasterStreamServers "${ADD_ZOO}"
 }
 
 function stopHeron {
     echo "Stopping Heron"
     runCommandMasterStreamServers "${STOP_HERON_CMD}"
-    #runCommandMasterStreamServers "${STOP_ZK_CMD}"
+    runCommandMasterStreamServers "${STOP_ZK_CMD}"
 }
 
 function startHeronProcessing {

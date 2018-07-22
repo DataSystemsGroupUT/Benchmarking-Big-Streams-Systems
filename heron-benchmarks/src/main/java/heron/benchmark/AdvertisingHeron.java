@@ -232,7 +232,7 @@ public class AdvertisingHeron {
 //    StaticHosts staticHosts = new StaticHosts(partitionInfo);
 
 
-        SpoutConfig spoutConfig = new SpoutConfig(hosts, kafkaTopic, "/" + kafkaTopic, UUID.randomUUID().toString());
+        SpoutConfig spoutConfig = new SpoutConfig(hosts, kafkaTopic, "/heron", UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
         spoutConfig.zkServers = zkServers;
         spoutConfig.zkPort = 2181;
