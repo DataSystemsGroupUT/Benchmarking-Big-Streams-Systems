@@ -513,16 +513,24 @@ case $1 in
                 startZK
                 sleep ${SHORT_SLEEP}
                 startHeron
-                startHeronProcessing
             ;;
             process)
-                startStormProcessing
+                startHeronProcessing
+            ;;
+            redis)
+                startRedis
+            ;;
+            kafka)
+                startKafka
             ;;
             zoo)
                 startZK
             ;;
             prepare)
                 prepareEnvironment
+            ;;
+            load)
+                startLoadData
             ;;
         esac
     ;;
@@ -540,16 +548,21 @@ case $1 in
                 stopZK
             ;;
             heron)
-                stopHeronProcessing
                 stopHeron
                 sleep ${SHORT_SLEEP}
                 stopZK
             ;;
             process)
-                stopStormProcessing
+                stopHeronProcessing
             ;;
             zoo)
                 stopZK
+            ;;
+            load)
+                stopLoadData
+            ;;
+            redis)
+                stopRedis
             ;;
             kafka)
                 stopKafka

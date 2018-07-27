@@ -234,8 +234,8 @@ public class AdvertisingHeron {
 
         SpoutConfig spoutConfig = new SpoutConfig(hosts, kafkaTopic, "/heron", UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
-        spoutConfig.zkServers = zkServers;
-        spoutConfig.zkPort = 2181;
+//        spoutConfig.zkServers = Arrays.asList("stream-node01");
+//        spoutConfig.zkPort = 2181;
         spoutConfig.startOffsetTime = kafka.api.OffsetRequest.LatestTime();
 
         KafkaSpout kafkaSpout = new KafkaSpout(spoutConfig);

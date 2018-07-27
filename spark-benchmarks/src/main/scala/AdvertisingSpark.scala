@@ -9,27 +9,22 @@ package spark.benchmark
 
 import java.util
 
-import kafka.serializer.StringDecoder
-import org.apache.spark.streaming
 import org.apache.spark.streaming.{Milliseconds, StreamingContext}
-import org.apache.spark.streaming.dstream
+
 import org.apache.spark.SparkConf
 import org.json.JSONObject
 import org.sedis._
 import redis.clients.jedis._
 
 import scala.collection.Iterator
-import org.apache.spark.rdd.RDD
-import java.util.{LinkedHashMap, UUID}
+import java.util.UUID
 
 import compat.Platform.currentTime
 import benchmark.common.Utils
-import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.streaming.kafka010.{ConsumerStrategies, KafkaUtils, LocationStrategies}
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable.Buffer
 
 object KafkaRedisAdvertisingStream {
   def main(args: Array[String]) {
