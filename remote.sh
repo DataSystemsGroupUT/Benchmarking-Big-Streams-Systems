@@ -582,7 +582,7 @@ case $1 in
         git add --all
         git commit -am "$2"
         git push origin master
-        pullRepository
+        runAllServers "${PULL_GIT}"
     ;;
     report)
         Rscript reporting.R
