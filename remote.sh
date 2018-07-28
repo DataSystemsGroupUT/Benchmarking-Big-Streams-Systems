@@ -3,9 +3,9 @@
 
 TEST_TIME=60
 
-TPS="1000"
+TPS="10000"
 TPS_RANGE=1000
-TPS_LIMIT=10000
+TPS_LIMIT=20000
 
 INITIAL_TPS=${TPS}
 BATCH="3000"
@@ -16,7 +16,7 @@ WAIT_AFTER_STOP_PRODUCER=6
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
-KAFKA_PARTITION=1
+KAFKA_PARTITION=5
 #KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 KAFKA_FOLDER="kafka_2.11-1.1.0"
 
@@ -301,7 +301,7 @@ function stopMonitoring(){
 }
 
 function changeTps(){
-    runCommandLoadServers "sed -i \"s/LOAD:-1000/LOAD:-$1/g\" stream-benchmarking/stream-bench.sh" "nohup"
+    runCommandLoadServers "sed -i \"s/LOAD:-${INITIAL_TPS}/LOAD:-$1/g\" stream-benchmarking/stream-bench.sh" "nohup"
 }
 
 
@@ -358,7 +358,7 @@ function getBenchmarkResult(){
     getResultFromKafkaServer "${PATH_RESULT}"
     getResultFromRedisServer "${PATH_RESULT}"
     sleep ${SHORT_SLEEP}
-    Rscript reporting.R ${ENGINE_PATH} ${INITIAL_TPS} ${TEST_TIME}
+    Rscript reporting/reporting.R ${ENGINE_PATH} ${INITIAL_TPS} ${TEST_TIME}
 }
 
 function benchmark(){

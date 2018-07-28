@@ -11,10 +11,10 @@ source('~/Desktop/EDU/THESIS/stream-benchmarking/StreamServerReport.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/KafkaServerReport.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/BenchmarkResult.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/BenchmarkPercentile.R')
-generateBenchmarkPercentile("flink", 1000, 600)
-generateBenchmarkReport("flink", 1000, 600)
-generateStreamServerLoadReport("flink", 1000, 600)
-generateKafkaServerLoadReport("flink", 1000, 600)
+generateBenchmarkReport("kafka", 1000, 60)
+generateStreamServerLoadReport("kafka", 1000, 60)
+generateKafkaServerLoadReport("kafka", 1000, 60)
+generateBenchmarkPercentile("kafka", 1000, 60)
 
 
 
