@@ -28,7 +28,7 @@ CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt; rm -rf /root/zookeeper/
 CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
 SETUP_KAFKA="cd stream-benchmarking; ./stream-bench.sh SETUP_KAFKA"
 
-CHANGE_TPS_CMD="sed -i “s/LOAD:-1000/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
+CHANGE_TPS_CMD="sed -i “s/LOAD:-${INITIAL_TPS}/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
 
 LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
@@ -301,6 +301,7 @@ function stopMonitoring(){
 }
 
 function changeTps(){
+    #TODO replace with CHANGE_TPS_CMD variable
     runCommandLoadServers "sed -i \"s/LOAD:-${INITIAL_TPS}/LOAD:-$1/g\" stream-benchmarking/stream-bench.sh" "nohup"
 }
 
