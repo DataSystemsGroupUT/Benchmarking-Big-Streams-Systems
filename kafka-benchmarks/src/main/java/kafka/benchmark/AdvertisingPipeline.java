@@ -55,9 +55,9 @@ public class AdvertisingPipeline {
             this.event_time = event_time;
         }
 
-        public String ad_id;
-        public String campaign_id;
-        public String event_time;
+        String ad_id;
+        String campaign_id;
+        String event_time;
     }
 
 
@@ -73,13 +73,13 @@ public class AdvertisingPipeline {
             this.ip_address = ip_address;
         }
 
-        public String user_id;
-        public String page_id;
-        public String ad_id;
-        public String ad_type;
-        public String event_type;
-        public String event_time;
-        public String ip_address;
+        String user_id;
+        String page_id;
+        String ad_id;
+        String ad_type;
+        String event_type;
+        String event_time;
+        String ip_address;
     }
 
     public static void main(final String[] args) throws Exception {
