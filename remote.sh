@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=60
+TEST_TIME=600
 
 TPS="1000"
 TPS_RANGE=1000
@@ -12,7 +12,7 @@ BATCH="3000"
 SHORT_SLEEP=5
 LONG_SLEEP=10
 
-WAIT_AFTER_STOP_PRODUCER=6
+WAIT_AFTER_STOP_PRODUCER=60
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
@@ -483,8 +483,6 @@ case $1 in
         benchmarkLoop "spark" $2
     ;;
     storm)
-        TPS=$[4000]
-        changeTps ${TPS}
         benchmarkLoop "storm"
     ;;
     kafka)
