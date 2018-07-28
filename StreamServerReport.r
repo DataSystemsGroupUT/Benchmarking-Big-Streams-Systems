@@ -31,7 +31,8 @@ generateStreamServerLoadReport <- function(engine, tps, duration){
     
     names(cpuUsage) <- c("NODE","USAGE", "TIME")
     ggplot(data=cpuUsage, aes(x=TIME, y=USAGE, group=NODE, colour=NODE)) + 
-      geom_smooth(method="auto", se=F) + 
+      scale_y_continuous(breaks= pretty_breaks()) +
+      geom_smooth(method="loess", se=F) + 
       guides(fill=FALSE) +
       labs(x="Seconds", y="CPU load percentage",
            title=paste(toupper(engine), "BENCHMARK"),
@@ -41,7 +42,8 @@ generateStreamServerLoadReport <- function(engine, tps, duration){
     
     names(memoryUsage) <- c("NODE","USAGE","TIME")
     ggplot(data=memoryUsage, aes(x=TIME, y=USAGE, group=NODE, colour=NODE)) + 
-      geom_smooth(method="auto", se=F) + 
+      geom_smooth(method="loess", se=F) + 
+      scale_y_continuous(breaks= pretty_breaks()) +
       guides(fill=FALSE) +
       labs(x="Seconds", y="Memory load percentage",
            title=paste(toupper(engine), "BENCHMARK"),

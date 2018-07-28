@@ -32,7 +32,7 @@ generateKafkaServerLoadReport <- function(engine, tps, duration){
     names(cpuUsage) <- c("NODE","USAGE", "TIME")
     names(memoryUsage) <- c("NODE","USAGE","TIME")
     ggplot(data=cpuUsage, aes(x=TIME, y=USAGE, group=NODE, colour=NODE)) + 
-      geom_smooth(method="auto", se=F) + 
+      geom_smooth(method="loess", se=F) + 
       guides(fill=FALSE) +
       labs(x="Seconds", y="CPU load percentage",
            title=paste(toupper(engine), "BENCHMARK"),
@@ -41,7 +41,7 @@ generateKafkaServerLoadReport <- function(engine, tps, duration){
     ggsave(paste("KAFKA", "CPU.pdf", sep = "_"), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
     
     ggplot(data=memoryUsage, aes(x=TIME, y=USAGE, group=NODE, colour=NODE)) + 
-      geom_smooth(method="auto", se=F) + 
+      geom_smooth(method="loess", se=F) + 
       guides(fill=FALSE) +
       labs(x="Seconds", y="Memory load percentage",
            title=paste(toupper(engine), "BENCHMARK"),
