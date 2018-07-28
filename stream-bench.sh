@@ -132,8 +132,6 @@ run() {
   OPERATION=$1
   if [ "SETUP" = "$OPERATION" ];
   then
-
-    
     run "SETUP_BENCHMARK"
 	run "SETUP_REDIS"
     run "SETUP_KAFKA"
