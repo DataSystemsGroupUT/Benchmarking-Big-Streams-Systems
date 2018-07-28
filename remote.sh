@@ -22,6 +22,7 @@ KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load; rm -rf /root/stream-benchmarking/apache-storm-1.2.1/logs/*; rm -rf /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/work/*; rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
+SHUTDOWN_CMD="shutdown;"
 CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt; rm -rf /root/zookeeper/version-2/*;"
 
 CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
@@ -87,24 +88,22 @@ STOP_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_REDIS;"
 PULL_GIT="cd stream-benchmarking; git reset --hard HEAD; git pull origin master;"
 
 
+C1="{\"type\":\"resize\",\"size\":\"c-1vcpu-2gb\"}"
+C2="{\"type\":\"resize\",\"size\":\"c-2\"}"
+C4="{\"type\":\"resize\",\"size\":\"c-4\"}"
+C16="{\"type\":\"resize\",\"size\":\"c-16\"}"
+DG_POWER_OFF="{\"type\":\"power_off\"}"
+DG_POWER_ON="{\"type\":\"power_on\"}"
 
 
 . ./remoteInvocation.sh --source-only
 
-function rebootServer {
-    runCommandStreamServers "${REBOOT_CMD}" "nohup"
-    runCommandZKServers "${REBOOT_CMD}" "nohup"
-    runCommandKafkaServers "${REBOOT_CMD}" "nohup"
-    runCommandLoadServers "${REBOOT_CMD}" "nohup"
-    runCommandRedisServer "${REBOOT_CMD}" "nohup"
-}
-
-function pullRepository {
-    runCommandStreamServers "${PULL_GIT}" "nohup"
-    runCommandZKServers "${PULL_GIT}" "nohup"
-    runCommandKafkaServers "${PULL_GIT}" "nohup"
-    runCommandLoadServers "${PULL_GIT}" "nohup"
-    runCommandRedisServer "${PULL_GIT}" "nohup"
+function runAllServers {
+    runCommandStreamServers "{$1}" "nohup"
+    runCommandZKServers "${1}" "nohup"
+    runCommandKafkaServers "${1}" "nohup"
+    runCommandLoadServers "${1}" "nohup"
+    runCommandRedisServer "${1}" "nohup"
 }
 
 function stopLoadData {
@@ -458,9 +457,10 @@ function stopAll (){
 }
 
 
+
 function benchmarkLoop (){
     while true; do
-        pullRepository
+        runAllServers "${PULL_GIT}"
         sleep ${SHORT_SLEEP}
         if (("$TPS" > "$TPS_LIMIT")); then
             break
@@ -588,13 +588,37 @@ case $1 in
         Rscript reporting.R
     ;;
     reboot)
-        rebootServer
+        runAllServers "${REBOOT_CMD}"
+    ;;
+    shutdown)
+        runAllServers "${SHUTDOWN_CMD}"
     ;;
     build)
         runCommandStreamServers "${CLEAN_BUILD_BENCHMARK}" "nohup"
     ;;
     clean)
         cleanResult
+    ;;
+    resize_up)
+        runForRedisDroplets "${C4}"
+        runForLoadDroplets "${C2}"
+        runForKafkaDroplets "${C16}"
+        runForStreamDroplets "${C16}"
+        runForZKDroplets "${C4}"
+
+    ;;
+    resize_down)
+        runForRedisDroplets "${C1}"
+        runForLoadDroplets "${C1}"
+        runForKafkaDroplets "${C1}"
+        runForStreamDroplets "${C1}"
+        runForZKDroplets "${C1}"
+    ;;
+    power_off)
+        runOnAllDroplets "${DG_POWER_OFF}"
+    ;;
+    power_on)
+        runOnAllDroplets "${DG_POWER_ON}"
     ;;
     test)
         runSystem $2 $3

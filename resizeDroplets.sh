@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+CONTENT_TYPE="'Content-Type: application/json'"
+AUTH="'Authorization: Bearer 3de6eded7b58005391801a734bc82a8a0dbe12d144cf890cd4983f4908d5c9de'"
+C1="c-1vcpu-2gb"
+C16="'{"type":"resize","size":"c-16"}'"
+C4="c-4"
+C2="c-2"
+
+
+
+function startPowerOff {
+    echo "power off"
+
+}
+
+function stopPowerOn {
+    echo "power on"
+
+}
+
+
+case $1 in
+    off)
+        runCommandMasterStreamServers "${STOP_SPARK_DSTREAM_PROC_CMD}" "nohup"
+    ;;
+    on)
+        runCommandMasterStreamServers "${STOP_SPARK_DATASET_PROC_CMD}" "nohup"
+    ;;
+    *)
+        echo "Which spark processing would you like to stop"
+    ;;
+esac
+
+#Stream Servers
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99932869/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99932868/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99932867/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99932866/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99932865/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99932864/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99932863/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99932862/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99932861/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99932860/actions"
+
+#Kafka Servers
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99933241/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99933240/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99933239/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99933238/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/99933237/actions"
+
+
+
+
+
+#ZooKeeper Servers
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C4}  "https://api.digitalocean.com/v2/droplets/99933379/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C4}  "https://api.digitalocean.com/v2/droplets/99933378/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C4}  "https://api.digitalocean.com/v2/droplets/99933377/actions"
+
+#Redis Server
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C4}  "https://api.digitalocean.com/v2/droplets/99907513/actions"
+
+
+
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576061/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576062/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576063/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576064/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576065/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576066/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576067/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576068/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576069/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576070/actions"
+

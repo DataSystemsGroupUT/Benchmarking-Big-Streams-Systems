@@ -52,7 +52,7 @@ object KafkaRedisAdvertisingStream {
 
   def main(args: Array[String]) {
 
-//        val commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true).asInstanceOf[java.util.Map[String, Any]];
+    //        val commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true).asInstanceOf[java.util.Map[String, Any]];
     val commonConfig = Utils.findAndReadConfigFile(args(0), true).asInstanceOf[java.util.Map[String, Any]];
     val timeDivisor = commonConfig.get("time.divisor") match {
       case n: Number => n.longValue()
@@ -128,49 +128,26 @@ object KafkaRedisAdvertisingStream {
     val filteredOnView = kafkaData.filter("event_type = 'view'")
 
 
-
     //project the event, basically filter the fields.
     val projected = filteredOnView.select("ad_id", "event_time").map(row => AdsFiltered(row.getAs(0), row.getAs(1)))
-
 
 
     //Note that the Storm benchmark caches the results from Redis, we don't do that here yet
     val redisJoined = projected.mapPartitions(queryRedisTopLevel(_, redisHost))
 
 
-
     val campaign_timeStamp = redisJoined.map(event => AdsCalculated(event.ad_id, event.campaign_id, timeDivisor * (event.event_time.toLong / timeDivisor)))
     //each record in the RDD: key:(campaign_id : String, window_time: Long),  Value: (ad_id : String)
-    //DStream[((String,Long),String)]
-
-    // since we're just counting use reduceByKey
-
-    //    val campaign_timeStamp = redisJoined.map(campaignTime(_, timeDivisor))
-
 
     val totalEventsPerCampaignTime = campaign_timeStamp.groupByKey(p => (p.campaign_id, p.window_time))
       .count().as("count")
-//
-//    totalEventsPerCampaignTime.writeStream
-//      .outputMode("complete")
-//      .format("console")
-//      .start()
-    //    val schema = StructType(((String, Long), Int))
     //
-    //    val ds = spark.createDataFrame(List(), schema)
-    //.writeStream.start()
+    //    totalEventsPerCampaignTime.writeStream
+    //      .outputMode("complete")
+    //      .format("console")
+    //      .start()
 
-    //    totalEventsPerCampaignTime.
-
-
-    //    val myList: Iterator[((String, Long), Int)] = Iterator(totalEventsPerCampaignTime)
-    //
-    //    writeRedisTopLevel(myList, redisHost)
-
-    //    myList.printSchema()
-    //campaign_timeStamp.show(10)
-
-    val writer = new ForeachWriter[((String, Long), Long) ] {
+    val writer = new ForeachWriter[((String, Long), Long)] {
 
       override def open(partitionId: Long, version: Long) = {
         true
@@ -183,12 +160,6 @@ object KafkaRedisAdvertisingStream {
       override def close(errorOrNull: Throwable) = {
       }
     }
-//
-//    totalEventsPerCampaignTime.writeStream
-//      .outputMode("update")
-//      .format("console")
-//      .start()
-
     val writeToConsole = totalEventsPerCampaignTime
       .writeStream.foreach(writer)
       .trigger(Trigger.ProcessingTime(batchSize))

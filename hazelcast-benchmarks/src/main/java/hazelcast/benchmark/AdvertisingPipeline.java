@@ -11,10 +11,12 @@ import com.hazelcast.core.ITopic;
 import com.hazelcast.jet.Jet;
 import com.hazelcast.jet.JetInstance;
 import com.hazelcast.jet.Job;
+import com.hazelcast.jet.Util;
 import com.hazelcast.jet.core.AbstractProcessor;
 import com.hazelcast.jet.core.DAG;
 import com.hazelcast.jet.core.Edge;
 import com.hazelcast.jet.core.Vertex;
+import com.hazelcast.jet.core.processor.Processors;
 import com.hazelcast.jet.function.DistributedFunction;
 import com.hazelcast.jet.kafka.KafkaSources;
 import com.hazelcast.jet.pipeline.*;
@@ -121,7 +123,7 @@ public class AdvertisingPipeline {
                 .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
                 .filter(tuple -> tuple._5().equals("view"))
                 .map(tuple1 -> new AdsFiltered(tuple1._3(), tuple1._6()))
-                .map(adsFiltered -> queryRedisTopLevel(adsFiltered, redisServerHost))
+//                .map(adsFiltered -> queryRedisTopLevel(adsFiltered, redisServerHost));
 //                .map(adsEnriched -> campaignProcessorCommon.execute("asd","asd")).setLocalParallelism(1)
 //                    campaignProcessorCommon.execute(adsEnriched.campaign_id, adsEnriched.event_time);
 //                    return "";
@@ -130,9 +132,22 @@ public class AdvertisingPipeline {
 //
 //                .map(adsEnriched -> new RedisJoinBolt(redisServerHost));
 //
-        Job job = instance.newJob(pipeline);
+//        Job job = instance.newJob(pipeline);
 
+        DAG dag = pipeline.toDag();
 
+// 1. Create vertices
+//        Vertex source = dag.newVertex("source", KafkaSources.kafka(properties, kafkaTopic));
+//        Vertex transform = dag.newVertex("transform", Processors.map(
+//                (String line) -> Util.entry(line, line.length())));
+//        Vertex sink = dag.newVertex("sink", Sinks.writeMap("sinkMap"));
+
+// 2. Configure local parallelism
+//        source.localParallelism(1);
+
+// 3. Create edges
+//        dag.edge(Edge.between(source, transform));
+//        dag.edge(Edge.between(transform, sink));
 
 
     }
@@ -166,7 +181,6 @@ public class AdvertisingPipeline {
         }
     }
 
-
     public static class RedisJoinBolt2 implements DistributedFunction<Tuple2, Tuple3> {
 
         private final RedisAdCampaignCache redisAdCampaignCache;
@@ -192,7 +206,6 @@ public class AdvertisingPipeline {
 
         campaignProcessorCommon.execute(tuple._1().toString(), tuple._3().toString());
     }
-
 
     public static AdsEnriched queryRedisTopLevel(AdsFiltered adsFiltered, String redisHost) {
         JedisPool jedis = new JedisPool(new JedisPoolConfig(), redisHost, 6379, 2000);
