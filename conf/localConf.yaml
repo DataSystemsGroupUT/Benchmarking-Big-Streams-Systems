@@ -16,7 +16,7 @@ process.hosts: 1
 process.cores: 4
 storm.workers: 4
 storm.ackers: 2
-
+storm.ack: "enabled"
 time.divisor: 10000
 
 #Spark Specific

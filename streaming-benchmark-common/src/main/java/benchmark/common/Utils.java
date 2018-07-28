@@ -6,22 +6,12 @@ package benchmark.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
+
+import java.io.*;
+import java.net.URL;
+import java.util.*;
 
 public class Utils {
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
@@ -42,7 +32,7 @@ public class Utils {
             }
 
             if (mustExist) {
-                if(confFileEmpty)
+                if (confFileEmpty)
                     throw new RuntimeException("Config file " + name + " doesn't have any valid storm configs");
                 else
                     throw new RuntimeException("Could not find config file on classpath " + name);
@@ -81,23 +71,34 @@ public class Utils {
                             + " resources. You're probably bundling the Storm jars with your topology jar. "
                             + resources);
         } else {
-            LOG.debug("Using "+configFilePath+" from resources");
+            LOG.debug("Using " + configFilePath + " from resources");
             URL resource = resources.iterator().next();
             return resource.openStream();
         }
         return null;
     }
 
-    public static List<URL> findResources(String name) {
+    private static List<URL> findResources(String name) {
         try {
             Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(name);
             List<URL> ret = new ArrayList<URL>();
-            while(resources.hasMoreElements()) {
+            while (resources.hasMoreElements()) {
                 ret.add(resources.nextElement());
             }
             return ret;
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String joinHosts(List<String> hosts, String port) {
+        StringBuilder joined = new StringBuilder();
+        for (String s : hosts) {
+            if (joined.length() != 0) {
+                joined.append(",");
+            }
+            joined.append(s).append(":").append(port);
+        }
+        return joined.toString();
     }
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=60
+TEST_TIME=600
 
 TPS="1000"
 TPS_RANGE=1000
@@ -12,7 +12,7 @@ BATCH="3000"
 SHORT_SLEEP=5
 LONG_SLEEP=10
 
-WAIT_AFTER_STOP_PRODUCER=6
+WAIT_AFTER_STOP_PRODUCER=60
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
@@ -620,9 +620,14 @@ case $1 in
     power_on)
         runOnAllDroplets "${DG_POWER_ON}"
     ;;
+    result)
+        getResultFromStreamServer "result/$1/TPS_4000_DURATION_600"
+        getResultFromKafkaServer "result/$1/TPS_4000_DURATION_600"
+        getResultFromRedisServer "result/$1/TPS_4000_DURATION_600"
+    ;;
     test)
 #        runSystem $2 $3
-        TPS=$[10000]
+        TPS=$[7000]
         changeTps ${TPS}
         runSystem $2 $3
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60

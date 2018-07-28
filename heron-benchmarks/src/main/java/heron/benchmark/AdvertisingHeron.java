@@ -183,21 +183,6 @@ public class AdvertisingHeron {
         }
     }
 
-    private static String joinHosts(List<String> hosts, String port) {
-        String joined = null;
-        for (String s : hosts) {
-            if (joined == null) {
-                joined = "";
-            } else {
-                joined += ",";
-            }
-
-            joined += s + ":" + port;
-        }
-        System.out.println(joined);
-        return joined;
-    }
-
     public static void main(String[] args) throws Exception {
         TopologyBuilder builder = new TopologyBuilder();
 
@@ -209,9 +194,9 @@ public class AdvertisingHeron {
         Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
 //      Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
         List<String> zkServers = (List<String>) commonConfig.get("zookeeper.servers");
-        String zkServerHosts = joinHosts((List<String>) commonConfig.get("zookeeper.servers"),
+        String zkServerHosts = Utils.joinHosts((List<String>) commonConfig.get("zookeeper.servers"),
                 Integer.toString((Integer) commonConfig.get("zookeeper.port")));
-        String kafkaServerHosts = joinHosts((List<String>) commonConfig.get("kafka.brokers"),
+        String kafkaServerHosts = Utils.joinHosts((List<String>) commonConfig.get("kafka.brokers"),
                 Integer.toString((Integer) commonConfig.get("kafka.port")));
         String redisServerHost = (String) commonConfig.get("redis.host");
         String kafkaTopic = (String) commonConfig.get("kafka.topic");

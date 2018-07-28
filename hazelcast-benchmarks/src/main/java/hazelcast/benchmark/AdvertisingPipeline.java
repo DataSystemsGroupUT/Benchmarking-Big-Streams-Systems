@@ -95,7 +95,7 @@ public class AdvertisingPipeline {
 
         String redisServerHost = (String) commonConfig.get("redis.host");
         String kafkaTopic = (String) commonConfig.get("kafka.topic");
-        String kafkaServerHosts = joinHosts((List<String>) commonConfig.get("kafka.brokers"),
+        String kafkaServerHosts = Utils.joinHosts((List<String>) commonConfig.get("kafka.brokers"),
                 Integer.toString((Integer) commonConfig.get("kafka.port")));
 
         int kafkaPartitions = ((Number) commonConfig.get("kafka.partitions")).intValue();
@@ -317,19 +317,5 @@ public class AdvertisingPipeline {
         return (String) conf.get("redis.host");
     }
 
-    private static String joinHosts(List<String> hosts, String port) {
-        String joined = null;
-        for (String s : hosts) {
-            if (joined == null) {
-                joined = "";
-            } else {
-                joined += ",";
-            }
-
-            joined += s + ":" + port;
-        }
-//        logger.info("HOSTS " + joined);
-        return joined;
-    }
 
 }

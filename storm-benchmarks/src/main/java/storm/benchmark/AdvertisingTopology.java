@@ -26,7 +26,6 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.json.JSONObject;
 
-
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +38,12 @@ public class AdvertisingTopology {
 
     public static class DeserializeBolt extends BaseRichBolt {
         OutputCollector _collector;
+
+        Boolean ackEnabled;
+
+        DeserializeBolt(Boolean ackEnabled) {
+            this.ackEnabled = ackEnabled;
+        }
 
         @Override
         public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
@@ -55,6 +60,8 @@ public class AdvertisingTopology {
                     obj.getString("event_type"),
                     obj.getString("event_time"),
                     obj.getString("ip_address")));
+            if (ackEnabled)
+                _collector.ack(tuple);
         }
 
         @Override
@@ -65,6 +72,12 @@ public class AdvertisingTopology {
 
     public static class EventFilterBolt extends BaseRichBolt {
         OutputCollector _collector;
+        Boolean ackEnabled;
+
+        EventFilterBolt(Boolean ackEnabled) {
+            this.ackEnabled = ackEnabled;
+        }
+
         @Override
         public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
             _collector = collector;
@@ -75,6 +88,8 @@ public class AdvertisingTopology {
             if (tuple.getStringByField("event_type").equals("view")) {
                 _collector.emit(tuple, tuple.getValues());
             }
+            if (ackEnabled)
+                _collector.ack(tuple);
         }
 
         @Override
@@ -85,6 +100,12 @@ public class AdvertisingTopology {
 
     public static class EventProjectionBolt extends BaseRichBolt {
         OutputCollector _collector;
+        Boolean ackEnabled;
+
+        EventProjectionBolt(Boolean ackEnabled) {
+            this.ackEnabled = ackEnabled;
+        }
+
         @Override
         public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
             _collector = collector;
@@ -94,6 +115,8 @@ public class AdvertisingTopology {
         public void execute(Tuple tuple) {
             _collector.emit(tuple, new Values(tuple.getStringByField("ad_id"),
                     tuple.getStringByField("event_time")));
+            if (ackEnabled)
+                _collector.ack(tuple);
         }
 
         @Override
@@ -107,8 +130,11 @@ public class AdvertisingTopology {
         transient RedisAdCampaignCache redisAdCampaignCache;
         private String redisServerHost;
 
-        public RedisJoinBolt(String redisServerHost) {
+        private Boolean ackEnabled;
+
+        RedisJoinBolt(String redisServerHost, Boolean ackEnabled) {
             this.redisServerHost = redisServerHost;
+            this.ackEnabled = ackEnabled;
         }
 
         public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
@@ -128,6 +154,8 @@ public class AdvertisingTopology {
             _collector.emit(tuple, new Values(campaign_id,
                     tuple.getStringByField("ad_id"),
                     tuple.getStringByField("event_time")));
+            if (ackEnabled)
+                _collector.ack(tuple);
         }
 
         @Override
@@ -142,10 +170,12 @@ public class AdvertisingTopology {
         transient private CampaignProcessorCommon campaignProcessorCommon;
         private String redisServerHost;
         private Long timeDivisor;
+        private Boolean ackEnabled;
 
-        public CampaignProcessor(String redisServerHost, Long timeDivisor) {
+        CampaignProcessor(String redisServerHost, Long timeDivisor, Boolean ackEnabled) {
             this.redisServerHost = redisServerHost;
             this.timeDivisor = timeDivisor;
+            this.ackEnabled = ackEnabled;
         }
 
         public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
@@ -160,6 +190,8 @@ public class AdvertisingTopology {
             String campaign_id = tuple.getStringByField("campaign_id");
             String event_time = tuple.getStringByField("event_time");
             this.campaignProcessorCommon.execute(campaign_id, event_time);
+            if (ackEnabled)
+                _collector.ack(tuple);
         }
 
         @Override
@@ -167,19 +199,6 @@ public class AdvertisingTopology {
         }
     }
 
-    private static String joinHosts(List<String> hosts, String port) {
-        String joined = null;
-        for (String s : hosts) {
-            if (joined == null) {
-                joined = "";
-            } else {
-                joined += ",";
-            }
-
-            joined += s + ":" + port;
-        }
-        return joined;
-    }
 
     public static void main(String[] args) throws Exception {
         TopologyBuilder builder = new TopologyBuilder();
@@ -193,12 +212,13 @@ public class AdvertisingTopology {
         Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
         String redisServerHost = (String) commonConfig.get("redis.host");
         String kafkaTopic = (String) commonConfig.get("kafka.topic");
-        String kafkaServerHosts = joinHosts((List<String>) commonConfig.get("kafka.brokers"),
+        String kafkaServerHosts = Utils.joinHosts((List<String>) commonConfig.get("kafka.brokers"),
                 Integer.toString((Integer) commonConfig.get("kafka.port")));
 
         int kafkaPartitions = ((Number) commonConfig.get("kafka.partitions")).intValue();
         int workers = ((Number) commonConfig.get("storm.workers")).intValue();
         int ackers = ((Number) commonConfig.get("storm.ackers")).intValue();
+        Boolean ackEnabled = commonConfig.get("storm.ack").equals("enabled");
         int cores = ((Number) commonConfig.get("process.cores")).intValue();
         int timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
         int parallel = Math.max(1, cores / 7);
@@ -207,11 +227,11 @@ public class AdvertisingTopology {
         KafkaSpout kafkaSpout = new KafkaSpout(KafkaSpoutConfig.builder(kafkaServerHosts, kafkaTopic).build());
 
         builder.setSpout("ads", kafkaSpout, kafkaPartitions);
-        builder.setBolt("event_deserializer", new DeserializeBolt(), parallel).shuffleGrouping("ads");
-        builder.setBolt("event_filter", new EventFilterBolt(), parallel).shuffleGrouping("event_deserializer");
-        builder.setBolt("event_projection", new EventProjectionBolt(), parallel).shuffleGrouping("event_filter");
-        builder.setBolt("redis_join", new RedisJoinBolt(redisServerHost), parallel).shuffleGrouping("event_projection");
-        builder.setBolt("campaign_processor", new CampaignProcessor(redisServerHost, Long.valueOf(timeDivisor)), parallel * 2)
+        builder.setBolt("event_deserializer", new DeserializeBolt(ackEnabled), parallel).shuffleGrouping("ads");
+        builder.setBolt("event_filter", new EventFilterBolt(ackEnabled), parallel).shuffleGrouping("event_deserializer");
+        builder.setBolt("event_projection", new EventProjectionBolt(ackEnabled), parallel).shuffleGrouping("event_filter");
+        builder.setBolt("redis_join", new RedisJoinBolt(redisServerHost, ackEnabled), parallel).shuffleGrouping("event_projection");
+        builder.setBolt("campaign_processor", new CampaignProcessor(redisServerHost, Long.valueOf(timeDivisor), ackEnabled), parallel * 2)
                 .fieldsGrouping("redis_join", new Fields("campaign_id"));
 
         Config conf = new Config();
