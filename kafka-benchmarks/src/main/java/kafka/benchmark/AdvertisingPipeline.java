@@ -1,7 +1,3 @@
-/**
- * Copyright 2015, Yahoo Inc.
- * Licensed under the terms of the Apache License 2.0. Please see LICENSE file in the project root for terms.
- */
 package kafka.benchmark;
 
 import benchmark.common.Utils;
@@ -38,20 +34,14 @@ public class AdvertisingPipeline {
 
     private static final Logger logger = LoggerFactory.getLogger(AdvertisingPipeline.class);
 
-    static int timeDivisor;
-    static String redisServerHost;
+    private static int timeDivisor;
+    private static String redisServerHost;
 
 
-    public static class EnrichedData {
+    static class EnrichedData {
 
-        public EnrichedData(String ad_id, String event_time) {
+        EnrichedData(String ad_id, String event_time) {
             this.ad_id = ad_id;
-            this.event_time = event_time;
-        }
-
-        public EnrichedData(String ad_id, String campaign_id, String event_time) {
-            this.ad_id = ad_id;
-            this.campaign_id = campaign_id;
             this.event_time = event_time;
         }
 
@@ -63,7 +53,7 @@ public class AdvertisingPipeline {
 
     public static class RowData implements Serializable {
 
-        public RowData(String user_id, String page_id, String ad_id, String ad_type, String event_type, String event_time, String ip_address) {
+        RowData(String user_id, String page_id, String ad_id, String ad_type, String event_type, String event_time, String ip_address) {
             this.user_id = user_id;
             this.page_id = page_id;
             this.ad_id = ad_id;
@@ -178,7 +168,7 @@ public class AdvertisingPipeline {
         @Override
         @SuppressWarnings("unchecked")
         public void init(ProcessorContext context) {
-            this.campaignProcessorCommon = new CampaignProcessorCommon(redisServerHost, Long.valueOf(timeDivisor));
+            this.campaignProcessorCommon = new CampaignProcessorCommon(redisServerHost, (long) timeDivisor);
             this.campaignProcessorCommon.prepare();
         }
 
@@ -191,7 +181,7 @@ public class AdvertisingPipeline {
     }
 
 
-    public static RowData deserializeBolt(String value) {
+    private static RowData deserializeBolt(String value) {
         JSONObject obj = new JSONObject(value);
         return new RowData(obj.getString("user_id"),
                 obj.getString("page_id"),
