@@ -55,7 +55,6 @@ public class AdvertisingTopology {
                     obj.getString("event_type"),
                     obj.getString("event_time"),
                     obj.getString("ip_address")));
-            _collector.ack(tuple);
         }
 
         @Override
@@ -76,7 +75,6 @@ public class AdvertisingTopology {
             if (tuple.getStringByField("event_type").equals("view")) {
                 _collector.emit(tuple, tuple.getValues());
             }
-            _collector.ack(tuple);
         }
 
         @Override
@@ -96,7 +94,6 @@ public class AdvertisingTopology {
         public void execute(Tuple tuple) {
             _collector.emit(tuple, new Values(tuple.getStringByField("ad_id"),
                     tuple.getStringByField("event_time")));
-            _collector.ack(tuple);
         }
 
         @Override
@@ -131,7 +128,6 @@ public class AdvertisingTopology {
             _collector.emit(tuple, new Values(campaign_id,
                     tuple.getStringByField("ad_id"),
                     tuple.getStringByField("event_time")));
-            _collector.ack(tuple);
         }
 
         @Override
@@ -164,7 +160,6 @@ public class AdvertisingTopology {
             String campaign_id = tuple.getStringByField("campaign_id");
             String event_time = tuple.getStringByField("event_time");
             this.campaignProcessorCommon.execute(campaign_id, event_time);
-            _collector.ack(tuple);
         }
 
         @Override
