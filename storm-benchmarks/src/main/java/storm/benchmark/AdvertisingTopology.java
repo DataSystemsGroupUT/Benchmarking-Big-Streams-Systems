@@ -223,7 +223,7 @@ public class AdvertisingTopology {
         int timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
         int parallel = Math.max(1, cores / 7);
 
-        out.println("Configuration loading  ");
+        out.println("Configuration loading  "+ackEnabled);
         KafkaSpout kafkaSpout = new KafkaSpout(KafkaSpoutConfig.builder(kafkaServerHosts, kafkaTopic).build());
 
         builder.setSpout("ads", kafkaSpout, kafkaPartitions);
