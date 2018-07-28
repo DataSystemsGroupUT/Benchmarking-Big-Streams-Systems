@@ -16,7 +16,7 @@ WAIT_AFTER_STOP_PRODUCER=6
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
-KAFKA_PARTITION=75
+KAFKA_PARTITION=15
 #KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 KAFKA_FOLDER="kafka_2.11-1.1.0"
 
@@ -628,8 +628,8 @@ case $1 in
         getResultFromRedisServer "result/$1/TPS_4000_DURATION_600"
     ;;
     test)
-#        runSystem $2 $3
-        TPS=$[7000]
+        runSystem $2 $3
+        TPS=$[10000]
         changeTps ${TPS}
         runSystem $2 $3
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60

@@ -19,30 +19,30 @@ generateKafkaServerLoadReport(args[1], tps, duration)
 
 
 if(length(args) == 0){
-  generateBenchmarkReport("kafka", 1000, 1800)
-  generateStreamServerLoadReport("kafka", 1000, 1800)
-  generateKafkaServerLoadReport("kafka", 1000, 1800)
+  generateBenchmarkReport("kafka", 1000, 600)
+  generateStreamServerLoadReport("kafka", 1000, 600)
+  generateKafkaServerLoadReport("kafka", 1000, 600)
 
 
-  generateBenchmarkReport("flink", 1000, 1800)
-  generateStreamServerLoadReport("flink", 1000, 1800)
-  generateKafkaServerLoadReport("flink", 1000, 1800)
+  generateBenchmarkReport("flink", 1000, 600)
+  generateStreamServerLoadReport("flink", 1000, 600)
+  generateKafkaServerLoadReport("flink", 1000, 600)
   
-  generateBenchmarkReport("spark_dstream_1000", 1000, 1800)
-  generateStreamServerLoadReport("spark_dstream_1000", 1000, 1800)
-  generateKafkaServerLoadReport("spark_dstream_1000", 1000, 1800)
+  generateBenchmarkReport("spark_dstream_1000", 1000, 600)
+  generateStreamServerLoadReport("spark_dstream_1000", 1000, 600)
+  generateKafkaServerLoadReport("spark_dstream_1000", 1000, 600)
   
-  generateBenchmarkReport("spark_dataset_1000", 1000, 1800)
-  generateStreamServerLoadReport("spark_dataset_1000", 1000, 1800)
-  generateKafkaServerLoadReport("spark_dataset_1000", 1000, 1800)
+  generateBenchmarkReport("spark_dataset_1000", 1000, 600)
+  generateStreamServerLoadReport("spark_dataset_1000", 1000, 600)
+  generateKafkaServerLoadReport("spark_dataset_1000", 1000, 600)
   
-  generateBenchmarkReport("storm", 1000, 1800)
-  generateStreamServerLoadReport("storm", 1000, 1800)
-  generateKafkaServerLoadReport("storm", 1000, 1800)
+  generateBenchmarkReport("storm", 1000, 600)
+  generateStreamServerLoadReport("storm", 1000, 600)
+  generateKafkaServerLoadReport("storm", 1000, 600)
 
-  generateBenchmarkReport("heron", 1000, 1800)
-  generateStreamServerLoadReport("heron", 1000, 1800)
-  generateKafkaServerLoadReport("heron", 1000, 1800)
+  generateBenchmarkReport("heron", 1000, 600)
+  generateStreamServerLoadReport("heron", 1000, 600)
+  generateKafkaServerLoadReport("heron", 1000, 600)
 }
   
 

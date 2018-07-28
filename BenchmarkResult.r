@@ -16,13 +16,9 @@ duration <- as.numeric(args[3])
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 
-#generateBenchmarkReport <- function(engine, tps, duration){
+generateBenchmarkReport <- function(engine, tps, duration){
   result = NULL
-  engine="flink"
-  tps=1000
-  duration="600"
   for(i in 1:10) {
-    i = 1  
     TPS = toString(tps * i)
     reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
@@ -34,7 +30,7 @@ trim <- function (x) gsub("^\\s+|\\s+$", "", x)
       windows[c] = c
     }
     #df <- data.frame(toString(tps*i*10), Seen$V1, Updated$V1 - 10000, round(SumProceed*100/sum(Seen$V1),digits=0))
-    df <- data.frame(toString(tps*i*10), Seen$V1, Updated$V1 - 10000, round(SumProceed*100/sum(Seen$V1),digits=0))
+    df <- data.frame(toString(tps*i*10), Seen$V1, Updated$V1 - 10000, windows)
     result <- rbind(result, df)
     
     if (length(Seen$V1)  != length(Updated$V1)){ 
@@ -61,5 +57,4 @@ trim <- function (x) gsub("^\\s+|\\s+$", "", x)
     ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
     theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
   ggsave(paste(engine,"_", duration, ".pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
-
-#}
+}
