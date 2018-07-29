@@ -3,9 +3,9 @@
 
 TEST_TIME=600
 
-TPS="11000"
+TPS="1000"
 TPS_RANGE=1000
-TPS_LIMIT=20000
+TPS_LIMIT=15000
 
 INITIAL_TPS=${TPS}
 BATCH="3000"
@@ -478,6 +478,8 @@ function benchmarkLoop (){
 
 case $1 in
     flink)
+        TPS=$[12000]
+        changeTps ${TPS}
         benchmarkLoop "flink"
     ;;
     spark)
@@ -628,7 +630,7 @@ case $1 in
     ;;
     test)
 #        runSystem $2 $3
-        TPS=$[16000]
+        TPS=$[10000]
         changeTps ${TPS}
         runSystem $2 $3
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
