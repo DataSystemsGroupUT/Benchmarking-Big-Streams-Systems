@@ -12,14 +12,15 @@ options("scipen"=10)
 args <- commandArgs(TRUE)
 tps <- as.numeric(args[2])
 duration <- as.numeric(args[3])
-
+percentile <- as.numeric(args[4])
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
-engines <- c("flink", "kafka", "spark_dataset_3000")
-tps=1000
-duration=600
-percentile=99
-eng=1
-i=1
+#engines <- c("flink", "kafka", "spark_dataset_3000")
+#tps=1000
+#duration=600
+#percentile=99
+#eng=1
+#i=1
+
 generateBenchmarkSpesificPercentile <- function(engines, tps, duration, percentile){
   result = NULL
   for(eng in 1:length(engines)){
@@ -102,6 +103,7 @@ generateBenchmarkPercentile <- function(engine, tps, duration){
   #result = result[result$Throughput > 0,]
   ggplot(data=result, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
     geom_smooth(method="loess", se=F) + 
+    scale_y_continuous(breaks = round(seq(min(result$Throughput), max(result$Throughput), by = 100),1)) +
     guides(fill=FALSE) +
     xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
     ggtitle(paste(toupper(engine), "Benchmark Percentile chart", sep = " ")) +

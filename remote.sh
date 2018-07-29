@@ -484,6 +484,8 @@ case $1 in
         benchmarkLoop "spark" $2
     ;;
     storm)
+        TPS=$[11000]
+        changeTps ${TPS}
         benchmarkLoop "storm"
     ;;
     kafka)

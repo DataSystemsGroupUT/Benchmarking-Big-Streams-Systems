@@ -17,6 +17,7 @@ generateBenchmarkSpesificPercentile(engines, 1000, 600, 99)
 generateBenchmarkPercentile("flink", 1000, 600)
 generateBenchmarkPercentile("kafka", 1000, 600)
 generateBenchmarkPercentile("spark_dataset_3000", 1000, 600)
+generateBenchmarkPercentile("spark_dstream_3000", 1000, 600)
 
 generateBenchmarkReport("flink", 1000, 600)
 generateStreamServerLoadReport("flink", 1000, 600)
