@@ -58,7 +58,7 @@ generateBenchmarkSpesificPercentile <- function(engines, tps, duration, percenti
     geom_point() + geom_smooth(method="loess", se=F) +
     guides(fill=FALSE) +
     scale_x_continuous(breaks = round(seq(min(result$TPS), max(result$TPS), by = 10000),1)) +
-    scale_y_continuous(breaks = round(seq(min(result$Throughput), max(result$Throughput), by = 1000),1)) +
+    #scale_y_continuous(breaks = round(seq(min(result$Throughput), max(result$Throughput), by = 1000),1)) +
     xlab("Througput (event/s)") + ylab("Window Latency ms ") +
     ggtitle(paste(toupper(engine), toString(percentile), "% Percentile chart", sep = " ")) +
     theme(plot.title = element_text(size = 13, face = "plain"), axis.text.x = element_text(angle = 30, hjust = 1), text = element_text(size = 12, face = "plain"))
@@ -103,7 +103,7 @@ generateBenchmarkPercentile <- function(engine, tps, duration){
   #result = result[result$Throughput > 0,]
   ggplot(data=result, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
     geom_smooth(method="loess", se=F) + 
-    scale_y_continuous(breaks = round(seq(min(result$Throughput), max(result$Throughput), by = 100),1)) +
+    #scale_y_continuous(breaks = round(seq(min(result$Throughput), max(result$Throughput), by = 100),1)) +
     guides(fill=FALSE) +
     xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
     ggtitle(paste(toupper(engine), "Benchmark Percentile chart", sep = " ")) +

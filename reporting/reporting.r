@@ -26,8 +26,9 @@ if(length(args) == 0){
     generateKafkaServerLoadReport(engines[i], 1000, 600)
     generateBenchmarkPercentile(engines[i], 1000, 600)
   }
-  generateBenchmarkSpesificPercentile(engines, 100, 600, 99)
-  generateBenchmarkSpesificPercentile(engines, 100, 600, 90)
+  generateBenchmarkSpesificPercentile(engines, 1000, 600, 99)
+  generateBenchmarkSpesificPercentile(engines, 1000, 600, 95)
+  generateBenchmarkSpesificPercentile(engines, 1000, 600, 90)
 }
   
 
