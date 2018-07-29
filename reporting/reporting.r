@@ -7,14 +7,14 @@ args <- commandArgs(TRUE)
 tps <- as.numeric(args[2])
 duration <- as.numeric(args[3])
 
-source('~/Desktop/EDU/THESIS/stream-benchmarking/StreamServerReport.r')
-source('~/Desktop/EDU/THESIS/stream-benchmarking/KafkaServerReport.r')
-source('~/Desktop/EDU/THESIS/stream-benchmarking/BenchmarkResult.r')
-source('~/Desktop/EDU/THESIS/stream-benchmarking/BenchmarkPercentile.R')
+source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/StreamServerReport.r')
+source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/KafkaServerReport.r')
+source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/BenchmarkResult.r')
+source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/BenchmarkPercentile.R')
 generateBenchmarkReport("kafka", 1000, 600)
 generateStreamServerLoadReport("kafka", 1000, 600)
 generateKafkaServerLoadReport("kafka", 1000, 600)
-generateBenchmarkPercentile("kafka", 1000, 60)
+#generateBenchmarkPercentile("kafka", 1000, 60)
 
 
 

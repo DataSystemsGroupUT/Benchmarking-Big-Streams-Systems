@@ -250,7 +250,7 @@
   (let [conf (yaml/parse-string (slurp confPath))
         redis-host (get conf :redis.host)
         kafka-port (get conf :kafka.port)
-        kafka-hosts (clojure.string/join (interpose "," (for [broker (get conf :kafka.stream.brokers)]
+        kafka-hosts (clojure.string/join (interpose "," (for [broker (get conf :kafka.brokers)]
                                                           (str broker ":" kafka-port))))]
     (println {:redis-host redis-host :kakfa-brokers kafka-hosts})
     {:redis-host redis-host :kakfa-brokers kafka-hosts}))

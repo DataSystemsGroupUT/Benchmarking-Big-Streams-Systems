@@ -17,8 +17,8 @@ WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
 KAFKA_PARTITION=5
-#KAFKA_FOLDER="kafka_2.11-0.11.0.2"
-KAFKA_FOLDER="kafka_2.11-1.1.0"
+KAFKA_FOLDER="kafka_2.11-0.11.0.2"
+#KAFKA_FOLDER="kafka_2.11-1.1.0"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load; rm -rf /root/stream-benchmarking/apache-storm-1.2.1/logs/*; rm -rf /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/work/*; rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"

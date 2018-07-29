@@ -15,6 +15,10 @@ duration <- as.numeric(args[3])
 
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
+engine="kafka"
+tps=1000
+duration=600
+i=13
 
 generateBenchmarkReport <- function(engine, tps, duration){
   result = NULL
@@ -26,10 +30,17 @@ generateBenchmarkReport <- function(engine, tps, duration){
     Updated = read.table(paste(sourceFolder, "redis-updated.txt",sep=""),header=F,stringsAsFactors=F,sep=',')
 
     windows = c()
-    for(c in 1:length(Updated$V1)) {
-      windows[c] = c
+    SeenFiltered = c()
+    UpdatedFiltered = c()
+    for(c in 1:(length(Updated$V1)-1)) {
+      if(Seen$V1[c] != Seen$V1[c+1] && Updated$V1[c] != Updated$V1[c+1]){
+        SeenFiltered <- c(SeenFiltered, Seen$V1[c])
+        UpdatedFiltered <- c(UpdatedFiltered, Updated$V1[c])
+      }
     }
-    df <- data.frame(toString(tps*i*10), Seen$V1, Updated$V1 - 10000, windows)
+    windows <- 1:length(UpdatedFiltered)
+    
+    df <- data.frame(toString(tps*i*10), SeenFiltered, UpdatedFiltered - 10000, windows)
     result <- rbind(result, df)
     
     if (length(Seen$V1)  != length(Updated$V1)){ 
