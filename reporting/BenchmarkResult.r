@@ -18,7 +18,7 @@ trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 generateBenchmarkReport <- function(engine, tps, duration){
   result = NULL
-  for(i in 1:20) {
+  for(i in 1:15) {
     TPS = toString(tps * i)
     reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")

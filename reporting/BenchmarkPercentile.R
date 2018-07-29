@@ -21,7 +21,7 @@ duration=600
 i=1
 generateBenchmarkPercentile <- function(engine, tps, duration){
   result = NULL
-  for(i in 1:20) {
+  for(i in 1:15) {
     TPS = toString(tps * i)
     reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
@@ -31,6 +31,10 @@ generateBenchmarkPercentile <- function(engine, tps, duration){
     windows = c()
     for(c in 1:length(Updated$V1)) {
       windows[c] = c
+      if(Seen$V1[c] == Seen$V1[c+1] && Updated$V1[c] == Updated$V1[c+1]){
+        Seen <- Seen[-c, ]
+        Updated <- Updated[-c, ]
+      }
     }
     
     df <- data.frame(toString(tps*i*10), Seen$V1, Updated$V1 - 10000, windows)
