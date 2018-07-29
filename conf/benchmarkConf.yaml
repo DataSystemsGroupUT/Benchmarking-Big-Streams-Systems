@@ -42,8 +42,8 @@ process.cores: 16
 
 #STORM Specific
 storm.workers: 36
-storm.ackers: 9
-storm.ack: "enabled"
+storm.ackers: 0
+storm.ack: "disabled"
 
 
 #Spark Specific

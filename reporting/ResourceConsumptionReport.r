@@ -11,10 +11,10 @@ eng=1
 i=1
 
 generateStreamServerLoadReport <- function(engines, tps, duration){
-   charts <- c()
    for(i in 1:15) {
      memoryUsage= NULL
      cpuUsage= NULL
+     
      for(eng in 1:length(engines)){
        engine = engines[eng]
        TPS = toString(tps*i)
@@ -25,25 +25,38 @@ generateStreamServerLoadReport <- function(engines, tps, duration){
          streamCpu = read.table(paste(sourceFolder, "stream-node-0", x,".cpu",sep=""),header=F,stringsAsFactors=F,sep=',')
          streamMem = read.table(paste(sourceFolder, "stream-node-0", x,".mem",sep=""),header=F,stringsAsFactors=F,sep=',')
          
-         SecondsCpu = c()
-         for(c in 1:length(streamCpu$V1)) {
-           SecondsCpu[c] = c
-         }
+         SecondsCpu <- length(streamCpu$V1)
+         SecondsMem <- 1:length(streamMem$V1)
          
-         SecondsMem = c()
-         for(m in 1:length(streamMem$V1)) {
-           SecondsMem[m] = m
-         }
          dfCpu <- data.frame(engine, paste("Node " , x, sep=""), as.numeric(trim(substr(streamCpu$V1, 9, 14))), SecondsCpu)
          dfMemory <- data.frame(engine, paste("Node " , x, sep=""), as.numeric(trim(substr(streamMem$V3, 2, 10)))*100/as.numeric(trim(substr(streamMem$V1, 11, 19))), SecondsMem)
+         names(dfCpu) <- c("ENGINE","NODE","USAGE", "TIME")
+         names(dfMemory) <- c("ENGINE","NODE","USAGE", "TIME")
+         cpuUsage <- rbind(cpuUsage, dfCpu)
+         memoryUsage <- rbind(memoryUsage, dfMemory)
+       }
+       #Get the kafka servers cpu and memory consumption statistics
+       for(x in 1:5) {
+         kafkaCpu = read.table(paste(sourceFolder, "kafka-node-0", x,".cpu",sep=""),header=F,stringsAsFactors=F,sep=',')
+         kafkaMem = read.table(paste(sourceFolder, "kafka-node-0", x,".mem",sep=""),header=F,stringsAsFactors=F,sep=',')
+         
+         SecondsCpu <- length(kafkaCpu$V1)
+         SecondsMem <- 1:length(kafkaMem$V1)
+         
+         dfCpu <- data.frame(engine, paste("Node " , x+10, sep=""), as.numeric(trim(substr(kafkaCpu$V1, 9, 14))), SecondsCpu)
+         dfMemory <- data.frame(engine, paste("Node " , x+10, sep=""), as.numeric(trim(substr(kafkaMem$V3, 2, 10)))*100/as.numeric(trim(substr(kafkaMem$V1, 11, 19))), SecondsMem)
+         names(dfCpu) <- c("ENGINE","NODE","USAGE", "TIME")
+         names(dfMemory) <- c("ENGINE","NODE","USAGE", "TIME")
          cpuUsage <- rbind(cpuUsage, dfCpu)
          memoryUsage <- rbind(memoryUsage, dfMemory)
        }
      }
+   }
      names(cpuUsage) <- c("ENGINE","NODE","USAGE", "TIME")
      names(memoryUsage) <- c("ENGINE", "NODE","USAGE","TIME")
      cpuUsage <- cpuUsage %>% group_by(ENGINE, TIME) %>% summarise(USAGE=mean(USAGE))
      memoryUsage <- memoryUsage %>% group_by(ENGINE, TIME) %>% summarise(USAGE=mean(USAGE))
+     
      
      ggplot(data=cpuUsage, aes(x=TIME, y=USAGE, group=ENGINE, colour=ENGINE)) + 
        scale_y_continuous(breaks= pretty_breaks()) +
@@ -66,6 +79,6 @@ generateStreamServerLoadReport <- function(engines, tps, duration){
        theme(plot.title = element_text(size = 15, face = "plain"), plot.subtitle = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
      ggsave(paste("TPS",TPS,"STREAM", "MEMMORY.pdf", sep = "_"), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
    }
-   
+  
 }
 

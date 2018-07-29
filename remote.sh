@@ -481,8 +481,6 @@ case $1 in
         benchmarkLoop "flink"
     ;;
     spark)
-        TPS=$[11000]
-        changeTps ${TPS}
         benchmarkLoop "spark" $2
     ;;
     storm)
