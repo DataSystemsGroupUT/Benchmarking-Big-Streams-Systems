@@ -5,7 +5,7 @@
 ######################################################################################################################################
 
 generateStreamServerLoadReport <- function(engine, tps, duration){
-  for(i in 1:10) {
+  for(i in 1:20) {
     TPS = toString(tps*i)
     memoryUsage= NULL
     cpuUsage= NULL

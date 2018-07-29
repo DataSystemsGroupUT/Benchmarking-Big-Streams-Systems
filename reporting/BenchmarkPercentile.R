@@ -21,7 +21,7 @@ duration=600
 i=1
 generateBenchmarkPercentile <- function(engine, tps, duration){
   result = NULL
-  for(i in 1:10) {
+  for(i in 1:20) {
     TPS = toString(tps * i)
     reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")

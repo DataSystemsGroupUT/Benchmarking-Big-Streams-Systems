@@ -627,8 +627,8 @@ case $1 in
         getResultFromRedisServer "result/$1/TPS_4000_DURATION_600"
     ;;
     test)
-        runSystem $2 $3
-        TPS=$[10000]
+#        runSystem $2 $3
+        TPS=$[16000]
         changeTps ${TPS}
         runSystem $2 $3
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
