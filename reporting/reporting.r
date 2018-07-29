@@ -7,23 +7,11 @@ options("scipen"=10)
 args <- commandArgs(TRUE)
 tps <- as.numeric(args[2])
 duration <- as.numeric(args[3])
-engines <- c("flink","spark_dataset_3000","spark_dstream_3000", "kafka")
+engines <- c("flink","spark_dataset_3000","spark_dstream_3000", "kafka", "storm_without_ack",  "storm_with_ack")
 source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/StreamServerReport.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/KafkaServerReport.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/BenchmarkResult.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/BenchmarkPercentile.R')
-generateBenchmarkSpesificPercentile(engines, 1000, 600, 95) 
-generateBenchmarkSpesificPercentile(engines, 1000, 600, 99) 
-generateBenchmarkPercentile("flink", 1000, 600)
-generateBenchmarkPercentile("kafka", 1000, 600)
-generateBenchmarkPercentile("spark_dataset_3000", 1000, 600)
-generateBenchmarkPercentile("spark_dstream_3000", 1000, 600)
-
-generateBenchmarkReport("flink", 1000, 600)
-generateStreamServerLoadReport("flink", 1000, 600)
-generateKafkaServerLoadReport("flink", 1000, 600)
-
-
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 generateBenchmarkReport(args[1], tps, duration)
@@ -36,7 +24,10 @@ if(length(args) == 0){
     generateBenchmarkReport(engines[i], 1000, 600)
     generateStreamServerLoadReport(engines[i], 1000, 600)
     generateKafkaServerLoadReport(engines[i], 1000, 600)
+    generateBenchmarkPercentile(engines[i], 1000, 600)
   }
+  generateBenchmarkSpesificPercentile(engines, 100, 600, 99)
+  generateBenchmarkSpesificPercentile(engines, 100, 600, 90)
 }
   
 
