@@ -478,11 +478,11 @@ function benchmarkLoop (){
 
 case $1 in
     flink)
-        TPS=$[12000]
-        changeTps ${TPS}
         benchmarkLoop "flink"
     ;;
     spark)
+        TPS=$[11000]
+        changeTps ${TPS}
         benchmarkLoop "spark" $2
     ;;
     storm)

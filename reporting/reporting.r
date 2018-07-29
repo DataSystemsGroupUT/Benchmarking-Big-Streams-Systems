@@ -11,11 +11,11 @@ source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/StreamServerReport.r'
 source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/KafkaServerReport.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/BenchmarkResult.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/BenchmarkPercentile.R')
-generateBenchmarkReport("kafka", 1000, 600)
-generateStreamServerLoadReport("kafka", 1000, 600)
-generateKafkaServerLoadReport("kafka", 1000, 600)
-#generateBenchmarkPercentile("kafka", 1000, 60)
-
+generateBenchmarkReport("flink", 1000, 600)
+generateStreamServerLoadReport("flink", 1000, 600)
+generateKafkaServerLoadReport("flink", 1000, 600)
+generateBenchmarkPercentile("flink", 1000, 60)
+  
 
 
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
@@ -47,9 +47,6 @@ if(length(args) == 0){
   generateStreamServerLoadReport("storm_with_ack", 1000, 600)
   generateKafkaServerLoadReport("storm_with_ack", 1000, 600)
 
-  generateBenchmarkReport("heron", 1000, 600)
-  generateStreamServerLoadReport("heron", 1000, 600)
-  generateKafkaServerLoadReport("heron", 1000, 600)
 }
   
 
