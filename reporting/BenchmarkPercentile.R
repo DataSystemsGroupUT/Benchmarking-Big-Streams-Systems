@@ -14,10 +14,10 @@ tps <- as.numeric(args[2])
 duration <- as.numeric(args[3])
 
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
-engines <- c("flink", "kafka")
+engines <- c("flink", "kafka", "spark_dataset_3000")
 tps=1000
 duration=600
-percentile=95
+percentile=99
 eng=1
 i=1
 generateBenchmarkSpesificPercentile <- function(engines, tps, duration, percentile){
@@ -27,7 +27,7 @@ generateBenchmarkSpesificPercentile <- function(engines, tps, duration, percenti
     for(i in 1:15) {
       TPS = toString(tps * i)
       TPS
-      reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
+      reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", sep = "")
       sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
       Seen = read.table(paste(sourceFolder, "redis-seen.txt",sep=""),header=F,stringsAsFactors=F,sep=',')
       Updated = read.table(paste(sourceFolder, "redis-updated.txt",sep=""),header=F,stringsAsFactors=F,sep=',')
@@ -61,7 +61,7 @@ generateBenchmarkSpesificPercentile <- function(engines, tps, duration, percenti
     xlab("Througput (event/s)") + ylab("Window Latency ms ") +
     ggtitle(paste(toupper(engine), toString(percentile), "% Percentile chart", sep = " ")) +
     theme(plot.title = element_text(size = 13, face = "plain"), axis.text.x = element_text(angle = 30, hjust = 1), text = element_text(size = 12, face = "plain"))
-  ggsave(paste(engine,"_", duration, "_percentile.pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
+  ggsave(paste(duration,"_",percentile,  "_percentile.pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
 }
 
 generateBenchmarkPercentile <- function(engine, tps, duration){
@@ -106,5 +106,5 @@ generateBenchmarkPercentile <- function(engine, tps, duration){
     xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
     ggtitle(paste(toupper(engine), "Benchmark Percentile chart", sep = " ")) +
     theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
-  ggsave(paste(engine,"_", duration, "_percentile.pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
+  ggsave(paste(engine,"_", duration, "_all_percentile.pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
 }
