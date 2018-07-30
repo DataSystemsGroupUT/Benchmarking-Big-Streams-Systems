@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-TEST_TIME=60
+TEST_TIME=600
 
 TPS="1000"
 TPS_RANGE=1000
@@ -9,14 +9,14 @@ TPS_LIMIT=15000
 
 INITIAL_TPS=${TPS}
 BATCH="3000"
-SHORT_SLEEP=3
-LONG_SLEEP=5
+SHORT_SLEEP=5
+LONG_SLEEP=10
 
-WAIT_AFTER_STOP_PRODUCER=6
+WAIT_AFTER_STOP_PRODUCER=60
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
-KAFKA_PARTITION=100
+KAFKA_PARTITION=5
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 #KAFKA_FOLDER="kafka_2.11-1.1.0"
 
@@ -629,7 +629,7 @@ case $1 in
         getResultFromRedisServer "result/$1/TPS_4000_DURATION_600"
     ;;
     test)
-        runSystem $2 $3
+        #runSystem $2 $3
         TPS=$[15000]
         changeTps ${TPS}
         runSystem $2 $3
