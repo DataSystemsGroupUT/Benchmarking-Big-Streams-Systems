@@ -101,13 +101,12 @@ public class AdvertisingPipeline {
         config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
         StreamsBuilder builder = new StreamsBuilder();
-        builder.stream(kafkaTopic).mapValues(o -> deserializeBolt(o.toString()))
+        builder.stream(kafkaTopic)
+                .mapValues(o -> deserializeBolt(o.toString()))
                 .filter((o, rowData) -> rowData.event_type.equals("view"))
                 .mapValues(rowData -> new EnrichedData(rowData.ad_id, rowData.event_time))
                 .transform(RedisJoinBolt::new)
                 .process(CampaignProcessor::new);
-
-
         KafkaStreams streams = new KafkaStreams(builder.build(), config);
         streams.start();
 

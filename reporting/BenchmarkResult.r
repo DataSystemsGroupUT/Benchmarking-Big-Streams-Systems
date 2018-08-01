@@ -4,25 +4,9 @@
 ##########################                             Stream Benchmark Result                              ##########################
 ##########################                                                                                  ##########################
 ######################################################################################################################################
-#!/usr/bin/env Rscript
-library(ggplot2)
-library(scales)
-theme_set(theme_bw())
-options("scipen"=10)
-args <- commandArgs(TRUE)
-tps <- as.numeric(args[2])
-duration <- as.numeric(args[3])
-
-trim <- function (x) gsub("^\\s+|\\s+$", "", x)
-
-engine="kafka"
-tps=1000
-duration=600
-i=13
-
-generateBenchmarkReport <- function(engine, tps, duration){
+generateBenchmarkReport <- function(engine, tps, duration, tps_count){
   result = NULL
-  for(i in 1:15) {
+  for(i in 1:tps_count) {
     TPS = toString(tps * i)
     reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
@@ -49,20 +33,36 @@ generateBenchmarkReport <- function(engine, tps, duration){
 
     names(df) <- c("TPS","Seen","Throughput", "Percentile")
     ggplot(data=df, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
-      geom_smooth(method="loess", se=F) + 
+      geom_smooth(method="loess", se=F, size=0.5) + 
       guides(fill=FALSE) +
-      xlab("Windows") + ylab("Window Throughput ms ") +
+      scale_y_continuous(breaks= pretty_breaks()) +
+      xlab("Windows") + ylab("Latency (ms)") +
       ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
-      theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
-    ggsave( paste(engine, "_", toString(tps*i*10), ".pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
+      theme(plot.title = element_text(size = 8, face = "plain"), 
+            text = element_text(size = 7, face = "plain"),
+            legend.justification = c(0, 1), 
+            legend.position = c(0, 1),
+            legend.box.margin=margin(c(3,3,3,3)),
+            legend.key.height=unit(0.5,"line"),
+            legend.key.width=unit(0.5,"line"),
+            legend.text=element_text(size=rel(0.7)))
+    ggsave( paste(engine, "_", toString(tps*i*10), ".pdf", sep=""), width = 8, height = 8, units = "cm", device = "pdf", path = sourceFolder)
   }
   names(result) <- c("TPS","Seen","Throughput", "Percentile")
   result = result[result$Throughput > 0,]
   ggplot(data=result, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
-    geom_smooth(method="loess", se=F) + 
+    geom_smooth(method="loess", se=F, size=0.5) + 
     guides(fill=FALSE) +
-    xlab("Windows") + ylab("Window Throughput ms ") +
-    ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
-    theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
-  ggsave(paste(engine,"_", duration, ".pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
+    scale_y_continuous(breaks= pretty_breaks()) +
+    xlab("Windows") + ylab("Latency (ms) ") +
+    ggtitle(paste(toupper(engine), "Benchmark average latency", sep = " ")) +
+    theme(plot.title = element_text(size = 8, face = "plain"), 
+          text = element_text(size = 7, face = "plain"),
+          legend.justification = c(0, 1), 
+          legend.position = c(0, 1),
+          legend.key.height=unit(0.5,"line"),
+          legend.key.width=unit(0.5,"line"),
+          legend.box.margin=margin(c(3,3,3,3)),
+          legend.text=element_text(size=rel(0.7)))
+  ggsave(paste(engine,"_", duration, ".pdf", sep=""), width = 8, height = 8, units = "cm", device = "pdf", path = reportFolder)
 }

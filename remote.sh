@@ -639,4 +639,5 @@ case $1 in
         #Rscript --vanilla reporting.R "storm" 1000 60
         echo "Please Enter valid command"
 
+
 esac

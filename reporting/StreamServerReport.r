@@ -1,11 +1,9 @@
-
-
 ######################################################################################################################################
 ##########################                        Benchmark Stream Server Load                              ##########################
 ######################################################################################################################################
 
-generateStreamServerLoadReport <- function(engine, tps, duration){
-  for(i in 1:15) {
+generateStreamServerLoadReport <- function(engine, tps, duration, tps_count){
+  for(i in 1:tps_count) {
     TPS = toString(tps*i)
     memoryUsage= NULL
     cpuUsage= NULL
@@ -30,26 +28,41 @@ generateStreamServerLoadReport <- function(engine, tps, duration){
     }
     
     names(cpuUsage) <- c("NODE","USAGE", "TIME")
-    ggplot(data=cpuUsage, aes(x=TIME, y=USAGE, group=NODE, colour=NODE)) + 
+    p1 <- ggplot(data=cpuUsage, aes(x=TIME, y=USAGE, group=NODE, colour=NODE)) + 
       scale_y_continuous(breaks= pretty_breaks()) +
-      geom_smooth(method="loess", se=F) + 
+      geom_smooth(method="loess", se=F, size=0.5) + 
       guides(fill=FALSE) +
-      labs(x="Seconds", y="CPU load percentage",
-           title=paste(toupper(engine), "BENCHMARK"),
-           subtitle=paste("Stream Servers CPU load with", toString(tps*i*10), "TPS"))
-      theme(plot.title = element_text(size = 15, face = "plain"), plot.subtitle = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
-    ggsave(paste("STREAM", "CPU.pdf", sep = "_"), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
+      labs(x="Seconds", y="CPU load percentage", subtitle=paste(toupper(engine), "Benchmark,","stream cpu usage with", toString(tps*i*10), "TPS")) +
+      theme(plot.title = element_text(size = 8, face = "plain"), 
+            plot.subtitle = element_text(size = 7, face = "plain"),
+            text = element_text(size = 7, face = "plain"),
+            legend.justification = c(1, 0), 
+            legend.position = c(1, 0),
+            legend.box.margin=margin(c(3,3,3,3)),
+            legend.key.height=unit(0.5,"line"),
+            legend.key.width=unit(0.5,"line"),
+            legend.text=element_text(size=rel(0.7)))
+    ggsave(paste("STREAM", "CPU.pdf", sep = "_"), width = 8, height = 8, units = "cm", device = "pdf", path = sourceFolder)
     
     names(memoryUsage) <- c("NODE","USAGE","TIME")
-    ggplot(data=memoryUsage, aes(x=TIME, y=USAGE, group=NODE, colour=NODE)) + 
-      geom_smooth(method="loess", se=F) + 
+    p2 <- ggplot(data=memoryUsage, aes(x=TIME, y=USAGE, group=NODE, colour=NODE)) + 
+      geom_smooth(method="loess", se=F, size=0.5) + 
       scale_y_continuous(breaks= pretty_breaks()) +
       guides(fill=FALSE) +
-      labs(x="Seconds", y="Memory load percentage",
-           title=paste(toupper(engine), "BENCHMARK"),
-           subtitle=paste("Stream Servers Memory load with", toString(tps*i*10), "TPS"))
-      theme(plot.title = element_text(size = 15, face = "plain"), plot.subtitle = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
-    ggsave(paste("STREAM", "MEMMORY.pdf", sep = "_"), width = 20, height = 20, units = "cm", device = "pdf", path = sourceFolder)
+      labs(x="Seconds", y="Memory load percentage", subtitle=paste(toupper(engine), "Benchmark,","stream memory usage with", toString(tps*i*10), "TPS")) +
+      theme(plot.title = element_text(size = 8, face = "plain"), 
+            plot.subtitle = element_text(size = 7, face = "plain"), 
+            text = element_text(size = 7, face = "plain"),
+            legend.justification = c(1, 0), 
+            legend.position = c(1, 0),
+            legend.box.margin=margin(c(3,3,3,3)),
+            legend.key.height=unit(0.5,"line"),
+            legend.key.width=unit(0.5,"line"),
+            legend.text=element_text(size=rel(0.7)))
+    ggsave(paste("STREAM", "MEMMORY.pdf", sep = "_"), width = 8, height = 8, units = "cm", device = "pdf", path = sourceFolder)
+    pdf(paste(sourceFolder, "TPS_",TPS,"_STREAM_RESOURCE_LOAD", ".pdf", sep = ""), width = 8, height = 4)
+    multiplot(p1, p2, cols = 2)
+    dev.off()
   }
 }
 

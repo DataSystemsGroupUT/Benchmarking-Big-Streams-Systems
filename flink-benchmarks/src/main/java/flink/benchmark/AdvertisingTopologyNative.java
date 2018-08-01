@@ -71,16 +71,12 @@ public class AdvertisingTopologyNative {
                 .rebalance()
                 // Parse the String as JSON
                 .flatMap(new DeserializeBolt())
-
                 //Filter the records if event type is "view"
                 .filter(new EventFilterBolt())
-
                 // project the event
                 .<Tuple2<String, String>>project(2, 5)
-
                 // perform join with redis data
                 .flatMap(new RedisJoinBolt())
-
                 // process campaign
                 .keyBy(0)
                 .flatMap(new CampaignProcessor());

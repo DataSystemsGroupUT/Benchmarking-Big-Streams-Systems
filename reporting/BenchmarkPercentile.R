@@ -1,31 +1,16 @@
-
+#!/usr/bin/env Rscript
 ######################################################################################################################################
 ##########################                                                                                  ##########################
 ##########################                       Stream Benchmark Percentile Result                         ##########################
 ##########################                                                                                  ##########################
 ######################################################################################################################################
-#!/usr/bin/env Rscript
-library(ggplot2)
-library(scales)
-theme_set(theme_bw())
-options("scipen"=10)
-args <- commandArgs(TRUE)
-tps <- as.numeric(args[2])
-duration <- as.numeric(args[3])
-percentile <- as.numeric(args[4])
-trim <- function (x) gsub("^\\s+|\\s+$", "", x)
-#engines <- c("flink", "kafka", "spark_dataset_3000")
-#tps=1000
-#duration=600
-#percentile=99
-#eng=1
-#i=1
 
-generateBenchmarkSpesificPercentile <- function(engines, tps, duration, percentile){
+
+generateBenchmarkSpesificPercentile <- function(engines, tps, duration, percentile, tps_count){
   result = NULL
   for(eng in 1:length(engines)){
     engine = engines[eng] 
-    for(i in 1:15) {
+    for(i in 1:tps_count) {
       TPS = toString(tps * i)
       TPS
       reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", sep = "")
@@ -55,25 +40,27 @@ generateBenchmarkSpesificPercentile <- function(engines, tps, duration, percenti
   }
   names(result) <- c("TPS","Engine","Throughput")
   ggplot(data=result, aes(x=TPS, y=Throughput, group=Engine, colour=Engine)) + 
-    geom_point() + geom_smooth(method="loess", se=F) +
+    geom_smooth(method="loess", se=F, size=0.5) +
     guides(fill=FALSE) +
+    scale_y_continuous(breaks= pretty_breaks()) +
     scale_x_continuous(breaks = round(seq(min(result$TPS), max(result$TPS), by = 10000),1)) +
-    #scale_y_continuous(breaks = round(seq(min(result$Throughput), max(result$Throughput), by = 1000),1)) +
-    xlab("Througput (event/s)") + ylab("Window Latency ms ") +
+    xlab("Througput (event/s)") + ylab("Latency (ms) ") +
     ggtitle(paste(toupper(engine), toString(percentile), "% Percentile chart", sep = " ")) +
-    theme(plot.title = element_text(size = 13, face = "plain"), axis.text.x = element_text(angle = 30, hjust = 1), text = element_text(size = 12, face = "plain"))
-  ggsave(paste(duration,"_",percentile,  "_percentile.pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
+    theme(plot.title = element_text(size = 8, face = "plain"), 
+          axis.text.x = element_text(size = 6, angle = 30, hjust = 1), 
+          text = element_text(size = 6, face = "plain"),
+          legend.justification = c(0, 1), 
+          legend.position = c(0, 1),
+          legend.key.height=unit(0.5,"line"),
+          legend.key.width=unit(0.5,"line"),
+          legend.box.margin=margin(c(3,3,3,3)),
+          legend.text=element_text(size=rel(0.7)))
+  ggsave(paste(duration,"_",percentile,  "_percentile.pdf", sep=""), width = 8, height = 8, units = "cm", device = "pdf", path = reportFolder)
 }
 
-
-tps=1000
-duration=600
-percentile=99
-engine="flink"
-i=1
-generateBenchmarkPercentile <- function(engine, tps, duration){
+generateBenchmarkPercentile <- function(engine, tps, duration, tps_count){
   result = NULL
-  for(i in 1:15) {
+  for(i in 1:tps_count) {
     TPS = toString(tps * i)
     reportFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/", sep = "")
     sourceFolder = paste("/Users/sahverdiyev/Desktop/EDU/THESIS/stream-benchmarking/result/", engine, "/TPS_", TPS,"_DURATION_",toString(duration),"/", sep = "")
@@ -108,11 +95,18 @@ generateBenchmarkPercentile <- function(engine, tps, duration){
   names(result) <- c("TPS","Seen","Throughput", "Percentile")
   #result = result[result$Throughput > 0,]
   ggplot(data=result, aes(x=Percentile, y=Throughput, group=TPS, colour=TPS)) + 
-    geom_smooth(method="loess", se=F) + 
-    #scale_y_continuous(breaks = round(seq(min(result$Throughput), max(result$Throughput), by = 1000),1)) +
+    geom_smooth(method="loess", se=F, size=0.5) + 
+    scale_y_continuous(breaks= pretty_breaks()) +
     guides(fill=FALSE) +
-    xlab("Percentage of Completed Tuple") + ylab("Window Throughput ms ") +
+    xlab("Percentage of Completed Tuple") + ylab("Latency (ms) ") +
     ggtitle(paste(toupper(engine), "Benchmark Percentile chart", sep = " ")) +
-    theme(plot.title = element_text(size = 13, face = "plain"), text = element_text(size = 12, face = "plain"))
-  ggsave(paste(engine,"_", duration, "_all_percentile.pdf", sep=""), width = 20, height = 20, units = "cm", device = "pdf", path = reportFolder)
+    theme(plot.title = element_text(size = 8, face = "plain"), 
+          text = element_text(size = 6, face = "plain"),
+          legend.justification = c(0, 1), 
+          legend.position = c(0, 1),
+          legend.key.height=unit(0.5,"line"),
+          legend.key.width=unit(0.5,"line"),
+          legend.box.margin=margin(c(3,3,3,3)),
+          legend.text=element_text(size=rel(0.7)))
+  ggsave(paste(engine,"_", duration, "_all_percentile.pdf", sep=""), width = 8, height = 8, units = "cm", device = "pdf", path = reportFolder)
 }
