@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CONTENT_TYPE="'Content-Type: application/json'"
-AUTH="'Authorization: Bearer 3de6eded7b58005391801a734bc82a8a0dbe12d144cf890cd4983f4908d5c9de'"
+AUTH="'Authorization: Bearer 808fe5b62bc168f757a40463ee3dfdefc58f2d5b865b88ff1a0a1bad71a5154e'"
 C1="c-1vcpu-2gb"
 C16="'{"type":"resize","size":"c-16"}'"
 C4="c-4"

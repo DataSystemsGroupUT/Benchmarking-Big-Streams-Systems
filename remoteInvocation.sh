@@ -7,7 +7,7 @@ KAFKA_SERVER_COUNT=5
 SSH_USER="root"
 
 CONTENT_TYPE="Content-Type: application/json"
-AUTH="Authorization: Bearer 3de6eded7b58005391801a734bc82a8a0dbe12d144cf890cd4983f4908d5c9de"
+AUTH="Authorization: Bearer 808fe5b62bc168f757a40463ee3dfdefc58f2d5b865b88ff1a0a1bad71a5154e"
 
 
 

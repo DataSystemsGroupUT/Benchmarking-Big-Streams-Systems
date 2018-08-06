@@ -23,17 +23,17 @@ generateStreamServerLoadReport(args[1], tps, duration, tps_count)
 generateKafkaServerLoadReport(args[1], tps, duration, tps_count)
 generateBenchmarkPercentile(args[1], tps, duration, tps_count)
 
-generateBenchmarkReport("spark_dstream", tps, duration, 13)
-
+generateBenchmarkReport("spark_dstream", 1000, 600, 13)
+generateBenchmarkPercentile("spark_dstream", 1000, 600, 13)
 tps_count = 15
 
 if(length(args) == 0){
   for (i in 1:length(engines_all)) { 
-    #generateBenchmarkReport(engines_all[i], 1000, 600, tps_count)
+    generateBenchmarkReport(engines_all[i], 1000, 600, tps_count)
     #generateStreamServerLoadReport(engines_all[i], 1000, 600, tps_count)
     #generateKafkaServerLoadReport(engines_all[i], 1000, 600, tps_count)
     #generateBenchmarkPercentile(engines_all[i], 1000, 600, tps_count)
-    generateResourceConsumptionReportByTps(engines_all[i], 1000, 600, tps_count)
+    #generateResourceConsumptionReportByTps(engines_all[i], 1000, 600, tps_count)
   }
   generateResourceConsumptionReport(engines, 1000, 600, tps_count)
   generateBenchmarkSpesificPercentile(engines, 1000, 600, 99, tps_count)

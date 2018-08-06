@@ -42,10 +42,10 @@ generateBenchmarkSpesificPercentile <- function(engines, tps, duration, percenti
   ggplot(data=result, aes(x=TPS, y=Throughput, group=Engine, colour=Engine)) + 
     geom_smooth(method="loess", se=F, size=0.5) +
     guides(fill=FALSE) +
-    scale_y_continuous(breaks= pretty_breaks()) +
+    scale_y_continuous(breaks = round(seq(min(result$Throughput), max(result$Throughput), by = 5000),1)) +
     scale_x_continuous(breaks = round(seq(min(result$TPS), max(result$TPS), by = 10000),1)) +
     xlab("Througput (event/s)") + ylab("Latency (ms) ") +
-    ggtitle(paste(toupper(engine), toString(percentile), "% Percentile chart", sep = " ")) +
+    ggtitle(paste(toString(percentile), "% Percentile chart", sep = " ")) +
     theme(plot.title = element_text(size = 8, face = "plain"), 
           axis.text.x = element_text(size = 6, angle = 30, hjust = 1), 
           text = element_text(size = 6, face = "plain"),
@@ -99,7 +99,7 @@ generateBenchmarkPercentile <- function(engine, tps, duration, tps_count){
     scale_y_continuous(breaks= pretty_breaks()) +
     guides(fill=FALSE) +
     xlab("Percentage of Completed Tuple") + ylab("Latency (ms) ") +
-    ggtitle(paste(toupper(engine), "Benchmark Percentile chart", sep = " ")) +
+    ggtitle(paste(toupper(engine), "Benchmark, Percentile chart", sep = " ")) +
     theme(plot.title = element_text(size = 8, face = "plain"), 
           text = element_text(size = 6, face = "plain"),
           legend.justification = c(0, 1), 
