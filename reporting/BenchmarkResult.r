@@ -37,7 +37,7 @@ generateBenchmarkReport <- function(engine, tps, duration, tps_count){
       guides(fill=FALSE) +
       scale_y_continuous(breaks= pretty_breaks()) +
       xlab("Windows") + ylab("Latency (ms)") +
-      ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
+      #ggtitle(paste(toupper(engine), "Benchmark", sep = " ")) +
       theme(plot.title = element_text(size = 8, face = "plain"), 
             text = element_text(size = 7, face = "plain"),
             legend.justification = c(0, 1), 
@@ -55,7 +55,7 @@ generateBenchmarkReport <- function(engine, tps, duration, tps_count){
     guides(fill=FALSE) +
     scale_y_continuous(breaks= pretty_breaks()) +
     xlab("Windows") + ylab("Latency (ms) ") +
-    ggtitle(paste(toupper(engine), ", Loess regression of latencies", sep = " ")) +
+    #ggtitle(paste(toupper(engine), ", Loess regression of latencies", sep = " ")) +
     theme(plot.title = element_text(size = 8, face = "plain"), 
           text = element_text(size = 7, face = "plain"),
           legend.justification = c(0, 1), 

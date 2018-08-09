@@ -32,7 +32,8 @@ generateStreamServerLoadReport <- function(engine, tps, duration, tps_count){
       scale_y_continuous(breaks= pretty_breaks()) +
       geom_smooth(method="loess", se=F, size=0.5) + 
       guides(fill=FALSE) +
-      labs(x="Seconds", y="CPU load percentage", subtitle=paste(toupper(engine), "Benchmark,","stream cpu usage with", toString(tps*i*10), "TPS")) +
+      labs(x="Seconds", y="CPU load percentage") +
+      #subtitle=paste(toupper(engine), "Benchmark,","stream cpu usage with", toString(tps*i*10), "TPS")) +
       theme(plot.title = element_text(size = 8, face = "plain"), 
             plot.subtitle = element_text(size = 7, face = "plain"),
             text = element_text(size = 7, face = "plain"),
@@ -49,7 +50,8 @@ generateStreamServerLoadReport <- function(engine, tps, duration, tps_count){
       geom_smooth(method="loess", se=F, size=0.5) + 
       scale_y_continuous(breaks= pretty_breaks()) +
       guides(fill=FALSE) +
-      labs(x="Seconds", y="Memory load percentage", subtitle=paste(toupper(engine), "Benchmark,","stream memory usage with", toString(tps*i*10), "TPS")) +
+      labs(x="Seconds", y="Memory load percentage") +
+      #subtitle=paste(toupper(engine), "Benchmark,","stream memory usage with", toString(tps*i*10), "TPS")) +
       theme(plot.title = element_text(size = 8, face = "plain"), 
             plot.subtitle = element_text(size = 7, face = "plain"), 
             text = element_text(size = 7, face = "plain"),
