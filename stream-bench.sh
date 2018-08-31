@@ -42,9 +42,9 @@ ZK_PORT="2181"
 ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
 PARTITIONS=${PARTITIONS:-5}
-LOAD=${LOAD:-100}
+LOAD=${LOAD:-1000}
 CONF_FILE=./conf/localConf.yaml
-TEST_TIME=${TEST_TIME:-1800}
+TEST_TIME=${TEST_TIME:-60}
 
 pid_match() {
    local VAL=`ps -aef | grep "$1" | grep -v grep | awk '{print $2}'`
@@ -119,10 +119,20 @@ fetch_untar_file() {
 }
 
 create_kafka_topic() {
-    local count=`$KAFKA_DIR/bin/kafka-topics.sh --describe --zookeeper "$ZK_CONNECTIONS" --topic $TOPIC 2>/dev/null | grep -c $TOPIC`
+    local count=`$KAFKA_DIR/bin/kafka-topics.sh --describe --zookeeper "$ZK_CONNECTIONS" --topic ${TOPIC} 2>/dev/null | grep -c ${TOPIC}`
     if [[ "$count" = "0" ]];
     then
-        $KAFKA_DIR/bin/kafka-topics.sh --create --zookeeper "$ZK_CONNECTIONS" --replication-factor 1 --partitions $PARTITIONS --topic $TOPIC
+        $KAFKA_DIR/bin/kafka-topics.sh --create --zookeeper "$ZK_CONNECTIONS" --replication-factor 1 --partitions ${PARTITIONS} --topic ${TOPIC}
+    else
+        echo "Kafka topic $TOPIC already exists"
+    fi
+}
+
+create_kafka_stream_topic() {
+    local count=`$KAFKA_STREAM_DIR/bin/kafka-topics.sh --describe --zookeeper "$ZK_CONNECTIONS" --topic ${TOPIC} 2>/dev/null | grep -c ${TOPIC}`
+    if [[ "$count" = "0" ]];
+    then
+        $KAFKA_STREAM_DIR/bin/kafka-topics.sh --create --zookeeper "$ZK_CONNECTIONS" --replication-factor 1 --partitions ${PARTITIONS} --topic ${TOPIC}
     else
         echo "Kafka topic $TOPIC already exists"
     fi
@@ -145,7 +155,7 @@ run() {
   elif [ "SETUP_BENCHMARK" = "$OPERATION" ];
   then
     
-    $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION" -Dheron.version="$HERON_VERSION"
+    $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dkafka.stream.version="$KAFKA_STREAM_VERSION" -Dheron.version="$HERON_VERSION" -Dhazelcast.version="$HAZELCAST_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION"
   elif [ "SETUP_REDIS" = "$OPERATION" ];
   then
     
@@ -216,7 +226,14 @@ run() {
   elif [ "STOP_ZK" = "$OPERATION" ];
   then
     stop_if_needed dev_zookeeper ZooKeeper
-    rm -rf /tmp/dev-storm-zookeeper
+    rm -rf /tmp/zookeeper
+  elif [ "START_ZK_KAFKA_STREAM" = "$OPERATION" ];
+  then
+    start_if_needed dev_zookeeper ZooKeeper 10 ${KAFKA_STREAM_DIR}/bin/zookeeper-server-start.sh -daemon ${KAFKA_STREAM_DIR}/config/zookeeper.properties
+  elif [ "STOP_ZK_KAFKA_STREAM" = "$OPERATION" ];
+  then
+    stop_if_needed dev_zookeeper ZooKeeper
+    rm -rf /tmp/zookeeper
   elif [ "START_REDIS" = "$OPERATION" ];
   then
     start_if_needed redis-server Redis 1 "$REDIS_DIR/src/redis-server" --protected-mode no
@@ -256,12 +273,26 @@ run() {
   then
     stop_if_needed kafka\.Kafka Kafka
     rm -rf /tmp/kafka-logs/
+  elif [ "START_KAFKA_STREAM" = "$OPERATION" ];
+  then
+    start_if_needed kafka\.Kafka Kafka 10 "$KAFKA_STREAM_DIR/bin/kafka-server-start.sh" "$KAFKA_STREAM_DIR/config/server.properties"
+    create_kafka_stream_topic
+  elif [ "STOP_KAFKA_STREAM" = "$OPERATION" ];
+  then
+    stop_if_needed kafka\.Kafka Kafka
+    rm -rf /tmp/kafka-logs/
   elif [ "START_FLINK" = "$OPERATION" ];
   then
-    start_if_needed org.apache.flink.runtime.jobmanager.JobManager Flink 1 $FLINK_DIR/bin/start-local.sh
+    start_if_needed org.apache.flink.runtime.jobmanager.JobManager Flink 1 ${FLINK_DIR}/bin/start-local.sh
   elif [ "STOP_FLINK" = "$OPERATION" ];
   then
     $FLINK_DIR/bin/stop-local.sh
+  elif [ "START_JET" = "$OPERATION" ];
+  then
+    start_if_needed HazelcastJet HazelcastJet 1 ${HAZELCAST_DIR}/bin/jet-start.sh
+  elif [ "STOP_JET" = "$OPERATION" ];
+  then
+    ${HAZELCAST_DIR}/bin/jet-stop.sh
   elif [ "START_SPARK" = "$OPERATION" ];
   then
     start_if_needed org.apache.spark.deploy.master.Master SparkMaster 5 $SPARK_DIR/sbin/start-master.sh -h localhost -p 7077
@@ -303,14 +334,15 @@ run() {
     stop_if_needed spark.benchmark.KafkaRedisAdvertisingStream "Spark Client Process"
   elif [ "START_KAFKA_PROCESSING" = "$OPERATION" ];
   then
-    java -jar ./kafka-benchmarks/target/kafka-benchmarks-0.1.0.jar -conf $CONF_FILE
+    java -jar ./kafka-benchmarks/target/kafka-benchmarks-0.1.0.jar -conf $CONF_FILE &
     sleep 3
   elif [ "STOP_KAFKA_PROCESSING" = "$OPERATION" ];
   then
     ps aux | grep kafka-benchmarks | awk '{print $2}' | xargs kill
+    rm -rf /tmp/kafka-streams/
   elif [ "START_FLINK_PROCESSING" = "$OPERATION" ];
   then
-    "$FLINK_DIR/bin/flink" run ./flink-benchmarks/target/flink-benchmarks-0.1.0.jar --confPath $CONF_FILE &
+    "$FLINK_DIR/bin/flink" run ./flink-benchmarks/target/flink-benchmarks-0.1.0.jar -conf $CONF_FILE &
     sleep 3
   elif [ "STOP_FLINK_PROCESSING" = "$OPERATION" ];
   then
@@ -322,6 +354,10 @@ run() {
       "$FLINK_DIR/bin/flink" cancel $FLINK_ID
       sleep 3
     fi
+  elif [ "START_JET_PROCESSING" = "$OPERATION" ];
+  then
+    start_if_needed HazelcastJetProcessing "Hazelcast Jet Processing" 3 "$HAZELCAST_DIR/bin/jet-submit.sh" ./hazelcast-benchmarks/target/hazelcast-benchmarks-0.1.0.jar -conf $CONF_FILE
+    sleep 3
   elif [ "START_HERON_PROCESSING" = "$OPERATION" ];
       then
         heron submit standalone ./heron-benchmarks/target/heron-benchmarks-0.1.0.jar heron.benchmark.AdvertisingHeron test-topo -conf $CONF_FILE
@@ -343,7 +379,7 @@ run() {
     run "START_STORM"
     run "START_STORM_TOPOLOGY"
     run "START_LOAD"
-    sleep $TEST_TIME
+    sleep ${TEST_TIME}
     run "STOP_LOAD"
     run "STOP_STORM_TOPOLOGY"
     run "STOP_STORM"
@@ -358,10 +394,24 @@ run() {
     run "START_FLINK"
     run "START_FLINK_PROCESSING"
     run "START_LOAD"
-    sleep $TEST_TIME
+    sleep ${TEST_TIME}
     run "STOP_LOAD"
     run "STOP_FLINK_PROCESSING"
     run "STOP_FLINK"
+    run "STOP_KAFKA"
+    run "STOP_REDIS"
+    run "STOP_ZK"
+  elif [ "JET_TEST" = "$OPERATION" ];
+  then
+    run "START_ZK"
+    run "START_REDIS"
+    run "START_KAFKA"
+    run "START_JET"
+    run "START_JET_PROCESSING"
+    run "START_LOAD"
+    sleep ${TEST_TIME}
+    run "STOP_LOAD"
+    run "STOP_JET"
     run "STOP_KAFKA"
     run "STOP_REDIS"
     run "STOP_ZK"
@@ -373,7 +423,7 @@ run() {
     run "START_SPARK"
     run "START_SPARK_PROCESSING"
     run "START_LOAD"
-    sleep $TEST_TIME
+    sleep ${TEST_TIME}
     run "STOP_LOAD"
     run "STOP_SPARK_PROCESSING"
     run "STOP_SPARK"
@@ -381,30 +431,52 @@ run() {
     run "STOP_REDIS"
     run "STOP_ZK"
  elif [ "HERON_TEST" = "$OPERATION" ];
-  then
+ then
     run "START_ZK"
     run "START_REDIS"
     run "START_KAFKA"
     run "START_HERON"
+    run "START_HERON_PROCESSING"
     run "START_LOAD"
-    sleep $TEST_TIME
+    sleep ${TEST_TIME}
     run "STOP_LOAD"
+    run "STOP_HERON_PROCESSING"
     run "STOP_HERON"
     run "STOP_KAFKA"
     run "STOP_REDIS"
     run "STOP_ZK"
+  elif [ "KAFKA_TEST" = "$OPERATION" ];
+  then
+    run "START_ZK_KAFKA_STREAM"
+    run "START_REDIS"
+    run "START_KAFKA_STREAM"
+    run "START_KAFKA_PROCESSING"
+    run "START_LOAD"
+    sleep ${TEST_TIME}
+    run "STOP_LOAD"
+    run "STOP_KAFKA_PROCESSING"
+    run "STOP_KAFKA_STREAM"
+    run "STOP_REDIS"
+    run "STOP_ZK_KAFKA_STREAM"
   elif [ "STOP_ALL" = "$OPERATION" ];
   then
     run "STOP_LOAD"
     run "STOP_SPARK_PROCESSING"
     run "STOP_SPARK"
+    run "STOP_JET"
     run "STOP_FLINK_PROCESSING"
     run "STOP_FLINK"
     run "STOP_STORM_TOPOLOGY"
     run "STOP_STORM"
+    run "STOP_KAFKA_PROCESSING"
     run "STOP_KAFKA"
+    run "STOP_KAFKA_STREAM"
+    run "STOP_HERON_PROCESSING"
+    run "STOP_HERON"
     run "STOP_REDIS"
     run "STOP_ZK"
+    run "STOP_ZK_KAFKA_STREAM"
+    run "STOP_ZK_STORM"
   else
     if [ "HELP" != "$OPERATION" ];
     then

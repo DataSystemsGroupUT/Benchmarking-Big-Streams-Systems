@@ -85,7 +85,7 @@ public class CampaignProcessorCommon {
         flush_jedis.lpush("time_updated", Long.toString(System.currentTimeMillis()));
     }
 
-    public void flushWindows() {
+    private void flushWindows() {
         synchronized (need_flush) {
             for (CampaignWindowPair pair : need_flush) {
                 writeWindow(pair.campaign, pair.window);
@@ -104,7 +104,7 @@ public class CampaignProcessorCommon {
 
     // Needs to be rewritten now that redisGetWindow has been simplified.
     // This can be greatly simplified.
-    public Window getWindow(Long timeBucket, String campaign_id) {
+    private Window getWindow(Long timeBucket, String campaign_id) {
         synchronized (campaign_windows) {
             HashMap<String, Window> bucket_map = campaign_windows.get(timeBucket);
             if (bucket_map == null) {
@@ -136,7 +136,7 @@ public class CampaignProcessorCommon {
                 window = new Window();
                 window.timestamp = Long.toString(timeBucket * time_divisor);
                 window.seenCount = 0L;
-                bucket_map.put(campaign_id, redisWindow);
+                bucket_map.put(campaign_id, null);
             }
             return window;
         }

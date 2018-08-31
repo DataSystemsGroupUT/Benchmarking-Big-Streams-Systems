@@ -36,6 +36,7 @@
             <groupId>com.hazelcast.jet</groupId>
             <artifactId>hazelcast-jet</artifactId>
             <version>${hazelcast.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.hazelcast.jet</groupId>
@@ -91,9 +92,9 @@
                 <version>2.4</version>
                 <configuration>
                     <archive>
-                        <manifestEntries>
-                            <program-class>flink.benchmark.AdvertisingTopologyNative</program-class>
-                        </manifestEntries>
+                        <manifest>
+                            <mainClass>hazelcast.benchmark.AdvertisingPipeline</mainClass>
+                        </manifest>
                     </archive>
                 </configuration>
             </plugin>
