@@ -23,8 +23,7 @@ generateStreamServerLoadReport(args[1], tps, duration, tps_count)
 generateKafkaServerLoadReport(args[1], tps, duration, tps_count)
 generateBenchmarkPercentile(args[1], tps, duration, tps_count)
 
-generateBenchmarkReport("spark_dstream", 1000, 600, 13)
-generateBenchmarkPercentile("spark_dstream", 1000, 600, 13)
+
 tps_count = 15
 
 if(length(args) == 0){
