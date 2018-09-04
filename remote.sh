@@ -17,8 +17,8 @@ WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
 KAFKA_PARTITION=10
-#KAFKA_FOLDER="kafka_2.11-0.11.0.2"
-KAFKA_FOLDER="kafka_2.11-1.1.0"
+KAFKA_FOLDER="kafka_2.11-0.11.0.2"
+#KAFKA_FOLDER="kafka_2.11-1.1.0"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load; rm -rf /root/stream-benchmarking/apache-storm-1.2.1/logs/*; rm -rf /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/work/*; rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
@@ -81,6 +81,11 @@ STOP_KAFKA_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-server-stop.sh
 
 START_KAFKA_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_KAFKA_PROCESSING;"
 STOP_KAFKA_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_KAFKA_PROCESSING;"
+
+START_JET_CMD="cd stream-benchmarking; ./hazelcast-jet-0.6/bin/jet-start.sh;"
+STOP_JET_CMD="cd stream-benchmarking; ./hazelcast-jet-0.6/bin/jet-stop.sh;"
+START_JET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_JET_PROCESSING;"
+STOP_JET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_JET_PROCESSING;"
 
 START_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh START_REDIS;"
 STOP_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_REDIS;"
@@ -180,6 +185,26 @@ function stopHeronProcessing {
     echo "Stopping Heron Processing"
     runCommandMasterStreamServers "${STOP_HERON_PROC_CMD}"
 }
+
+function startJet {
+    echo "Starting Jet"
+    runCommandStreamServers "${START_JET_CMD}" "nohup"
+}
+
+function stopJet {
+    echo "Stopping Jet"
+    runCommandStreamServers "${STOP_JET_CMD}"
+}
+
+function startJetProcessing {
+    echo "Starting Jet Processing"
+    runCommandMasterStreamServers "${START_JET_PROC_CMD}" "nohup"
+}
+
+function stopJetProcessing {
+    echo "Stopping Jet Processing"
+    runCommandMasterStreamServers "${STOP_JET_PROC_CMD}" "nohup"
+ }
 
 function startFlink {
     echo "Starting Flink"
@@ -365,6 +390,15 @@ function benchmark(){
 function runSystem(){
     prepareEnvironment
     case $1 in
+         jet)
+            startJet
+            sleep ${SHORT_SLEEP}
+            startJetProcessing
+            benchmark $1
+            stopJetProcessing
+            sleep ${SHORT_SLEEP}
+            stopJet
+        ;;
         flink)
             startFlink
             sleep ${SHORT_SLEEP}
@@ -458,6 +492,9 @@ case $1 in
     ;;
     spark)
         benchmarkLoop "spark" $2
+    ;;
+    jet)
+        benchmarkLoop "jet"
     ;;
     storm)
         changeTps ${TPS}
