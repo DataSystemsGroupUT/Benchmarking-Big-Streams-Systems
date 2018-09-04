@@ -7,7 +7,7 @@ KAFKA_SERVER_COUNT=5
 SSH_USER="root"
 
 CONTENT_TYPE="Content-Type: application/json"
-AUTH="Authorization: Bearer 808fe5b62bc168f757a40463ee3dfdefc58f2d5b865b88ff1a0a1bad71a5154e"
+AUTH="Authorization: Bearer 1b1744b1be9611fdc37b3acf7306f4b1e5116c42480ae6c20371d3ec7d6e39fb"
 
 
 
@@ -122,59 +122,59 @@ function getResultFromRedisServer(){
 
 function runForRedisDroplets {
     echo "DROPLET: Redis COMMAND: ${1}"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/99907513/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108622384/actions"
 }
 
 function runForZKDroplets {
     echo "DROPLET: ZooKeeper COMMAND: ${1}"
-    counter=1
-    while [ ${counter} -le ${ZOOKEEPER_SERVER_COUNT} ]
-    do
-        id=$[counter+99933376]
-        curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/${id}/actions"
-        ((counter++))
-    done
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108622254/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108622305/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108622347/actions"
 }
 
 function runForKafkaDroplets {
     echo "DROPLET: Kafka COMMAND: ${1}"
-    counter=1
-    while [ ${counter} -le ${KAFKA_SERVER_COUNT} ]
-    do
-        id=$[counter+99933236]
-        curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/${id}/actions"
-        ((counter++))
-    done
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108622217/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108622172/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108622151/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108622108/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108622068/actions"
 }
 
 
 
 function runForLoadDroplets {
     echo "DROPLET: Load COMMAND: ${1}"
-    counter=1
-    while [ ${counter} -le ${LOAD_SERVER_COUNT} ]
-    do
-        id=$[counter+100576060]
-        curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets/${id}/actions"
-        ((counter++))
-    done
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
 }
 
 function runForStreamDroplets {
     echo "DROPLET: Stream COMMAND: ${1}"
-    counter=1
-    while [ ${counter} -le ${STREAM_SERVER_COUNT} ]
-    do
-        id=$[counter+99932859]
-        curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/${id}/actions"
-        ((counter++))
-    done
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108619673/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108620670/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108621738/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108621816/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108621767/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108621852/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108621922/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108621953/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108622493/actions"
+    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}"  "https://api.digitalocean.com/v2/droplets/108626896/actions"
 }
 
 function runOnAllDroplets(){
     runForRedisDroplets "${1}"
     runForKafkaDroplets "${1}"
-    runForLoadDroplets "${1}"
+    #runForLoadDroplets "${1}"
     runForStreamDroplets "${1}"
     runForZKDroplets "${1}"
 }

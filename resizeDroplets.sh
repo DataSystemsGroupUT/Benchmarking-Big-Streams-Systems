@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# This script has been used as a scratch.
+# Last version of Resize droplet scripts has been migrated to remoteInvocation.sh
 
 CONTENT_TYPE="'Content-Type: application/json'"
 AUTH="'Authorization: Bearer 808fe5b62bc168f757a40463ee3dfdefc58f2d5b865b88ff1a0a1bad71a5154e'"
@@ -61,18 +63,5 @@ curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C4}  "https://api.digitalocean.c
 curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C4}  "https://api.digitalocean.com/v2/droplets/99933377/actions"
 
 #Redis Server
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C4}  "https://api.digitalocean.com/v2/droplets/99907513/actions"
-
-
-
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576061/actions"
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576062/actions"
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576063/actions"
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576064/actions"
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576065/actions"
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576066/actions"
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576067/actions"
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576068/actions"
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576069/actions"
-curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C16}  "https://api.digitalocean.com/v2/droplets/100576070/actions"
+curl -X POST -H ${CONTENT_TYPE} -H ${AUTH} -d ${C4}  "https://api.digitalocean.com/v2/droplets/108622384/actions"
 
