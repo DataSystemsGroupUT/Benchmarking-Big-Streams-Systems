@@ -539,7 +539,7 @@ case $1 in
     ;;
     stop)
         case $2 in
-            fling)
+            flink)
                 stopFlink
             ;;
             spark)
