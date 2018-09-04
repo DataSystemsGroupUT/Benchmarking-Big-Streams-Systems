@@ -44,9 +44,9 @@ ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
 PARTITIONS=${PARTITIONS:-1}
 LOAD=${LOAD:-1000}
-CONF_FILE=./conf/localConf.yaml
+CONF_FILE=./conf/benchmarkConf.yaml
 TEST_TIME=${TEST_TIME:-60}
-SPARK_MASTER_HOST="localhost"
+SPARK_MASTER_HOST="stream-node01"
 
 pid_match() {
    local VAL=`ps -aef | grep "$1" | grep -v grep | awk '{print $2}'`
