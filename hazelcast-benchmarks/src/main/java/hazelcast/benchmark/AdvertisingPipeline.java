@@ -177,6 +177,8 @@ public class AdvertisingPipeline {
         protected boolean tryProcess0(Object item) {
             AdsFiltered adsFiltered = (AdsFiltered) item;
             String campaign_id = this.redisAdCampaignCache.execute(adsFiltered.ad_id);
+            if(campaign_id == null)
+                return false;
             return this.tryEmit(new AdsEnriched(campaign_id, adsFiltered.ad_id, adsFiltered.event_time));
         }
     }

@@ -452,6 +452,7 @@ function stopAll (){
     stopLoadData
     stopMonitoring
     stopKafkaProcessing
+    stopJet
     stopFlinkProcessing
     stopFlink
     stopSparkProcessing "dataset"
