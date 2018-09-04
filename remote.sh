@@ -16,7 +16,7 @@ WAIT_AFTER_STOP_PRODUCER=6
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
-KAFKA_PARTITION=5
+KAFKA_PARTITION=10
 #KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 KAFKA_FOLDER="kafka_2.11-1.1.0"
 
@@ -241,17 +241,6 @@ function stopSparkProcessing {
     esac
 }
 
-
-function startKafkaStream {
-    echo "Starting Kafka Stream"
-    runCommandStreamServers "${START_KAFKA_CMD}"
-}
-
-function stopKafkaStream {
-    echo "Stopping Kafka Stream"
-    runCommandStreamServers "${STOP_KAFKA_CMD}"
-}
-
 function startKafkaProcessing {
     echo "Starting Kafka processing"
     runCommandStreamServers "${START_KAFKA_PROC_CMD}" "nohup"
@@ -374,9 +363,9 @@ function benchmark(){
 
 
 function runSystem(){
+    prepareEnvironment
     case $1 in
         flink)
-            prepareEnvironment
             startFlink
             sleep ${SHORT_SLEEP}
             startFlinkProcessing
@@ -386,7 +375,6 @@ function runSystem(){
             stopFlink
         ;;
         spark)
-            prepareEnvironment
             startSpark
             sleep ${SHORT_SLEEP}
             startSparkProcessing $2
@@ -396,7 +384,6 @@ function runSystem(){
             stopSpark
         ;;
         storm)
-            prepareEnvironment
             startStorm
             sleep ${SHORT_SLEEP}
             startStormProcessing
@@ -407,7 +394,6 @@ function runSystem(){
             stopStorm
         ;;
         heron)
-            prepareEnvironment
             startHeron
             startHeronProcessing
             sleep ${LONG_SLEEP}
@@ -417,20 +403,11 @@ function runSystem(){
             stopHeron
         ;;
         kafka)
-            cleanResult
-            startZK
-            sleep ${LONG_SLEEP}
-            startKafka
-            startKafkaStream
-            sleep ${LONG_SLEEP}
-            cleanKafka
-            startRedis
             sleep ${LONG_SLEEP}
             startKafkaProcessing
             benchmark $1
             stopKafkaProcessing
             sleep ${SHORT_SLEEP}
-            stopKafkaStream
         ;;
     esac
     destroyEnvironment
@@ -442,7 +419,6 @@ function stopAll (){
     stopLoadData
     stopMonitoring
     stopKafkaProcessing
-    stopKafkaStream
     stopFlinkProcessing
     stopFlink
     stopSparkProcessing "dataset"
