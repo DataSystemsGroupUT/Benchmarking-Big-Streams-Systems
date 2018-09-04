@@ -9,16 +9,16 @@ TPS_LIMIT=15000
 
 INITIAL_TPS=${TPS}
 BATCH="3000"
-SHORT_SLEEP=5
-LONG_SLEEP=10
+SHORT_SLEEP=3
+LONG_SLEEP=6
 
 WAIT_AFTER_STOP_PRODUCER=6
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
 KAFKA_PARTITION=5
-KAFKA_FOLDER="kafka_2.11-0.11.0.2"
-#KAFKA_FOLDER="kafka_2.11-1.1.0"
+#KAFKA_FOLDER="kafka_2.11-0.11.0.2"
+KAFKA_FOLDER="kafka_2.11-1.1.0"
 
 CLEAN_LOAD_RESULT_CMD="rm *.load; rm -rf /root/stream-benchmarking/apache-storm-1.2.1/logs/*; rm -rf /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/work/*; rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
@@ -254,12 +254,12 @@ function stopKafkaStream {
 
 function startKafkaProcessing {
     echo "Starting Kafka processing"
-    runCommandMasterStreamServers "${START_KAFKA_PROC_CMD}" "nohup"
+    runCommandStreamServers "${START_KAFKA_PROC_CMD}" "nohup"
 }
 
 function stopKafkaProcessing {
     echo "Stopping Kafka processing"
-    runCommandMasterStreamServers "${STOP_KAFKA_PROC_CMD}" "nohup"
+    runCommandStreamServers "${STOP_KAFKA_PROC_CMD}" "nohup"
 }
 
 function startStorm {
@@ -484,7 +484,6 @@ case $1 in
         benchmarkLoop "spark" $2
     ;;
     storm)
-        TPS=$[11000]
         changeTps ${TPS}
         benchmarkLoop "storm"
     ;;
