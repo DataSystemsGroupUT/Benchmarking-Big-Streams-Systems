@@ -128,7 +128,7 @@ public class AdvertisingPipeline {
         map = new HashMap<>();
         Pipeline pipeline = Pipeline.create();
         pipeline
-                .drawFrom(KafkaSources.kafka(properties, kafkaTopic))
+                .drawFrom(KafkaSources.kafka(properties, kafkaTopic)).setLocalParallelism(kafkaPartitions)
                 .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
                 .filter(tuple -> tuple._5().equals("view"))
                 .map(tuple1 -> new AdsFiltered(tuple1._3(), tuple1._6()))
