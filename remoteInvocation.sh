@@ -145,16 +145,16 @@ function runForKafkaDroplets {
 
 function runForLoadDroplets {
     echo "DROPLET: Load COMMAND: ${1}"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
-    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+#    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+#    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+#    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+#    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+#    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+#    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+#    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+#    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+#    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
+#    curl -X POST -H "${CONTENT_TYPE}" -H "${AUTH}" -d "${1}" "https://api.digitalocean.com/v2/droplets//actions"
 }
 
 function runForStreamDroplets {
@@ -174,7 +174,7 @@ function runForStreamDroplets {
 function runOnAllDroplets(){
     runForRedisDroplets "${1}"
     runForKafkaDroplets "${1}"
-    #runForLoadDroplets "${1}"
+    runForLoadDroplets "${1}"
     runForStreamDroplets "${1}"
     runForZKDroplets "${1}"
 }

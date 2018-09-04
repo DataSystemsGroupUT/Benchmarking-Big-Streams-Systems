@@ -99,7 +99,7 @@ DG_POWER_ON="{\"type\":\"power_on\"}"
 . ./remoteInvocation.sh --source-only
 
 function runAllServers {
-    runCommandStreamServers "{$1}" "nohup"
+    runCommandStreamServers "${1}" "nohup"
     runCommandZKServers "${1}" "nohup"
     runCommandKafkaServers "${1}" "nohup"
     runCommandLoadServers "${1}" "nohup"
