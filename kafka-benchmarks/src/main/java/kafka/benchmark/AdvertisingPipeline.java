@@ -84,7 +84,7 @@ public class AdvertisingPipeline {
 
         redisServerHost = (String) commonConfig.get("redis.host");
         String kafkaTopic = (String) commonConfig.get("kafka.topic");
-        String kafkaServerHosts = Utils.joinHosts((List<String>) commonConfig.get("kafka.stream.brokers"),
+        String kafkaServerHosts = Utils.joinHosts((List<String>) commonConfig.get("kafka.brokers"),
                 Integer.toString((Integer) commonConfig.get("kafka.port")));
 
         timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
