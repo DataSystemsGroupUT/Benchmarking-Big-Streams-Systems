@@ -615,18 +615,14 @@ case $1 in
     ;;
     resize_up)
         runForRedisDroplets "${C4}"
-        runForLoadDroplets "${C2}"
         runForKafkaDroplets "${C16}"
         runForStreamDroplets "${C16}"
-        runForZKDroplets "${C4}"
 
     ;;
     resize_down)
-        runForRedisDroplets "${C1}"
-        runForLoadDroplets "${C1}"
-        runForKafkaDroplets "${C1}"
-        runForStreamDroplets "${C1}"
-        runForZKDroplets "${C1}"
+        runForRedisDroplets "${C2}"
+        runForKafkaDroplets "${C2}"
+        runForStreamDroplets "${C2}"
     ;;
     power_off)
         runOnAllDroplets "${DG_POWER_OFF}"
