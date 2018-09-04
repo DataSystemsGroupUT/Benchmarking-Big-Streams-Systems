@@ -29,11 +29,9 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 //import backtype.storm.utils.Utils;
 
@@ -191,8 +189,8 @@ public class AdvertisingHeron {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(opts, args);
         String configPath = cmd.getOptionValue("conf");
-        Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
-//      Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
+//        Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
+        Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
         List<String> zkServers = (List<String>) commonConfig.get("zookeeper.servers");
         String zkServerHosts = Utils.joinHosts((List<String>) commonConfig.get("zookeeper.servers"),
                 Integer.toString((Integer) commonConfig.get("zookeeper.port")));
@@ -207,36 +205,25 @@ public class AdvertisingHeron {
 
         ZkHosts hosts = new ZkHosts(zkServerHosts);
 
-
-//    Broker brokerForPartition1 = new Broker("localhost", 9092);//localhost:9092 but we specified the port explicitly
-//
-//    GlobalPartitionInformation partitionInfo = new GlobalPartitionInformation();
-//
-//    partitionInfo.addPartition(0, brokerForPartition1);//mapping from partition 1 to brokerForPartition1
-//
-//    StaticHosts staticHosts = new StaticHosts(partitionInfo);
-
-
-        SpoutConfig spoutConfig = new SpoutConfig(hosts, kafkaTopic, "/heron", UUID.randomUUID().toString());
+        SpoutConfig spoutConfig = new SpoutConfig(hosts, kafkaTopic, "/" + kafkaTopic, UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
-//        spoutConfig.zkServers = Arrays.asList("stream-node01");
-//        spoutConfig.zkPort = 2181;
+        spoutConfig.zkServers = zkServers;
+        spoutConfig.zkPort = 2181;
         spoutConfig.startOffsetTime = kafka.api.OffsetRequest.LatestTime();
 
-        KafkaSpout kafkaSpout = new KafkaSpout(spoutConfig);
-
+        org.apache.storm.kafka.KafkaSpout kafkaSpout = new KafkaSpout(spoutConfig);
         builder.setSpout("ads", kafkaSpout, kafkaPartitions);
         builder.setBolt("event_deserializer", new DeserializeBolt(), parallel).shuffleGrouping("ads");
         builder.setBolt("event_filter", new EventFilterBolt(), parallel).shuffleGrouping("event_deserializer");
         builder.setBolt("event_projection", new EventProjectionBolt(), parallel).shuffleGrouping("event_filter");
         builder.setBolt("redis_join", new RedisJoinBolt(redisServerHost), parallel).shuffleGrouping("event_projection");
-        builder.setBolt("campaign_processor", new CampaignProcessor(redisServerHost, timeDivisor), parallel * 2)
+        builder.setBolt("campaign_processor", new CampaignProcessor(redisServerHost, timeDivisor), parallel)
                 .fieldsGrouping("redis_join", new Fields("campaign_id"));
 
         Config conf = new Config();
         conf.setDebug(true);
 
-        conf.setNumStmgrs(28);
+        conf.setNumStmgrs(1);
 
         conf.put("storm.zookeeper.session.timeout", 20000);
         conf.put("storm.zookeeper.connection.timeout", 15000);
@@ -245,14 +232,15 @@ public class AdvertisingHeron {
 
 
         if (args != null && args.length > 0) {
-//      HeronSubmitter.submitTopology(args[0], conf, builder.createTopology().getStormTopology());
+//      HeronSubmitter.submitTopology(args[0], conf, builder.createTopology());
             StormSubmitter.submitTopology(args[0], conf, builder.createTopology());
 
         } else {
 
+
             LocalCluster cluster = new LocalCluster();
             cluster.submitTopology("test", conf, builder.createTopology());
-            backtype.storm.utils.Utils.sleep(10000);
+            Thread.sleep(20000);
             cluster.killTopology("test");
             cluster.shutdown();
         }

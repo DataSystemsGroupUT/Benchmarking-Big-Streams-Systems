@@ -17,7 +17,8 @@ REDIS_VERSION=${REDIS_VERSION:-"4.0.8"}
 SCALA_BIN_VERSION=${SCALA_BIN_VERSION:-"2.11"}
 SCALA_SUB_VERSION=${SCALA_SUB_VERSION:-"11"}
 STORM_VERSION=${STORM_VERSION:-"1.2.1"}
-FLINK_VERSION=${FLINK_VERSION:-"1.5.0"}
+JSTORM_VERSION=${JSTORM_VERSION:-"1.2.1"}
+FLINK_VERSION=${FLINK_VERSION:-"1.6.0"}
 SPARK_VERSION=${SPARK_VERSION:-"2.3.0"}
 HERON_VERSION=${HERON_VERSION:-"0.17.8"}
 HAZELCAST_VERSION=${HAZELCAST_VERSION:-"0.6"}
@@ -41,10 +42,11 @@ ZK_HOST="localhost"
 ZK_PORT="2181"
 ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
-PARTITIONS=${PARTITIONS:-5}
+PARTITIONS=${PARTITIONS:-1}
 LOAD=${LOAD:-1000}
 CONF_FILE=./conf/localConf.yaml
 TEST_TIME=${TEST_TIME:-60}
+SPARK_MASTER_HOST="localhost"
 
 pid_match() {
    local VAL=`ps -aef | grep "$1" | grep -v grep | awk '{print $2}'`
@@ -222,17 +224,17 @@ run() {
     rm -rf /tmp/dev-storm-zookeeper
   elif [ "START_ZK" = "$OPERATION" ];
   then
-    start_if_needed dev_zookeeper ZooKeeper 10 $KAFKA_DIR/bin/zookeeper-server-start.sh -daemon $KAFKA_DIR/config/zookeeper.properties
+    start_if_needed zookeeper ZooKeeper 10 $KAFKA_DIR/bin/zookeeper-server-start.sh -daemon $KAFKA_DIR/config/zookeeper.properties
   elif [ "STOP_ZK" = "$OPERATION" ];
   then
-    stop_if_needed dev_zookeeper ZooKeeper
+    stop_if_needed zookeeper ZooKeeper
     rm -rf /tmp/zookeeper
   elif [ "START_ZK_KAFKA_STREAM" = "$OPERATION" ];
   then
-    start_if_needed dev_zookeeper ZooKeeper 10 ${KAFKA_STREAM_DIR}/bin/zookeeper-server-start.sh -daemon ${KAFKA_STREAM_DIR}/config/zookeeper.properties
+    start_if_needed zookeeper ZooKeeper 10 ${KAFKA_STREAM_DIR}/bin/zookeeper-server-start.sh -daemon ${KAFKA_STREAM_DIR}/config/zookeeper.properties
   elif [ "STOP_ZK_KAFKA_STREAM" = "$OPERATION" ];
   then
-    stop_if_needed dev_zookeeper ZooKeeper
+    stop_if_needed zookeeper ZooKeeper
     rm -rf /tmp/zookeeper
   elif [ "START_REDIS" = "$OPERATION" ];
   then
@@ -283,10 +285,10 @@ run() {
     rm -rf /tmp/kafka-logs/
   elif [ "START_FLINK" = "$OPERATION" ];
   then
-    start_if_needed org.apache.flink.runtime.jobmanager.JobManager Flink 1 ${FLINK_DIR}/bin/start-local.sh
+    start_if_needed org.apache.flink.runtime.jobmanager.JobManager Flink 1 ${FLINK_DIR}/bin/start-cluster.sh
   elif [ "STOP_FLINK" = "$OPERATION" ];
   then
-    $FLINK_DIR/bin/stop-local.sh
+    ${FLINK_DIR}/bin/stop-cluster.sh
   elif [ "START_JET" = "$OPERATION" ];
   then
     start_if_needed HazelcastJet HazelcastJet 1 ${HAZELCAST_DIR}/bin/jet-start.sh
@@ -320,7 +322,7 @@ run() {
     sleep 10
   elif [ "START_SPARK_PROCESSING" = "$OPERATION" ];
   then
-    "$SPARK_DIR/bin/spark-submit" --master spark://stream-node01:7077 --class spark.benchmark.KafkaRedisAdvertisingStream ./spark-benchmarks/target/spark-benchmarks-0.1.0.jar "$CONF_FILE" &
+    "$SPARK_DIR/bin/spark-submit" --master spark://${SPARK_MASTER_HOST}:7077 --class spark.benchmark.KafkaRedisAdvertisingStream ./spark-benchmarks/target/spark-benchmarks-0.1.0.jar "$CONF_FILE" &
     sleep 5
   elif [ "STOP_SPARK_PROCESSING" = "$OPERATION" ];
   then
@@ -338,11 +340,11 @@ run() {
     sleep 3
   elif [ "STOP_KAFKA_PROCESSING" = "$OPERATION" ];
   then
-    ps aux | grep kafka-benchmarks | awk '{print $2}' | xargs kill
+    stop_if_needed kafka-benchmarks kafka-benchmarks
     rm -rf /tmp/kafka-streams/
   elif [ "START_FLINK_PROCESSING" = "$OPERATION" ];
   then
-    "$FLINK_DIR/bin/flink" run ./flink-benchmarks/target/flink-benchmarks-0.1.0.jar -conf $CONF_FILE &
+    "$FLINK_DIR/bin/flink" run ./flink-benchmarks/target/flink-benchmarks-0.1.0.jar --confPath $CONF_FILE &
     sleep 3
   elif [ "STOP_FLINK_PROCESSING" = "$OPERATION" ];
   then
@@ -360,17 +362,17 @@ run() {
     sleep 3
   elif [ "START_HERON_PROCESSING" = "$OPERATION" ];
       then
-        heron submit standalone ./heron-benchmarks/target/heron-benchmarks-0.1.0.jar heron.benchmark.AdvertisingHeron test-topo -conf $CONF_FILE
+        heron submit local ./heron-benchmarks/target/heron-benchmarks-0.1.0.jar heron.benchmark.AdvertisingHeron test-topo -conf $CONF_FILE  --verbose
         sleep 5
   elif [ "STOP_HERON_PROCESSING" = "$OPERATION" ];
        then
-       heron kill standalone test-topo
+       heron kill local test-topo
   elif [ "START_HERON" = "$OPERATION" ];
        then
         heron-admin standalone cluster start
   elif [ "STOP_HERON" = "$OPERATION" ];
        then
-       yes yes | heron-admin standalone cluster stop
+       yes yes | heron-admin standalone cluster stop &
   elif [ "STORM_TEST" = "$OPERATION" ];
   then
     run "START_ZK"
@@ -426,6 +428,21 @@ run() {
     sleep ${TEST_TIME}
     run "STOP_LOAD"
     run "STOP_SPARK_PROCESSING"
+    run "STOP_SPARK"
+    run "STOP_KAFKA"
+    run "STOP_REDIS"
+    run "STOP_ZK"
+  elif [ "SPARK_CP_TEST" = "$OPERATION" ];
+  then
+    run "START_ZK"
+    run "START_REDIS"
+    run "START_KAFKA"
+    run "START_SPARK"
+    run "START_SPARK_CP_PROCESSING"
+    run "START_LOAD"
+    sleep ${TEST_TIME}
+    run "STOP_LOAD"
+    run "STOP_SPARK_CP_PROCESSING"
     run "STOP_SPARK"
     run "STOP_KAFKA"
     run "STOP_REDIS"
@@ -489,6 +506,8 @@ run() {
     echo "STOP_ZK: kill the ZooKeeper instance"
     echo "START_REDIS: run a redis instance in the background"
     echo "STOP_REDIS: kill the redis instance"
+    echo "START_JET: run Hazelcast Jet in the background"
+    echo "STOP_JET: kill Hazelcast Jet"
     echo "START_KAFKA: run kafka in the background"
     echo "STOP_KAFKA: kill kafka"
     echo "START_LOAD: run kafka load generation"
@@ -504,15 +523,25 @@ run() {
     echo 
     echo "START_STORM_TOPOLOGY: run the storm test topology"
     echo "STOP_STORM_TOPOLOGY: kill the storm test topology"
+    echo "START_HERON_PROCESSING: run the heron test topology"
+    echo "STOP_HERON_PROCESSING: kill the heron test topology"
     echo "START_FLINK_PROCESSING: run the flink test processing"
-    echo "STOP_FLINK_PROCESSSING: kill the flink test processing"
+    echo "STOP_FLINK_PROCESSING: kill the flink test processing"
+    echo "START_KAFKA_PROCESSING: run the kafka test processing"
+    echo "STOP_KAFKA_PROCESSING: kill the kafka test processing"
+    echo "STOP_JET_PROCESSING: kill the Hazelcast Jet test processing"
+    echo "START_JET_PROCESSING: run the Hazelcast Jet test processing"
     echo "START_SPARK_PROCESSING: run the spark test processing"
-    echo "STOP_SPARK_PROCESSSING: kill the spark test processing"
+    echo "STOP_SPARK_PROCESSING: kill the spark test processing"
+    echo "START_SPARK_CP_PROCESSING: run the spark structured streaming test processing"
+    echo "STOP_SPARK_CP_PROCESSING: kill the spark structured streaming test processing"
     echo
-    echo "STORM_TEST: run storm test (assumes SETUP is done)"
-    echo "FLINK_TEST: run flink test (assumes SETUP is done)"
-    echo "SPARK_TEST: run spark test (assumes SETUP is done)"
+    echo "STORM_TEST: run Storm test (assumes SETUP is done)"
+    echo "FLINK_TEST: run Flink test (assumes SETUP is done)"
+    echo "SPARK_TEST: run Spark test (assumes SETUP is done)"
     echo "HERON_TEST: run Heron test (assumes SETUP is done)"
+    echo "KAFKA_TEST: run Kafka test (assumes SETUP is done)"
+    echo "JET_TEST: run Hazelcast test (assumes SETUP is done)"
     echo "STOP_ALL: stop everything"
     echo
     echo "HELP: print out this message"

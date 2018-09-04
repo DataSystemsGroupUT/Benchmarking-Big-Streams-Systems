@@ -1,6 +1,5 @@
 .DS_Store
 target
-target (1)
 dependency-reduced-pom.xml
 download-cache/**
 download-cache
@@ -11,18 +10,13 @@ download-cache
 .project
 .settings
 bin
-apache-storm-1.2.0
-apache-storm-1.2.1
-hazelcast-jet-0.6
-flink-1.4.0
-flink-1.5.0
-heron-0.17.4
-heron-0.17.8
-kafka_2.11-0.11.0.2
-kafka_2.11-1.1.0
-redis-4.0.8
-spark-2.2.1-bin-hadoop2.6
-spark-2.3.0-bin-hadoop2.6
+apache-storm-*
+hazelcast-jet-*
+flink-1.*
+heron-0.*
+kafka_*
+redis-*
+spark-2.*
 dump.rdb
 nohup.out
 result_old

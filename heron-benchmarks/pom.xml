@@ -19,13 +19,20 @@
         </dependency>
         <dependency>
             <groupId>com.twitter.heron</groupId>
-            <artifactId>heron-storm</artifactId>
-            <version>0.17.5</version>
+            <artifactId>heron-api</artifactId>
+            <version>${heron.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.storm</groupId>
-            <artifactId>storm-kafka</artifactId>
-            <version>${storm.version}</version>
+            <groupId>com.twitter.heron</groupId>
+            <artifactId>heron-storm</artifactId>
+            <version>${heron.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter.heron</groupId>
+            <artifactId>heron-kafka</artifactId>
+            <version>0.15.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>
