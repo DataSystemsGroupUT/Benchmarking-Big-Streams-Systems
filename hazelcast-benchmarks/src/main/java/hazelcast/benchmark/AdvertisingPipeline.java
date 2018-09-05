@@ -128,7 +128,6 @@ public class AdvertisingPipeline {
         Pipeline pipeline = Pipeline.create();
         pipeline
                 .drawFrom(KafkaSources.kafka(properties, kafkaTopic))
-                .setLocalParallelism(kafkaPartitions)
                 .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
                 .setLocalParallelism(parallel)
                 .filter(tuple -> tuple._5().equals("view"))
