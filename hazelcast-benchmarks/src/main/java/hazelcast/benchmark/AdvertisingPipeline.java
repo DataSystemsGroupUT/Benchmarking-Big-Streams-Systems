@@ -153,18 +153,6 @@ public class AdvertisingPipeline {
     }
 
 
-    private static void createCustomSink(JetInstance instance, String redisServerHost) {
-        ITopic<Tuple2<Tuple2<String, Long>, Long>> topic = instance.getHazelcastInstance().getTopic("topic");
-        addListener(topic, e -> {
-            logger.info(e.toString());
-            writeRedisTopLevel(e, redisServerHost);
-        });
-    }
-
-    private static void addListener(ITopic<Tuple2<Tuple2<String, Long>, Long>> topic, Consumer<Tuple2<Tuple2<String, Long>, Long>> consumer) {
-        topic.addMessageListener(event -> consumer.accept(event.getMessageObject()));
-    }
-
     public static class RedisJoinBoltP extends AbstractProcessor {
 
 
@@ -215,6 +203,18 @@ public class AdvertisingPipeline {
             this.campaignProcessorCommon.execute(adsEnriched.campaign_id, String.valueOf(adsEnriched.event_time));
             return true;
         }
+    }
+
+    private static void createCustomSink(JetInstance instance, String redisServerHost) {
+        ITopic<Tuple2<Tuple2<String, Long>, Long>> topic = instance.getHazelcastInstance().getTopic("topic");
+        addListener(topic, e -> {
+            logger.info(e.toString());
+            writeRedisTopLevel(e, redisServerHost);
+        });
+    }
+
+    private static void addListener(ITopic<Tuple2<Tuple2<String, Long>, Long>> topic, Consumer<Tuple2<Tuple2<String, Long>, Long>> consumer) {
+        topic.addMessageListener(event -> consumer.accept(event.getMessageObject()));
     }
 
     private static Sink<Tuple2<Tuple2<String, Long>, Long>> buildTopicSink() {
