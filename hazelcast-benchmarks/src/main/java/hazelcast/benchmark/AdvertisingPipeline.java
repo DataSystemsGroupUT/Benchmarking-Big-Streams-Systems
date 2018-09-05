@@ -5,16 +5,16 @@
 package hazelcast.benchmark;
 
 import benchmark.common.Utils;
+import benchmark.common.advertising.CampaignProcessorCommon;
 import benchmark.common.advertising.RedisAdCampaignCache;
 import com.hazelcast.core.ITopic;
+import com.hazelcast.jet.Jet;
 import com.hazelcast.jet.JetInstance;
-import com.hazelcast.jet.aggregate.AggregateOperations;
 import com.hazelcast.jet.core.AbstractProcessor;
 import com.hazelcast.jet.kafka.KafkaSources;
 import com.hazelcast.jet.pipeline.Pipeline;
 import com.hazelcast.jet.pipeline.Sink;
 import com.hazelcast.jet.pipeline.Sinks;
-import com.hazelcast.jet.pipeline.WindowDefinition;
 import com.hazelcast.jet.server.JetBootstrap;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -31,7 +31,6 @@ import scala.Tuple2;
 import scala.Tuple7;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class AdvertisingPipeline {
@@ -111,10 +110,10 @@ public class AdvertisingPipeline {
         int kafkaPartitions = ((Number) commonConfig.get("kafka.partitions")).intValue();
 
         int cores = ((Number) commonConfig.get("process.cores")).intValue();
-        int timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
-
-//        JetInstance instance = Jet.newJetInstance();
-        JetInstance instance = JetBootstrap.getInstance();
+        long timeDivisor = ((Number) commonConfig.get("time.divisor")).longValue();
+        int parallel = Math.max(1, cores / 7);
+        JetInstance instance = Jet.newJetInstance();
+//        JetInstance instance = JetBootstrap.getInstance();
         createCustomSink(instance, redisServerHost);
 
         Properties properties = new Properties();
@@ -129,16 +128,25 @@ public class AdvertisingPipeline {
         Pipeline pipeline = Pipeline.create();
         pipeline
                 .drawFrom(KafkaSources.kafka(properties, kafkaTopic))
+//                .setLocalParallelism(kafkaPartitions)
                 .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
+//                .setLocalParallelism(parallel)
                 .filter(tuple -> tuple._5().equals("view"))
+//                .setLocalParallelism(parallel)
                 .map(tuple1 -> new AdsFiltered(tuple1._3(), tuple1._6()))
+//                .setLocalParallelism(parallel)
                 .customTransform("test2", () -> new RedisJoinBoltP(redisServerHost))
-                .map(o -> (AdsEnriched) o)
-                .addTimestamps(AdsEnriched::getEvent_time, TimeUnit.SECONDS.toMillis(0))
-                .window(WindowDefinition.tumbling(TimeUnit.SECONDS.toMillis(10)))
-                .groupingKey(AdsEnriched::getCampaign_id)
-                .aggregate(AggregateOperations.counting(), (winStart, winEnd, key, result) -> Tuple2.apply(Tuple2.apply(key, winStart), result))
-                .drainTo(buildTopicSink());
+//                .setLocalParallelism(parallel)
+                //.map(o -> (AdsEnriched) o)
+                .customTransform("test3", () -> new WriteRedisBoltP(redisServerHost, timeDivisor))
+//                .setLocalParallelism(parallel*2)
+
+
+                //.addTimestamps(AdsEnriched::getEvent_time, TimeUnit.SECONDS.toMillis(0))
+                //.window(WindowDefinition.tumbling(TimeUnit.SECONDS.toMillis(10)))
+                //.groupingKey(AdsEnriched::getCampaign_id)
+                //.aggregate(AggregateOperations.counting(), (winStart, winEnd, key, result) -> Tuple2.apply(Tuple2.apply(key, winStart), result))
+                .drainTo(Sinks.logger());
 
         instance.newJob(pipeline);
 
@@ -180,6 +188,32 @@ public class AdvertisingPipeline {
             if(campaign_id == null)
                 return false;
             return this.tryEmit(new AdsEnriched(campaign_id, adsFiltered.ad_id, adsFiltered.event_time));
+        }
+    }
+
+    public static class WriteRedisBoltP extends AbstractProcessor {
+
+
+        transient private CampaignProcessorCommon campaignProcessorCommon;
+        private String redisServerHost;
+        private Long timeDivisor;
+
+        WriteRedisBoltP(String redisServerHost, Long timeDivisor) {
+            this.redisServerHost = redisServerHost;
+            this.timeDivisor = timeDivisor;
+        }
+
+        @Override
+        protected void init(Context context) {
+            campaignProcessorCommon = new CampaignProcessorCommon(redisServerHost, timeDivisor);
+            this.campaignProcessorCommon.prepare();
+        }
+
+        @Override
+        protected boolean tryProcess0(Object item) {
+            AdsEnriched adsEnriched= (AdsEnriched) item;
+            this.campaignProcessorCommon.execute(adsEnriched.campaign_id, String.valueOf(adsEnriched.event_time));
+            return true;
         }
     }
 

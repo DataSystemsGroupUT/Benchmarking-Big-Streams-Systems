@@ -44,8 +44,8 @@ ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
 PARTITIONS=${PARTITIONS:-5}
 LOAD=${LOAD:-1000}
-CONF_FILE=./conf/benchmarkConf.yaml
-TEST_TIME=${TEST_TIME:-600}
+CONF_FILE=./conf/localConf.yaml
+TEST_TIME=${TEST_TIME:-300}
 SPARK_MASTER_HOST="stream-node01"
 
 pid_match() {
