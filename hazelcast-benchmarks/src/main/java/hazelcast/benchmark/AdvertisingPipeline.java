@@ -8,13 +8,14 @@ import benchmark.common.Utils;
 import benchmark.common.advertising.CampaignProcessorCommon;
 import benchmark.common.advertising.RedisAdCampaignCache;
 import com.hazelcast.core.ITopic;
-import com.hazelcast.jet.Jet;
 import com.hazelcast.jet.JetInstance;
+import com.hazelcast.jet.aggregate.AggregateOperations;
 import com.hazelcast.jet.core.AbstractProcessor;
 import com.hazelcast.jet.kafka.KafkaSources;
 import com.hazelcast.jet.pipeline.Pipeline;
 import com.hazelcast.jet.pipeline.Sink;
 import com.hazelcast.jet.pipeline.Sinks;
+import com.hazelcast.jet.pipeline.WindowDefinition;
 import com.hazelcast.jet.server.JetBootstrap;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -25,12 +26,12 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Jedis;
 import scala.Tuple2;
 import scala.Tuple7;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class AdvertisingPipeline {
@@ -40,13 +41,13 @@ public class AdvertisingPipeline {
 
     public static class AdsFiltered {
 
-        public AdsFiltered(String ad_id, String event_time) {
+        public AdsFiltered(String ad_id, Long event_time) {
             this.ad_id = ad_id;
             this.event_time = event_time;
         }
 
         public String ad_id;
-        public String event_time;
+        public Long event_time;
     }
 
     public static class AdsEnriched {
@@ -54,7 +55,7 @@ public class AdvertisingPipeline {
         public AdsEnriched() {
         }
 
-        public AdsEnriched(String campaign_id, String ad_id, String event_time) {
+        public AdsEnriched(String campaign_id, String ad_id, Long event_time) {
             this.campaign_id = campaign_id;
             this.ad_id = ad_id;
             this.event_time = event_time;
@@ -62,7 +63,7 @@ public class AdvertisingPipeline {
 
         public String campaign_id;
         public String ad_id;
-        public String event_time;
+        public Long event_time;
 
         public String getCampaign_id() {
             return campaign_id;
@@ -80,11 +81,11 @@ public class AdvertisingPipeline {
             this.ad_id = ad_id;
         }
 
-        public String getEvent_time() {
+        public Long getEvent_time() {
             return event_time;
         }
 
-        public void setEvent_time(String event_time) {
+        public void setEvent_time(Long event_time) {
             this.event_time = event_time;
         }
     }
@@ -114,7 +115,9 @@ public class AdvertisingPipeline {
         int parallel = Math.max(1, cores / 7);
 //        JetInstance instance = Jet.newJetInstance();
         JetInstance instance = JetBootstrap.getInstance();
-        createCustomSink(instance, redisServerHost);
+        Jedis jedis = new Jedis(redisServerHost);
+
+        createCustomSink(instance, jedis);
 
         Properties properties = new Properties();
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "101");
@@ -137,14 +140,15 @@ public class AdvertisingPipeline {
 //                .setLocalParallelism(parallel)
                 .customTransform("test2", () -> new RedisJoinBoltP(redisServerHost))
 //                .setLocalParallelism(parallel)
-                .customTransform("test3", () -> new WriteRedisBoltP(redisServerHost, timeDivisor))
+                .map(o -> (AdsEnriched) o)
+//                .customTransform("test3", () -> new WriteRedisBoltP(redisServerHost, timeDivisor))
 
 
-                //.addTimestamps(AdsEnriched::getEvent_time, TimeUnit.SECONDS.toMillis(0))
-                //.window(WindowDefinition.tumbling(TimeUnit.SECONDS.toMillis(10)))
-                //.groupingKey(AdsEnriched::getCampaign_id)
-                //.aggregate(AggregateOperations.counting(), (winStart, winEnd, key, result) -> Tuple2.apply(Tuple2.apply(key, winStart), result))
-                .drainTo(Sinks.logger());
+                .addTimestamps(AdsEnriched::getEvent_time, TimeUnit.SECONDS.toMillis(0))
+                .window(WindowDefinition.tumbling(TimeUnit.SECONDS.toMillis(10)))
+                .groupingKey(AdsEnriched::getCampaign_id)
+                .aggregate(AggregateOperations.counting(), (winStart, winEnd, key, result) -> Tuple2.apply(Tuple2.apply(key, winStart), result))
+                .drainTo(buildTopicSink());
 
         instance.newJob(pipeline);
 
@@ -171,7 +175,7 @@ public class AdvertisingPipeline {
         protected boolean tryProcess0(Object item) {
             AdsFiltered adsFiltered = (AdsFiltered) item;
             String campaign_id = this.redisAdCampaignCache.execute(adsFiltered.ad_id);
-            if(campaign_id == null)
+            if (campaign_id == null)
                 return false;
             return this.tryEmit(new AdsEnriched(campaign_id, adsFiltered.ad_id, adsFiltered.event_time));
         }
@@ -197,17 +201,17 @@ public class AdvertisingPipeline {
 
         @Override
         protected boolean tryProcess0(Object item) {
-            AdsEnriched adsEnriched= (AdsEnriched) item;
-            this.campaignProcessorCommon.execute(adsEnriched.campaign_id, adsEnriched.event_time);
+            AdsEnriched adsEnriched = (AdsEnriched) item;
+            //this.campaignProcessorCommon.execute(adsEnriched.campaign_id, adsEnriched.event_time);
             return true;
         }
     }
 
-    private static void createCustomSink(JetInstance instance, String redisServerHost) {
+    private static void createCustomSink(JetInstance instance, Jedis jedis) {
         ITopic<Tuple2<Tuple2<String, Long>, Long>> topic = instance.getHazelcastInstance().getTopic("topic");
         addListener(topic, e -> {
             logger.info(e.toString());
-            writeRedisTopLevel(e, redisServerHost);
+            writeWindow(jedis, e);
         });
     }
 
@@ -220,36 +224,38 @@ public class AdvertisingPipeline {
                 builder((jet) -> jet.getHazelcastInstance().getTopic("topic")).onReceiveFn(ITopic::publish).build();
     }
 
-    private static void writeRedisTopLevel(Tuple2<Tuple2<String, Long>, Long> campaign_window_counts, String redisHost) {
-        JedisPool jedis = new JedisPool(new JedisPoolConfig(), redisHost, 6379, 2000);
-        writeWindow(jedis, campaign_window_counts);
-        jedis.getResource().close();
-    }
+//    private static void writeRedisTopLevel(Tuple2<Tuple2<String, Long>, Long> campaign_window_counts, String redisHost) {
+//        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+//        JedisPool jedis = new JedisPool(new JedisPoolConfig(), redisHost, 6379, 2000);
+//
+//        writeWindow(jedis, campaign_window_counts);
+//        jedis.getResource().close();
+//    }
 
-    private static void writeWindow(JedisPool jedis, Tuple2<Tuple2<String, Long>, Long> campaign_window_counts) {
+    private static void writeWindow(Jedis jedis, Tuple2<Tuple2<String, Long>, Long> campaign_window_counts) {
         Tuple2<String, Long> campaign_window_pair = campaign_window_counts._1;
         String campaign = campaign_window_pair._1;
         String window_timestamp = campaign_window_pair._2.toString();
         Long window_seenCount = campaign_window_counts._2;
 
 
-        String windowUUID = jedis.getResource().hmget(campaign, window_timestamp).get(0);
+        String windowUUID = jedis.hmget(campaign, window_timestamp).get(0);
         if (windowUUID == null) {
             windowUUID = UUID.randomUUID().toString();
-            jedis.getResource().hset(campaign, window_timestamp, windowUUID);
-            String windowListUUID = jedis.getResource().hmget(campaign, "windows").get(0);
+            jedis.hset(campaign, window_timestamp, windowUUID);
+            String windowListUUID = jedis.hmget(campaign, "windows").get(0);
             if (windowListUUID == null) {
                 windowListUUID = UUID.randomUUID().toString();
-                jedis.getResource().hset(campaign, "windows", windowListUUID);
+                jedis.hset(campaign, "windows", windowListUUID);
             }
-            jedis.getResource().lpush(windowListUUID, window_timestamp);
+            jedis.lpush(windowListUUID, window_timestamp);
         }
-        jedis.getResource().hincrBy(windowUUID, "seen_count", window_seenCount);
-        jedis.getResource().hset(windowUUID, "time_updated", String.valueOf(System.currentTimeMillis()));
+        jedis.hincrBy(windowUUID, "seen_count", window_seenCount);
+        jedis.hset(windowUUID, "time_updated", String.valueOf(System.currentTimeMillis()));
 
     }
 
-    private static Tuple7<String, String, String, String, String, String, String> deserializeBolt(String input) {
+    private static Tuple7<String, String, String, String, String, Long, String> deserializeBolt(String input) {
 
         JSONObject obj = new JSONObject(input);
         return new Tuple7<>(
@@ -258,7 +264,7 @@ public class AdvertisingPipeline {
                 obj.getString("ad_id"),
                 obj.getString("ad_type"),
                 obj.getString("event_type"),
-                obj.getString("event_time"),
+                Long.valueOf(obj.getString("event_time")),
                 obj.getString("ip_address"));
     }
 
