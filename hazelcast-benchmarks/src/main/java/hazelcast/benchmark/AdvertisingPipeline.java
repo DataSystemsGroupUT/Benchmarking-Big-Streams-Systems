@@ -100,8 +100,8 @@ public class AdvertisingPipeline {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(opts, args);
         String configPath = cmd.getOptionValue("conf");
-//        Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
-        Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
+        Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
+//        Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
         String redisServerHost = (String) commonConfig.get("redis.host");
         String kafkaTopic = (String) commonConfig.get("kafka.topic");
         String kafkaServerHosts = Utils.joinHosts((List<String>) commonConfig.get("kafka.brokers"),
@@ -128,7 +128,7 @@ public class AdvertisingPipeline {
         Pipeline pipeline = Pipeline.create();
         pipeline
                 .drawFrom(KafkaSources.kafka(properties, kafkaTopic))
-                .setLocalParallelism(parallel)
+//                .setLocalParallelism(parallel)
                 .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
 //                .setLocalParallelism(parallel)
                 .filter(tuple -> tuple._5().equals("view"))
@@ -138,7 +138,6 @@ public class AdvertisingPipeline {
                 .customTransform("test2", () -> new RedisJoinBoltP(redisServerHost))
 //                .setLocalParallelism(parallel)
                 .customTransform("test3", () -> new WriteRedisBoltP(redisServerHost, timeDivisor))
-//                .setLocalParallelism(parallel)
 
 
                 //.addTimestamps(AdsEnriched::getEvent_time, TimeUnit.SECONDS.toMillis(0))
