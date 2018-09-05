@@ -117,7 +117,7 @@ public class AdvertisingPipeline {
         createCustomSink(instance, redisServerHost);
 
         Properties properties = new Properties();
-        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "jet");
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "101");
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerHosts);
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getCanonicalName());
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getCanonicalName());
@@ -129,14 +129,15 @@ public class AdvertisingPipeline {
         pipeline
                 .drawFrom(KafkaSources.kafka(properties, kafkaTopic))
                 .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
-                .setLocalParallelism(parallel)
+//                .setLocalParallelism(parallel)
                 .filter(tuple -> tuple._5().equals("view"))
-                .setLocalParallelism(parallel)
+//                .setLocalParallelism(parallel)
                 .map(tuple1 -> new AdsFiltered(tuple1._3(), tuple1._6()))
-                .setLocalParallelism(parallel)
+//                .setLocalParallelism(parallel)
                 .customTransform("test2", () -> new RedisJoinBoltP(redisServerHost))
-                .setLocalParallelism(parallel)
+//                .setLocalParallelism(parallel)
                 .customTransform("test3", () -> new WriteRedisBoltP(redisServerHost, timeDivisor))
+//                .setLocalParallelism(parallel)
 
 
                 //.addTimestamps(AdsEnriched::getEvent_time, TimeUnit.SECONDS.toMillis(0))
