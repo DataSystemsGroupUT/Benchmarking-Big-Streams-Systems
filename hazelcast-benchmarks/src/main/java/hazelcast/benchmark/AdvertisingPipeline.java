@@ -112,8 +112,8 @@ public class AdvertisingPipeline {
         int cores = ((Number) commonConfig.get("process.cores")).intValue();
         long timeDivisor = ((Number) commonConfig.get("time.divisor")).longValue();
         int parallel = Math.max(1, cores / 7);
-        JetInstance instance = Jet.newJetInstance();
-//        JetInstance instance = JetBootstrap.getInstance();
+//        JetInstance instance = Jet.newJetInstance();
+        JetInstance instance = JetBootstrap.getInstance();
         createCustomSink(instance, redisServerHost);
 
         Properties properties = new Properties();
