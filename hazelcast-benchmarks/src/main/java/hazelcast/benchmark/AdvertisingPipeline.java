@@ -8,15 +8,12 @@ import benchmark.common.Utils;
 import benchmark.common.advertising.CampaignProcessorCommon;
 import benchmark.common.advertising.RedisAdCampaignCache;
 import com.hazelcast.core.ITopic;
-import com.hazelcast.jet.Jet;
 import com.hazelcast.jet.JetInstance;
-import com.hazelcast.jet.aggregate.AggregateOperations;
 import com.hazelcast.jet.core.AbstractProcessor;
 import com.hazelcast.jet.kafka.KafkaSources;
 import com.hazelcast.jet.pipeline.Pipeline;
 import com.hazelcast.jet.pipeline.Sink;
 import com.hazelcast.jet.pipeline.Sinks;
-import com.hazelcast.jet.pipeline.WindowDefinition;
 import com.hazelcast.jet.server.JetBootstrap;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -32,7 +29,6 @@ import scala.Tuple2;
 import scala.Tuple7;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class AdvertisingPipeline {
@@ -142,14 +138,14 @@ public class AdvertisingPipeline {
                 .customTransform("test2", () -> new RedisJoinBoltP(redisServerHost))
 //                .setLocalParallelism(parallel)
                 .map(o -> (AdsEnriched) o)
-//                .customTransform("test3", () -> new WriteRedisBoltP(redisServerHost, timeDivisor))
+                .customTransform("test3", () -> new WriteRedisBoltP(redisServerHost, timeDivisor))
 
 
-                .addTimestamps(AdsEnriched::getEvent_time, TimeUnit.SECONDS.toMillis(0))
-                .window(WindowDefinition.tumbling(TimeUnit.SECONDS.toMillis(10)))
-                .groupingKey(AdsEnriched::getCampaign_id)
-                .aggregate(AggregateOperations.counting(), (winStart, winEnd, key, result) -> Tuple2.apply(Tuple2.apply(key, winStart), result))
-                .drainTo(buildTopicSink());
+//                .addTimestamps(AdsEnriched::getEvent_time, TimeUnit.SECONDS.toMillis(0))
+//                .window(WindowDefinition.tumbling(TimeUnit.SECONDS.toMillis(10)))
+//                .groupingKey(AdsEnriched::getCampaign_id)
+//                .aggregate(AggregateOperations.counting(), (winStart, winEnd, key, result) -> Tuple2.apply(Tuple2.apply(key, winStart), result))
+                .drainTo(Sinks.logger());
 
         instance.newJob(pipeline);
 
@@ -203,7 +199,7 @@ public class AdvertisingPipeline {
         @Override
         protected boolean tryProcess0(Object item) {
             AdsEnriched adsEnriched = (AdsEnriched) item;
-            //this.campaignProcessorCommon.execute(adsEnriched.campaign_id, adsEnriched.event_time);
+            this.campaignProcessorCommon.execute(adsEnriched.campaign_id, adsEnriched.event_time.toString());
             return true;
         }
     }
