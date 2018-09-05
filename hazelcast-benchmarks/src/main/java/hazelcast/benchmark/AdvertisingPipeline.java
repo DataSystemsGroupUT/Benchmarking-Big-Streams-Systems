@@ -40,13 +40,13 @@ public class AdvertisingPipeline {
 
     public static class AdsFiltered {
 
-        public AdsFiltered(String ad_id, Long event_time) {
+        public AdsFiltered(String ad_id, String event_time) {
             this.ad_id = ad_id;
             this.event_time = event_time;
         }
 
         public String ad_id;
-        public Long event_time;
+        public String event_time;
     }
 
     public static class AdsEnriched {
@@ -54,7 +54,7 @@ public class AdvertisingPipeline {
         public AdsEnriched() {
         }
 
-        public AdsEnriched(String campaign_id, String ad_id, Long event_time) {
+        public AdsEnriched(String campaign_id, String ad_id, String event_time) {
             this.campaign_id = campaign_id;
             this.ad_id = ad_id;
             this.event_time = event_time;
@@ -62,7 +62,7 @@ public class AdvertisingPipeline {
 
         public String campaign_id;
         public String ad_id;
-        public Long event_time;
+        public String event_time;
 
         public String getCampaign_id() {
             return campaign_id;
@@ -80,11 +80,11 @@ public class AdvertisingPipeline {
             this.ad_id = ad_id;
         }
 
-        public Long getEvent_time() {
+        public String getEvent_time() {
             return event_time;
         }
 
-        public void setEvent_time(Long event_time) {
+        public void setEvent_time(String event_time) {
             this.event_time = event_time;
         }
     }
@@ -128,6 +128,7 @@ public class AdvertisingPipeline {
         Pipeline pipeline = Pipeline.create();
         pipeline
                 .drawFrom(KafkaSources.kafka(properties, kafkaTopic))
+                .setLocalParallelism(parallel)
                 .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
 //                .setLocalParallelism(parallel)
                 .filter(tuple -> tuple._5().equals("view"))
@@ -198,7 +199,7 @@ public class AdvertisingPipeline {
         @Override
         protected boolean tryProcess0(Object item) {
             AdsEnriched adsEnriched= (AdsEnriched) item;
-            this.campaignProcessorCommon.execute(adsEnriched.campaign_id, String.valueOf(adsEnriched.event_time));
+            this.campaignProcessorCommon.execute(adsEnriched.campaign_id, adsEnriched.event_time);
             return true;
         }
     }
@@ -249,7 +250,7 @@ public class AdvertisingPipeline {
 
     }
 
-    private static Tuple7<String, String, String, String, String, Long, String> deserializeBolt(String input) {
+    private static Tuple7<String, String, String, String, String, String, String> deserializeBolt(String input) {
 
         JSONObject obj = new JSONObject(input);
         return new Tuple7<>(
@@ -258,7 +259,7 @@ public class AdvertisingPipeline {
                 obj.getString("ad_id"),
                 obj.getString("ad_type"),
                 obj.getString("event_type"),
-                Long.valueOf(obj.getString("event_time")),
+                obj.getString("event_time"),
                 obj.getString("ip_address"));
     }
 
