@@ -137,7 +137,6 @@ public class AdvertisingPipeline {
                 .customTransform("test2", () -> new RedisJoinBoltP(redisServerHost))
                 .setLocalParallelism(parallel)
                 .customTransform("test3", () -> new WriteRedisBoltP(redisServerHost, timeDivisor))
-                .setLocalParallelism(parallel)
 
 
                 //.addTimestamps(AdsEnriched::getEvent_time, TimeUnit.SECONDS.toMillis(0))
