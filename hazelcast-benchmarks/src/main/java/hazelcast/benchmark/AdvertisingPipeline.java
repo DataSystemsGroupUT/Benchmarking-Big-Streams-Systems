@@ -102,8 +102,8 @@ public class AdvertisingPipeline {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(opts, args);
         String configPath = cmd.getOptionValue("conf");
-        Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
-//        Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
+//        Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
+        Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
         String redisServerHost = (String) commonConfig.get("redis.host");
         String kafkaTopic = (String) commonConfig.get("kafka.topic");
         String kafkaServerHosts = Utils.joinHosts((List<String>) commonConfig.get("kafka.brokers"),
@@ -114,8 +114,8 @@ public class AdvertisingPipeline {
         int cores = ((Number) commonConfig.get("process.cores")).intValue();
         long timeDivisor = ((Number) commonConfig.get("time.divisor")).longValue();
         int parallel = Math.max(1, cores / 7);
-        JetInstance instance = Jet.newJetInstance();
-//        JetInstance instance = JetBootstrap.getInstance();
+//        JetInstance instance = Jet.newJetInstance();
+        JetInstance instance = JetBootstrap.getInstance();
         Jedis jedis = new Jedis(redisServerHost);
 
         createCustomSink(instance, jedis);
