@@ -128,7 +128,7 @@ public class AdvertisingPipeline {
         Pipeline pipeline = Pipeline.create();
         pipeline
                 .drawFrom(KafkaSources.kafka(properties, kafkaTopic))
-                .setLocalParallelism(kafkaPartitions)
+                //.setLocalParallelism(kafkaPartitions)
                 .map(objectObjectEntry -> deserializeBolt(objectObjectEntry.getValue().toString()))
                 .setLocalParallelism(parallel)
                 .filter(tuple -> tuple._5().equals("view"))
@@ -138,7 +138,7 @@ public class AdvertisingPipeline {
                 .customTransform("test2", () -> new RedisJoinBoltP(redisServerHost))
                 .setLocalParallelism(parallel)
                 .customTransform("test3", () -> new WriteRedisBoltP(redisServerHost, timeDivisor))
-                .setLocalParallelism(parallel)
+                .setLocalParallelism(1)
 
 
                 //.addTimestamps(AdsEnriched::getEvent_time, TimeUnit.SECONDS.toMillis(0))
