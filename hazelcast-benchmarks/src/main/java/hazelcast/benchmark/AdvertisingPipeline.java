@@ -100,8 +100,8 @@ public class AdvertisingPipeline {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(opts, args);
         String configPath = cmd.getOptionValue("conf");
-        Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
-//        Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
+//        Map commonConfig = Utils.findAndReadConfigFile("./conf/localConf.yaml", true);
+        Map commonConfig = Utils.findAndReadConfigFile(configPath, true);
         String redisServerHost = (String) commonConfig.get("redis.host");
         String kafkaTopic = (String) commonConfig.get("kafka.topic");
         String kafkaServerHosts = Utils.joinHosts((List<String>) commonConfig.get("kafka.brokers"),
