@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 TEST_TIME=60
 
 TPS="1000"
