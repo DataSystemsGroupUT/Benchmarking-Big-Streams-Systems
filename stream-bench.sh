@@ -17,7 +17,7 @@ REDIS_VERSION=${REDIS_VERSION:-"4.0.8"}
 SCALA_BIN_VERSION=${SCALA_BIN_VERSION:-"2.11"}
 SCALA_SUB_VERSION=${SCALA_SUB_VERSION:-"11"}
 STORM_VERSION=${STORM_VERSION:-"1.2.1"}
-JSTORM_VERSION=${JSTORM_VERSION:-"2.1.1"}
+JSTORM_VERSION=${JSTORM_VERSION:-"2.4.0"}
 FLINK_VERSION=${FLINK_VERSION:-"1.5.0"}
 SPARK_VERSION=${SPARK_VERSION:-"2.3.0"}
 HERON_VERSION=${HERON_VERSION:-"0.17.8"}
@@ -275,9 +275,9 @@ run() {
 #    stop_if_needed daemon.name=logviewer "Storm LogViewer"
   elif [ "START_JSTORM" = "$OPERATION" ];
   then
-    start_if_needed daemon.name=nimbus "JStorm Nimbus" 3 "$JSTORM_DIR/bin/jstorm" nimbus
-    start_if_needed daemon.name=supervisor "JStorm Supervisor" 3 "$JSTORM_DIR/bin/jstorm" supervisor
-    sleep 5
+    start_if_needed daemon.name=nimbus "JStorm Nimbus" 3 "$JSTORM_DIR/bin/jstorm.py" nimbus
+    start_if_needed daemon.name=supervisor "JStorm Supervisor" 3 "$JSTORM_DIR/bin/jstorm..py" supervisor
+    sleep 15
   elif [ "STOP_JSTORM" = "$OPERATION" ];
   then
     stop_if_needed daemon.name=nimbus "JStorm Nimbus"
@@ -337,13 +337,12 @@ run() {
     sleep 10
   elif [ "START_JSTORM_TOPOLOGY" = "$OPERATION" ];
   then
-    "$JSTORM_DIR/bin/jstorm" jar ./storm-benchmarks/target/storm-benchmarks-0.1.0.jar storm.benchmark.AdvertisingTopology test-topo -conf $CONF_FILE
+    "$JSTORM_DIR/bin/jstorm.py" jar ./jstorm-benchmarks/target/jstorm-benchmarks-0.1.0.jar jstorm.benchmark.AdvertisingTopology test-topo -conf $CONF_FILE
     sleep 15
   elif [ "STOP_JSTORM_TOPOLOGY" = "$OPERATION" ];
   then
-    "$JSTORM_DIR/bin/jstorm" kill -w 0 test-topo || true
-    sleep 10
-
+    "$JSTORM_DIR/bin/jstorm.py" kill test-topo
+    sleep 15
   elif [ "START_SPARK_PROCESSING" = "$OPERATION" ];
   then
     "$SPARK_DIR/bin/spark-submit" --master spark://${SPARK_MASTER_HOST}:7077 --class spark.benchmark.KafkaRedisAdvertisingStream ./spark-benchmarks/target/spark-benchmarks-0.1.0.jar "$CONF_FILE" &

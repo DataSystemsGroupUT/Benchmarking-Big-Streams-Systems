@@ -126,7 +126,7 @@ echo '1' >> /root/zookeeper/myid
 #./bin/kafka-console-producer.sh --broker-list  kafka-node01:9092,kafka-node02:9092,kafka-node03:9092,kafka-node04:9092 --topic sample-test
 #
 ##Consumer
-#./bin/kafka-console-consumer.sh --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic sample-test --from-beginning
+#./bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic ad-events
 #
 #
 #
