@@ -17,6 +17,7 @@ heron-0.*
 kafka_*
 redis-*
 spark-2.*
+jstorm-2.*
 dump.rdb
 nohup.out
 result_old

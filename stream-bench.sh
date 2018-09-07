@@ -17,7 +17,7 @@ REDIS_VERSION=${REDIS_VERSION:-"4.0.8"}
 SCALA_BIN_VERSION=${SCALA_BIN_VERSION:-"2.11"}
 SCALA_SUB_VERSION=${SCALA_SUB_VERSION:-"11"}
 STORM_VERSION=${STORM_VERSION:-"1.2.1"}
-JSTORM_VERSION=${JSTORM_VERSION:-"1.2.1"}
+JSTORM_VERSION=${JSTORM_VERSION:-"2.1.1"}
 FLINK_VERSION=${FLINK_VERSION:-"1.5.0"}
 SPARK_VERSION=${SPARK_VERSION:-"2.3.0"}
 HERON_VERSION=${HERON_VERSION:-"0.17.8"}
@@ -25,6 +25,7 @@ HAZELCAST_VERSION=${HAZELCAST_VERSION:-"0.6"}
 
 
 STORM_DIR="apache-storm-$STORM_VERSION"
+JSTORM_DIR="jstorm-$JSTORM_VERSION"
 REDIS_DIR="redis-$REDIS_VERSION"
 KAFKA_DIR="kafka_$SCALA_BIN_VERSION-$KAFKA_VERSION"
 KAFKA_STREAM_DIR="kafka_$SCALA_BIN_VERSION-$KAFKA_STREAM_VERSION"
@@ -44,8 +45,8 @@ ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
 PARTITIONS=${PARTITIONS:-5}
 LOAD=${LOAD:-1000}
-CONF_FILE=./conf/benchmarkConf.yaml
-TEST_TIME=${TEST_TIME:-600}
+CONF_FILE=./conf/localConf.yaml
+TEST_TIME=${TEST_TIME:-60}
 SPARK_MASTER_HOST="stream-node01"
 
 pid_match() {
@@ -157,7 +158,7 @@ run() {
   elif [ "SETUP_BENCHMARK" = "$OPERATION" ];
   then
     
-    $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dkafka.stream.version="$KAFKA_STREAM_VERSION" -Dheron.version="$HERON_VERSION" -Dhazelcast.version="$HAZELCAST_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION"
+    $MVN clean install -Dspark.version="$SPARK_VERSION" -Dkafka.version="$KAFKA_VERSION" -Dkafka.stream.version="$KAFKA_STREAM_VERSION" -Dheron.version="$HERON_VERSION" -Dhazelcast.version="$HAZELCAST_VERSION" -Dflink.version="$FLINK_VERSION" -Dstorm.version="$STORM_VERSION" -DJstorm.version="$JSTORM_VERSION" -Dscala.binary.version="$SCALA_BIN_VERSION" -Dscala.version="$SCALA_BIN_VERSION.$SCALA_SUB_VERSION"
   elif [ "SETUP_REDIS" = "$OPERATION" ];
   then
     
@@ -173,6 +174,11 @@ run() {
     #Fetch Kafka
     KAFKA_FILE="$KAFKA_DIR.tgz"
     fetch_untar_file "$KAFKA_FILE" "$APACHE_MIRROR/kafka/$KAFKA_VERSION/$KAFKA_FILE"
+  elif [ "SETUP_JSTORM" = "$OPERATION" ];
+  then
+    #Fetch JStorm
+    JSTORM_FILE="$JSTORM_DIR.zip"
+    fetch_untar_file "$JSTORM_FILE" "https://github.com/alibaba/jstorm/releases/download/$JSTORM_VERSION/$JSTORM_FILE"
   elif [ "SETUP_KAFKA_STREAM" = "$OPERATION" ];
   then
 
@@ -260,13 +266,22 @@ run() {
     start_if_needed daemon.name=supervisor "Storm Supervisor" 3 "$STORM_DIR/bin/storm" supervisor
 #    start_if_needed daemon.name=ui "Storm UI" 3 "$STORM_DIR/bin/storm" ui
 #    start_if_needed daemon.name=logviewer "Storm LogViewer" 3 "$STORM_DIR/bin/storm" logviewer
-    sleep 20
+    sleep 5
   elif [ "STOP_STORM" = "$OPERATION" ];
   then
     stop_if_needed daemon.name=nimbus "Storm Nimbus"
     stop_if_needed daemon.name=supervisor "Storm Supervisor"
 #    stop_if_needed daemon.name=ui "Storm UI"
 #    stop_if_needed daemon.name=logviewer "Storm LogViewer"
+  elif [ "START_JSTORM" = "$OPERATION" ];
+  then
+    start_if_needed daemon.name=nimbus "JStorm Nimbus" 3 "$JSTORM_DIR/bin/jstorm" nimbus
+    start_if_needed daemon.name=supervisor "JStorm Supervisor" 3 "$JSTORM_DIR/bin/jstorm" supervisor
+    sleep 5
+  elif [ "STOP_JSTORM" = "$OPERATION" ];
+  then
+    stop_if_needed daemon.name=nimbus "JStorm Nimbus"
+    stop_if_needed daemon.name=supervisor "JStorm Supervisor"
   elif [ "START_KAFKA" = "$OPERATION" ];
   then
     start_if_needed kafka\.Kafka Kafka 10 "$KAFKA_DIR/bin/kafka-server-start.sh" "$KAFKA_DIR/config/server.properties"
@@ -320,6 +335,15 @@ run() {
   then
     "$STORM_DIR/bin/storm" kill -w 0 test-topo || true
     sleep 10
+  elif [ "START_JSTORM_TOPOLOGY" = "$OPERATION" ];
+  then
+    "$JSTORM_DIR/bin/jstorm" jar ./storm-benchmarks/target/storm-benchmarks-0.1.0.jar storm.benchmark.AdvertisingTopology test-topo -conf $CONF_FILE
+    sleep 15
+  elif [ "STOP_JSTORM_TOPOLOGY" = "$OPERATION" ];
+  then
+    "$JSTORM_DIR/bin/jstorm" kill -w 0 test-topo || true
+    sleep 10
+
   elif [ "START_SPARK_PROCESSING" = "$OPERATION" ];
   then
     "$SPARK_DIR/bin/spark-submit" --master spark://${SPARK_MASTER_HOST}:7077 --class spark.benchmark.KafkaRedisAdvertisingStream ./spark-benchmarks/target/spark-benchmarks-0.1.0.jar "$CONF_FILE" &
@@ -385,6 +409,21 @@ run() {
     run "STOP_LOAD"
     run "STOP_STORM_TOPOLOGY"
     run "STOP_STORM"
+    run "STOP_KAFKA"
+    run "STOP_REDIS"
+    run "STOP_ZK"
+  elif [ "JSTORM_TEST" = "$OPERATION" ];
+  then
+    run "START_ZK"
+    run "START_REDIS"
+    run "START_KAFKA"
+    run "START_JSTORM"
+    run "START_JSTORM_TOPOLOGY"
+    run "START_LOAD"
+    sleep ${TEST_TIME}
+    run "STOP_LOAD"
+    run "STOP_JSTORM_TOPOLOGY"
+    run "STOP_JSTORM"
     run "STOP_KAFKA"
     run "STOP_REDIS"
     run "STOP_ZK"
