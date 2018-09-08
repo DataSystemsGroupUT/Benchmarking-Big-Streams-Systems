@@ -44,25 +44,22 @@ public class KafkaSpout implements IRichSpout {
     private long lastUpdateMs;
 
 
-    private KafkaSpoutConfig config;
-
+    private String kafkaHosts;
+    private String topic;
     private Consumer kafkaConsumer;
 
     public KafkaSpout() {
 
     }
 
-    public KafkaSpout(KafkaSpoutConfig config) {
-        this.config = config;
+    public KafkaSpout(String kafkaHosts,  String topic) {
+        this.kafkaHosts = kafkaHosts;
+        this.topic = topic;
     }
 
     @Override
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
         this.collector = collector;
-        if (this.config == null) {
-            config = new KafkaSpoutConfig();
-        }
-        config.configure(conf);
         kafkaConsumer = createConsumer();
     }
 
@@ -118,8 +115,8 @@ public class KafkaSpout implements IRichSpout {
 
     private Consumer<String, String> createConsumer() {
         final Properties props = new Properties();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getHosts());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, config.getGroupId());
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHosts);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "jstorm");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
@@ -129,7 +126,7 @@ public class KafkaSpout implements IRichSpout {
         final Consumer<String, String> consumer =
                 new KafkaConsumer<>(props);
         // Subscribe to the topic.
-        consumer.subscribe(Collections.singletonList(config.getTopic()));
+        consumer.subscribe(Collections.singletonList(topic));
         return consumer;
     }
 

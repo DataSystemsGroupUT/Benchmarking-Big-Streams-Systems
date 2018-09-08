@@ -4,15 +4,6 @@
  */
 package jstorm.benchmark;
 
-import benchmark.common.Utils;
-import benchmark.common.advertising.CampaignProcessorCommon;
-import benchmark.common.advertising.RedisAdCampaignCache;
-import com.alibaba.jstorm.kafka.KafkaSpout;
-import com.alibaba.jstorm.kafka.KafkaSpoutConfig;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
@@ -24,12 +15,18 @@ import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
+import benchmark.common.Utils;
+import benchmark.common.advertising.CampaignProcessorCommon;
+import benchmark.common.advertising.RedisAdCampaignCache;
+import com.alibaba.jstorm.kafka.KafkaSpout;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -238,18 +235,11 @@ public class AdvertisingTopology {
         int timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
         int parallel = Math.max(1, cores / 7);
 
-        out.println("Configuration loading  "+ackEnabled);
-        KafkaSpoutConfig kafkaSpoutConfig =  new KafkaSpoutConfig();
-        Map<String,String> kafkaConfMap = new HashMap<String, String>();
-        kafkaConfMap.put("kafka.topic",kafkaTopic);
-        kafkaConfMap.put("kafka.group.id","jstorm");
-        kafkaConfMap.put("kafka.zookeeper.hosts",zookeeperServerHosts);
-        kafkaConfMap.put("kafka.broker.hosts",kafkaServerHosts);
-        kafkaConfMap.put("kafka.broker.partitions",String.valueOf(kafkaPartitions));
-        kafkaSpoutConfig.configure(kafkaConfMap);
-        KafkaSpout kafkaSpout = new KafkaSpout(kafkaSpoutConfig);
+        out.println("Configuration loading  " + ackEnabled);
 
-        builder.setSpout("ads", kafkaSpout, 1);
+        KafkaSpout kafkaSpout = new KafkaSpout(kafkaServerHosts, kafkaTopic);
+
+        builder.setSpout("ads", kafkaSpout, kafkaPartitions);
         builder.setBolt("event_deserializer", new DeserializeBolt(ackEnabled), parallel).shuffleGrouping("ads");
         builder.setBolt("event_filter", new EventFilterBolt(ackEnabled), parallel).shuffleGrouping("event_deserializer");
         builder.setBolt("event_projection", new EventProjectionBolt(ackEnabled), parallel).shuffleGrouping("event_filter");
