@@ -96,6 +96,10 @@ mkdir /root/zookeeper/ -p
 touch /root/zookeeper/myid
 echo '1' >> /root/zookeeper/myid
 
+#JSTORM setup
+
+#install 2.4.0 jar to maven repo
+mvn install:install-file -Dfile=/root/stream-benchmarking/jstorm-2.4.0/jstorm-core-2.4.0.jar -DgroupId=com.alibaba.jstorm -DartifactId=jstorm-core -Dversion=2.4.0 -Dpackaging=jar
 
 ##Spark
 #./sbin/start-master.sh -h stream-node01 -p 7077
