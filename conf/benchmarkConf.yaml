@@ -17,7 +17,7 @@ kafka.port: 9092
 zookeeper.port: 2181
 redis.host: "redis"
 kafka.topic: "ad-events"
-kafka.partitions: 50
+kafka.partitions: 10
 
 process.hosts: 9
 process.cores: 16
