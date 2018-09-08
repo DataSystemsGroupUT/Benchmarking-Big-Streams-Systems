@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
-TEST_TIME=600
+. ./remoteInvocation.sh --source-only
+. ./variable.sh --source-only
 
-TPS="1000"
+
+
+
 TPS_RANGE=1000
 TPS_LIMIT=15000
-
 INITIAL_TPS=${TPS}
-BATCH="3000"
+
 SHORT_SLEEP=5
 LONG_SLEEP=10
 
@@ -15,81 +17,93 @@ WAIT_AFTER_STOP_PRODUCER=60
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
-KAFKA_PARTITION=5
+
+
 KAFKA_FOLDER="kafka_2.11-0.11.0.2"
 #KAFKA_FOLDER="kafka_2.11-1.1.0"
+PROJECT_DIR="/root/stream-benchmarking"
 
-CLEAN_LOAD_RESULT_CMD="rm *.load; rm -rf /root/stream-benchmarking/apache-storm-1.2.1/logs/*; rm -rf /root/stream-benchmarking/spark-2.3.0-bin-hadoop2.6/work/*; rm -rf /root/kafka-logs/*;"
+
+
+CLEAN_LOAD_RESULT_CMD="rm *.load; rm -rf $PROJECT_DIR/$STORM_DIR/logs/*;rm -rf $PROJECT_DIR/$STORM_DIR/logs/*; rm -rf $PROJECT_DIR/$SPARK_DIR/work/*; rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
 SHUTDOWN_CMD="shutdown;"
-CLEAN_RESULT_CMD="cd stream-benchmarking; rm data/*.txt; rm -rf /root/zookeeper/version-2/*;"
+CLEAN_RESULT_CMD="cd $PROJECT_DIR; rm data/*.txt; rm -rf /root/zookeeper/version-2/*;"
 
-CLEAN_BUILD_BENCHMARK="cd stream-benchmarking; ./stream-bench.sh SETUP_BENCHMARK"
-SETUP_KAFKA="cd stream-benchmarking; ./stream-bench.sh SETUP_KAFKA"
+CLEAN_BUILD_BENCHMARK="cd $PROJECT_DIR; ./stream-bench.sh SETUP_BENCHMARK"
+SETUP_KAFKA="cd $PROJECT_DIR; ./stream-bench.sh SETUP_KAFKA"
 
-CHANGE_TPS_CMD="sed -i “s/LOAD:-${INITIAL_TPS}/LOAD:-$TPS/g” stream-benchmarking/stream-bench.sh;"
+CHANGE_TPS_CMD="sed -i “s/LOAD:-${INITIAL_TPS}/LOAD:-$TPS/g” $PROJECT_DIR/stream-bench.sh;"
 
-LOAD_START_CMD="cd stream-benchmarking; ./stream-bench.sh START_LOAD;"
-LOAD_STOP_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_LOAD;"
+LOAD_START_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_LOAD;"
+LOAD_STOP_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_LOAD;"
 
-DELETE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --delete --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic ad-events;"
-CREATE_TOPIC="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions $KAFKA_PARTITION --topic ad-events;"
+DELETE_TOPIC="cd $PROJECT_DIR/$KAFKA_FOLDER; ./bin/kafka-topics.sh --delete --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --topic $TOPIC;"
+CREATE_TOPIC="cd $PROJECT_DIR/$KAFKA_FOLDER; ./bin/kafka-topics.sh --create --zookeeper zookeeper-node01:2181,zookeeper-node02:2181,zookeeper-node03:2181 --replication-factor 1 --partitions $PARTITIONS --topic $TOPIC;"
 
 START_MONITOR_CPU="top -b -d 1 | grep --line-buffered Cpu > cpu.load;"
 START_MONITOR_MEM="top -b -d 1 | grep --line-buffered 'KiB Mem' > mem.load;"
 STOP_MONITOR="ps aux | grep top | awk {'print \$2'} | xargs sudo kill;"
 
-START_STORM_NIMBUS_CMD="cd stream-benchmarking; ./apache-storm-1.2.1/bin/storm nimbus;"
+START_STORM_NIMBUS_CMD="cd $PROJECT_DIR; ./$STORM_DIR/bin/storm nimbus;"
 STOP_STORM_NIMBUS_CMD="ps aux | grep storm | awk {'print \$2'} | xargs sudo kill;"
-START_STORM_SUPERVISOR_CMD="cd stream-benchmarking; ./apache-storm-1.2.1/bin/storm supervisor;"
+START_STORM_SUPERVISOR_CMD="cd $PROJECT_DIR; ./$STORM_DIR/bin/storm supervisor;"
 STOP_STORM_SUPERVISOR_CMD="ps aux | grep storm | awk {'print \$2'} | xargs sudo kill;"
-START_STORM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_STORM_TOPOLOGY;"
-STOP_STORM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_STORM_TOPOLOGY;"
+START_STORM_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_STORM_TOPOLOGY;"
+STOP_STORM_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_STORM_TOPOLOGY;"
+
+START_JSTORM_NIMBUS_CMD="cd $PROJECT_DIR; ./$JSTORM_DIR/bin/jstorm.py nimbus;"
+STOP_JSTORM_NIMBUS_CMD="ps aux | grep jstorm | awk {'print \$2'} | xargs sudo kill;"
+START_JSTORM_SUPERVISOR_CMD="cd $PROJECT_DIR; ./$JSTORM_DIR/bin/jstorm.py supervisor;"
+STOP_JSTORM_SUPERVISOR_CMD="ps aux | grep jstorm | awk {'print \$2'} | xargs sudo kill;"
+START_JSTORM_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_JSTORM_TOPOLOGY;"
+STOP_JSTORM_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_JSTORM_TOPOLOGY;"
+
 
 START_HERON_CMD="heron-admin standalone cluster start;"
 START_HERON_API_CMD="heron-apiserver --cluster standalone;"
 STOP_HERON_CMD="yes yes | heron-admin standalone cluster stop;"
-START_HERON_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_HERON_PROCESSING;"
-STOP_HERON_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_HERON_PROCESSING;"
+START_HERON_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_HERON_PROCESSING;"
+STOP_HERON_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_HERON_PROCESSING;"
 
 COMMENT_ZOO="sed -i \"s/heron.statemgr.connection.string/#heron.statemgr.connection.string/g\" ~/.heron/conf/standalone/statemgr.yaml;"
 ADD_ZOO="echo \"heron.statemgr.connection.string: zookeeper-node03:2181,zookeeper-node02:2181,zookeeper-node01:2181\" >> ~/.heron/conf/standalone/statemgr.yaml"
 
-START_FLINK_CMD="cd stream-benchmarking; ./flink-1.5.0/bin/start-cluster.sh;"
-STOP_FLINK_CMD="cd stream-benchmarking; ./flink-1.5.0/bin/stop-cluster.sh;"
-START_FLINK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_FLINK_PROCESSING;"
-STOP_FLINK_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_FLINK_PROCESSING;"
+START_FLINK_CMD="cd $PROJECT_DIR; ./$FLINK_DIR/bin/start-cluster.sh;"
+STOP_FLINK_CMD="cd $PROJECT_DIR; ./$FLINK_DIR/bin/stop-cluster.sh;"
+START_FLINK_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_FLINK_PROCESSING;"
+STOP_FLINK_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_FLINK_PROCESSING;"
 
-START_SPARK_CMD="cd stream-benchmarking/spark-2.3.0-bin-hadoop2.6; ./sbin/start-all.sh;"
-STOP_SPARK_CMD="cd stream-benchmarking/spark-2.3.0-bin-hadoop2.6; ./sbin/stop-all.sh;"
-START_SPARK_RDD_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_CP_PROCESSING;"
-STOP_SPARK_RDD_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_CP_PROCESSING;"
+START_SPARK_CMD="cd $PROJECT_DIR/$SPARK_DIR; ./sbin/start-all.sh;"
+STOP_SPARK_CMD="cd $PROJECT_DIR/$SPARK_DIR; ./sbin/stop-all.sh;"
+START_SPARK_RDD_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_SPARK_CP_PROCESSING;"
+STOP_SPARK_RDD_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_SPARK_CP_PROCESSING;"
 
-START_SPARK_DSTREAM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_PROCESSING;"
-STOP_SPARK_DSTREAM_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_PROCESSING;"
+START_SPARK_DSTREAM_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_SPARK_PROCESSING;"
+STOP_SPARK_DSTREAM_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_SPARK_PROCESSING;"
 
-START_SPARK_DATASET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_SPARK_CP_PROCESSING;"
-STOP_SPARK_DATASET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_SPARK_CP_PROCESSING;"
+START_SPARK_DATASET_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_SPARK_CP_PROCESSING;"
+STOP_SPARK_DATASET_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_SPARK_CP_PROCESSING;"
 
 
-START_ZK_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/zookeeper-server-start.sh -daemon config/zookeeper.properties"
-STOP_ZK_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/zookeeper-server-stop.sh;"
+START_ZK_CMD="cd $PROJECT_DIR/$KAFKA_FOLDER; ./bin/zookeeper-server-start.sh -daemon config/zookeeper.properties"
+STOP_ZK_CMD="cd $PROJECT_DIR/$KAFKA_FOLDER; ./bin/zookeeper-server-stop.sh;"
 
-START_KAFKA_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-server-start.sh -daemon config/server.properties"
-STOP_KAFKA_CMD="cd stream-benchmarking/$KAFKA_FOLDER; ./bin/kafka-server-stop.sh;"
+START_KAFKA_CMD="cd $PROJECT_DIR/$KAFKA_FOLDER; ./bin/kafka-server-start.sh -daemon config/server.properties"
+STOP_KAFKA_CMD="cd $PROJECT_DIR/$KAFKA_FOLDER; ./bin/kafka-server-stop.sh;"
 
-START_KAFKA_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_KAFKA_PROCESSING;"
-STOP_KAFKA_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_KAFKA_PROCESSING;"
+START_KAFKA_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_KAFKA_PROCESSING;"
+STOP_KAFKA_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_KAFKA_PROCESSING;"
 
-START_JET_CMD="cd stream-benchmarking; ./hazelcast-jet-0.6/bin/jet-start.sh;"
-STOP_JET_CMD="cd stream-benchmarking; ./hazelcast-jet-0.6/bin/jet-stop.sh;"
-START_JET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh START_JET_PROCESSING;"
-STOP_JET_PROC_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_JET_PROCESSING;"
+START_JET_CMD="cd $PROJECT_DIR; ./$HAZELCAST_DIR/bin/jet-start.sh;"
+STOP_JET_CMD="cd $PROJECT_DIR; ./$HAZELCAST_DIR/bin/jet-stop.sh;"
+START_JET_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_JET_PROCESSING;"
+STOP_JET_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_JET_PROCESSING;"
 
-START_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh START_REDIS;"
-STOP_REDIS_CMD="cd stream-benchmarking; ./stream-bench.sh STOP_REDIS;"
+START_REDIS_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_REDIS;"
+STOP_REDIS_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_REDIS;"
 
-PULL_GIT="cd stream-benchmarking; git reset --hard HEAD; git pull origin master;"
+PULL_GIT="cd $PROJECT_DIR; git reset --hard HEAD; git pull origin master;"
 
 
 C1="{\"type\":\"resize\",\"size\":\"c-1vcpu-2gb\"}"
@@ -100,7 +114,7 @@ DG_POWER_OFF="{\"type\":\"power_off\"}"
 DG_POWER_ON="{\"type\":\"power_on\"}"
 
 
-. ./remoteInvocation.sh --source-only
+
 
 function runAllServers {
     runCommandStreamServers "${1}" "nohup"
@@ -299,6 +313,30 @@ function stopStormProcessing {
     runCommandMasterStreamServers "${STOP_STORM_PROC_CMD}" "nohup"
 }
 
+function startJStorm {
+    echo "Starting JStorm"
+    runCommandMasterStreamServers "${START_JSTORM_NIMBUS_CMD}" "nohup"
+    sleep ${SHORT_SLEEP}
+    runCommandSlaveStreamServers "${START_JSTORM_SUPERVISOR_CMD}" "nohup"
+}
+
+function stopJStorm {
+    echo "Stopping JStorm"
+    runCommandSlaveStreamServers "${STOP_JSTORM_SUPERVISOR_CMD}" "nohup"
+    sleep ${SHORT_SLEEP}
+    runCommandMasterStreamServers "${STOP_JSTORM_NIMBUS_CMD}" "nohup"
+}
+
+function startJStormProcessing {
+    echo "Starting JStorm processing"
+    runCommandMasterStreamServers "${START_JSTORM_PROC_CMD}" "nohup"
+}
+
+function stopJStormProcessing {
+    echo "Stopping JStorm processing"
+    runCommandMasterStreamServers "${STOP_JSTORM_PROC_CMD}" "nohup"
+}
+
 function startMonitoring(){
     echo "Start Monitoring"
     runCommandStreamServers "${START_MONITOR_CPU}" "nohup"
@@ -425,6 +463,16 @@ function runSystem(){
             sleep ${SHORT_SLEEP}
             stopStorm
         ;;
+        jstorm)
+            startJStorm
+            sleep ${SHORT_SLEEP}
+            startJStormProcessing
+            sleep ${LONG_SLEEP}
+            benchmark $1
+            stopJStormProcessing
+            sleep ${SHORT_SLEEP}
+            stopJStorm
+        ;;
         heron)
             startHeron
             startHeronProcessing
@@ -457,8 +505,10 @@ function stopAll (){
     stopSparkProcessing "dataset"
     stopSparkProcessing "dstream"
     stopSpark
-    stopStormProcessing
+    stopStormProcessizng
     stopStorm
+    stopJStormProcessing
+    stopJStorm
     stopHeronProcessing
     stopHeron
     cleanKafka
@@ -499,6 +549,10 @@ case $1 in
         changeTps ${TPS}
         benchmarkLoop "storm"
     ;;
+    jstorm)
+        changeTps ${TPS}
+        benchmarkLoop "jstorm"
+    ;;
     kafka)
         benchmarkLoop "kafka"
     ;;
@@ -509,6 +563,11 @@ case $1 in
         benchmarkLoop "spark" "dataset"
         benchmarkLoop "spark" "dstream"
         benchmarkLoop "storm"
+        benchmarkLoop "jstorm"
+        benchmarkLoop "flink"
+        benchmarkLoop "kafka"
+        benchmarkLoop "heron"
+        benchmarkLoop "jet"
     ;;
     start)
         case $2 in
@@ -522,6 +581,11 @@ case $1 in
                 startZK
                 sleep ${SHORT_SLEEP}
                 startStorm
+            ;;
+            jstorm)
+                startZK
+                sleep ${SHORT_SLEEP}
+                startJStorm
             ;;
             heron)
                 startZK
@@ -558,6 +622,11 @@ case $1 in
             ;;
             storm)
                 stopStorm
+                sleep ${SHORT_SLEEP}
+                stopZK
+            ;;
+            jstorm)
+                stopJStorm
                 sleep ${SHORT_SLEEP}
                 stopZK
             ;;

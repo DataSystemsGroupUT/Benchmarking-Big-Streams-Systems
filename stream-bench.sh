@@ -11,43 +11,9 @@ MVN=${MVN:-mvn}
 GIT=${GIT:-git}
 MAKE=${MAKE:-make}
 
-KAFKA_STREAM_VERSION=${KAFKA_STREAM_VERSION:-"1.1.0"}
-KAFKA_VERSION=${KAFKA_VERSION:-"0.11.0.2"}
-REDIS_VERSION=${REDIS_VERSION:-"4.0.8"}
-SCALA_BIN_VERSION=${SCALA_BIN_VERSION:-"2.11"}
-SCALA_SUB_VERSION=${SCALA_SUB_VERSION:-"11"}
-STORM_VERSION=${STORM_VERSION:-"1.2.1"}
-JSTORM_VERSION=${JSTORM_VERSION:-"2.4.0"}
-FLINK_VERSION=${FLINK_VERSION:-"1.5.0"}
-SPARK_VERSION=${SPARK_VERSION:-"2.3.0"}
-HERON_VERSION=${HERON_VERSION:-"0.17.8"}
-HAZELCAST_VERSION=${HAZELCAST_VERSION:-"0.6"}
+. ./variable.sh --source-only
 
 
-STORM_DIR="apache-storm-$STORM_VERSION"
-JSTORM_DIR="jstorm-$JSTORM_VERSION"
-REDIS_DIR="redis-$REDIS_VERSION"
-KAFKA_DIR="kafka_$SCALA_BIN_VERSION-$KAFKA_VERSION"
-KAFKA_STREAM_DIR="kafka_$SCALA_BIN_VERSION-$KAFKA_STREAM_VERSION"
-FLINK_DIR="flink-$FLINK_VERSION"
-HERON_DIR="heron-$HERON_VERSION"
-SPARK_DIR="spark-$SPARK_VERSION-bin-hadoop2.6"
-HAZELCAST_DIR="hazelcast-jet-$HAZELCAST_VERSION"
-
-
-#Get one of the closet apache mirrors
-APACHE_MIRROR=$(curl 'https://www.apache.org/dyn/closer.cgi' |   grep -o '<strong>[^<]*</strong>' |   sed 's/<[^>]*>//g' |   head -1)
-
-
-ZK_HOST="localhost"
-ZK_PORT="2181"
-ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
-    TOPIC=${TOPIC:-"ad-events"}
-PARTITIONS=${PARTITIONS:-5}
-LOAD=${LOAD:-1000}
-CONF_FILE=./conf/localConf.yaml
-TEST_TIME=${TEST_TIME:-60}
-SPARK_MASTER_HOST="stream-node01"
 
 pid_match() {
    local VAL=`ps -aef | grep "$1" | grep -v grep | awk '{print $2}'`
@@ -322,7 +288,7 @@ run() {
   elif [ "START_LOAD" = "$OPERATION" ];
   then
     cd data
-    start_if_needed leiningen.core.main "Load Generation" 1 $LEIN run -r -t $LOAD --configPath ../$CONF_FILE
+    start_if_needed leiningen.core.main "Load Generation" 1 $LEIN run -r -t $TPS --configPath ../$CONF_FILE
     cd ..
   elif [ "STOP_LOAD" = "$OPERATION" ];
   then
