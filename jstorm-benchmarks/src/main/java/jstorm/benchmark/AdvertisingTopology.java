@@ -24,8 +24,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,7 @@ import static java.lang.System.out;
 public class AdvertisingTopology {
 
     public static class DeserializeBolt extends BaseRichBolt {
-        private static Logger logger = LoggerFactory.getLogger(DeserializeBolt.class);
+
         OutputCollector _collector;
 
         Boolean ackEnabled;
@@ -54,7 +53,7 @@ public class AdvertisingTopology {
 
         @Override
         public void execute(Tuple tuple) {
-            logger.info(tuple.toString());
+
             JSONObject obj = new JSONObject(tuple.getString(0));
             _collector.emit(tuple, new Values(obj.getString("user_id"),
                     obj.getString("page_id"),
@@ -174,7 +173,7 @@ public class AdvertisingTopology {
     }
 
     public static class CampaignProcessor extends BaseRichBolt {
-        private static Logger logger = LoggerFactory.getLogger(CampaignProcessor.class);
+
         private OutputCollector _collector;
         transient private CampaignProcessorCommon campaignProcessorCommon;
         private String redisServerHost;
@@ -195,7 +194,7 @@ public class AdvertisingTopology {
 
         @Override
         public void execute(Tuple tuple) {
-            logger.info(tuple.toString());
+
             String campaign_id = tuple.getStringByField("campaign_id");
             String event_time = tuple.getStringByField("event_time");
             this.campaignProcessorCommon.execute(campaign_id, event_time);
