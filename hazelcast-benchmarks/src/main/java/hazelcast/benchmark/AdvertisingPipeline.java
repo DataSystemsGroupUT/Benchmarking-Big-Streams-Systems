@@ -8,7 +8,9 @@ import benchmark.common.Utils;
 import benchmark.common.advertising.CampaignProcessorCommon;
 import benchmark.common.advertising.RedisAdCampaignCache;
 import com.hazelcast.core.ITopic;
+import com.hazelcast.jet.Jet;
 import com.hazelcast.jet.JetInstance;
+import com.hazelcast.jet.config.JobConfig;
 import com.hazelcast.jet.core.AbstractProcessor;
 import com.hazelcast.jet.kafka.KafkaSources;
 import com.hazelcast.jet.pipeline.Pipeline;
@@ -110,8 +112,9 @@ public class AdvertisingPipeline {
         int cores = ((Number) commonConfig.get("process.cores")).intValue();
         long timeDivisor = ((Number) commonConfig.get("time.divisor")).longValue();
         int parallel = Math.max(1, cores / 7);
-//        JetInstance instance = Jet.newJetInstance();
-        JetInstance instance = JetBootstrap.getInstance();
+        JetInstance instance = Jet.newJetInstance();
+
+//        JetInstance instance = JetBootstrap.getInstance();
         Jedis jedis = new Jedis(redisServerHost);
 
         createCustomSink(instance, jedis);

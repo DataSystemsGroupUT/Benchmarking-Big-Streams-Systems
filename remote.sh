@@ -100,6 +100,8 @@ START_JET_CMD="cd $PROJECT_DIR; ./$HAZELCAST_DIR/bin/jet-start.sh;"
 STOP_JET_CMD="cd $PROJECT_DIR; ./$HAZELCAST_DIR/bin/jet-stop.sh;"
 START_JET_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_JET_PROCESSING;"
 STOP_JET_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_JET_PROCESSING;"
+START_JET_EMBEDDED_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_JET_EMBEDDED_PROCESSING;"
+STOP_JET_EMBEDDED_PROC_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_JET_EMBEDDED_PROCESSING;"
 
 START_REDIS_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_REDIS;"
 STOP_REDIS_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_REDIS;"
@@ -218,6 +220,16 @@ function startJetProcessing {
 function stopJetProcessing {
     echo "Stopping Jet Processing"
     runCommandMasterStreamServers "${STOP_JET_PROC_CMD}" "nohup"
+ }
+
+function startJetEmbeddedProcessing {
+    echo "Starting Jet Processing"
+    runCommandStreamServers "${START_JET_EMBEDDED_PROC_CMD}" "nohup"
+}
+
+function stopJetEmbeddedProcessing {
+    echo "Stopping Jet Processing"
+    runCommandStreamServers "${STOP_JET_EMBEDDED_PROC_CMD}" "nohup"
  }
 
 function startFlink {
@@ -428,6 +440,12 @@ function benchmark(){
 function runSystem(){
     prepareEnvironment
     case $1 in
+         jet_embedded)
+            startJetEmbeddedProcessing
+            benchmark $1
+            sleep ${SHORT_SLEEP}
+            stopJetEmbeddedProcessing
+        ;;
          jet)
             startJet
             sleep ${SHORT_SLEEP}
@@ -548,6 +566,9 @@ case $1 in
     ;;
     jet)
         benchmarkLoop "jet"
+    ;;
+    jet_embedded)
+        benchmarkLoop "jet_embedded"
     ;;
     storm)
         changeTps ${TPS}

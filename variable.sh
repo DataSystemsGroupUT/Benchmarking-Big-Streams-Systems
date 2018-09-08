@@ -12,7 +12,6 @@ SPARK_VERSION=${SPARK_VERSION:-"2.3.0"}
 HERON_VERSION=${HERON_VERSION:-"0.17.8"}
 HAZELCAST_VERSION=${HAZELCAST_VERSION:-"0.6"}
 
-
 STORM_DIR="apache-storm-$STORM_VERSION"
 JSTORM_DIR="jstorm-$JSTORM_VERSION"
 REDIS_DIR="redis-$REDIS_VERSION"
@@ -23,25 +22,19 @@ HERON_DIR="heron-$HERON_VERSION"
 SPARK_DIR="spark-$SPARK_VERSION-bin-hadoop2.6"
 HAZELCAST_DIR="hazelcast-jet-$HAZELCAST_VERSION"
 
-
 #Get one of the closet apache mirrors
 APACHE_MIRROR=$(curl 'https://www.apache.org/dyn/closer.cgi' |   grep -o '<strong>[^<]*</strong>' |   sed 's/<[^>]*>//g' |   head -1)
-
 
 ZK_HOST="localhost"
 ZK_PORT="2181"
 ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
-PARTITIONS=${PARTITIONS:-100}
-
-
-
+PARTITIONS=${PARTITIONS:-10}
 
 CONF_FILE=./conf/benchmarkConf.yaml
 
 TPS=${TPS:-1000}
 TEST_TIME=${TEST_TIME:-60}
-
 
 SPARK_MASTER_HOST="stream-node01"
 BATCH="3000"

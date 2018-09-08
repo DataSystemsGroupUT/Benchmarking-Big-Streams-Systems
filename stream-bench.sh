@@ -325,7 +325,7 @@ run() {
     stop_if_needed spark.benchmark.KafkaRedisAdvertisingStream "Spark Client Process"
   elif [ "START_KAFKA_PROCESSING" = "$OPERATION" ];
   then
-    java -jar ./kafka-benchmarks/target/kafka-benchmarks-0.1.0.jar -conf $CONF_FILE &
+    java -Xms3G -Xmx30G -jar ./kafka-benchmarks/target/kafka-benchmarks-0.1.0.jar -conf $CONF_FILE &
     sleep 3
   elif [ "STOP_KAFKA_PROCESSING" = "$OPERATION" ];
   then
@@ -349,6 +349,14 @@ run() {
   then
     start_if_needed HazelcastJetProcessing "Hazelcast Jet Processing" 3 "$HAZELCAST_DIR/bin/jet-submit.sh" ./hazelcast-benchmarks/target/hazelcast-benchmarks-0.1.0.jar -conf $CONF_FILE
     sleep 3
+  elif [ "START_JET_EMBEDDED_PROCESSING" = "$OPERATION" ];
+  then
+    java -Xms3G -Xmx30G -jar./hazelcast-benchmarks/target/hazelcast-benchmarks-0.1.0.jar -conf $CONF_FILE &
+    sleep 3
+  elif [ "STOP_JET_EMBEDDED_PROCESSING" = "$OPERATION" ];
+  then
+    stop_if_needed hazelcast-benchmarks hazelcast-benchmarks
+    rm -rf /tmp/kafka-streams/
   elif [ "START_HERON_PROCESSING" = "$OPERATION" ];
       then
         heron submit local ./heron-benchmarks/target/heron-benchmarks-0.1.0.jar heron.benchmark.AdvertisingHeron test-topo -conf $CONF_FILE  --verbose
