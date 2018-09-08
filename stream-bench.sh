@@ -276,7 +276,7 @@ run() {
   elif [ "START_JSTORM" = "$OPERATION" ];
   then
     start_if_needed daemon.name=nimbus "JStorm Nimbus" 3 "$JSTORM_DIR/bin/jstorm.py" nimbus
-    start_if_needed daemon.name=supervisor "JStorm Supervisor" 3 "$JSTORM_DIR/bin/jstorm..py" supervisor
+    start_if_needed daemon.name=supervisor "JStorm Supervisor" 3 "$JSTORM_DIR/bin/jstorm.py" supervisor
     sleep 15
   elif [ "STOP_JSTORM" = "$OPERATION" ];
   then
