@@ -243,7 +243,7 @@ public class AdvertisingTopology {
         builder.setBolt("event_filter", new EventFilterBolt(ackEnabled), parallel).shuffleGrouping("event_deserializer");
         builder.setBolt("event_projection", new EventProjectionBolt(ackEnabled), parallel).shuffleGrouping("event_filter");
         builder.setBolt("redis_join", new RedisJoinBolt(redisServerHost, ackEnabled), parallel).shuffleGrouping("event_projection");
-        builder.setBolt("campaign_processor", new CampaignProcessor(redisServerHost, Long.valueOf(timeDivisor), ackEnabled), parallel)
+        builder.setBolt("campaign_processor", new CampaignProcessor(redisServerHost, Long.valueOf(timeDivisor), ackEnabled), parallel*2)
                 .fieldsGrouping("redis_join", new Fields("campaign_id"));
 
         Config conf = new Config();

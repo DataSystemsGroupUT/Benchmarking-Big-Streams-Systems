@@ -34,7 +34,7 @@ CLEAN_RESULT_CMD="cd $PROJECT_DIR; rm data/*.txt; rm -rf data/workers; rm -rf $J
 CLEAN_BUILD_BENCHMARK="cd $PROJECT_DIR; ./stream-bench.sh SETUP_BENCHMARK"
 SETUP_KAFKA="cd $PROJECT_DIR; ./stream-bench.sh SETUP_KAFKA"
 
-CHANGE_TPS_CMD="sed -i “s/LOAD:-${INITIAL_TPS}/LOAD:-$TPS/g” $PROJECT_DIR/stream-bench.sh;"
+CHANGE_TPS_CMD="sed -i “s/TPS:-${INITIAL_TPS}/TPS:-$TPS/g” $PROJECT_DIR/variable.sh;"
 
 LOAD_START_CMD="cd $PROJECT_DIR; ./stream-bench.sh START_LOAD;"
 LOAD_STOP_CMD="cd $PROJECT_DIR; ./stream-bench.sh STOP_LOAD;"
@@ -354,7 +354,7 @@ function stopMonitoring(){
 
 function changeTps(){
     #TODO replace with CHANGE_TPS_CMD variable
-    runCommandLoadServers "sed -i \"s/LOAD:-${INITIAL_TPS}/LOAD:-$1/g\" stream-benchmarking/stream-bench.sh" "nohup"
+    runCommandLoadServers "sed -i \"s/TPS:-${INITIAL_TPS}/TPS:-$1/g\" stream-benchmarking/variable.sh" "nohup"
 }
 
 
