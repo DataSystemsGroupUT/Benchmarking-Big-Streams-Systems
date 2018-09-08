@@ -710,7 +710,7 @@ case $1 in
     ;;
     test)
         #runSystem $2 $3
-        TPS=$[11000]
+        TPS=$[10000]
         changeTps ${TPS}
         runSystem $2 $3
         #Rscript --vanilla reporting.R "spark_dstream_1000" 1000 60
