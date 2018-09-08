@@ -246,8 +246,8 @@ run() {
     sleep 15
   elif [ "STOP_JSTORM" = "$OPERATION" ];
   then
-    stop_if_needed daemon.name=nimbus "JStorm Nimbus"
-    stop_if_needed daemon.name=supervisor "JStorm Supervisor"
+    ${JSTORM_DIR}/bin/stop.sh
+    sleep 5
   elif [ "START_KAFKA" = "$OPERATION" ];
   then
     start_if_needed kafka\.Kafka Kafka 10 "$KAFKA_DIR/bin/kafka-server-start.sh" "$KAFKA_DIR/config/server.properties"
