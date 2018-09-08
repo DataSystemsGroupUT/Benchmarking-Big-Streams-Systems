@@ -39,7 +39,7 @@ PARTITIONS=${PARTITIONS:-50}
 
 CONF_FILE=./conf/benchmarkConf.yaml
 
-TPS=${TPS:-1000}
+TPS=${TPS:-100}
 TEST_TIME=${TEST_TIME:-60}
 
 
