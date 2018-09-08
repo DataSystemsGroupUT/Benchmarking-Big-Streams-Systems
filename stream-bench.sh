@@ -351,7 +351,7 @@ run() {
     sleep 3
   elif [ "START_JET_EMBEDDED_PROCESSING" = "$OPERATION" ];
   then
-    java -Xms3G -Xmx30G -jar./hazelcast-benchmarks/target/hazelcast-benchmarks-0.1.0.jar -conf $CONF_FILE &
+    java -Xms3G -Xmx30G -jar ./hazelcast-benchmarks/target/hazelcast-benchmarks-0.1.0.jar -conf $CONF_FILE &
     sleep 3
   elif [ "STOP_JET_EMBEDDED_PROCESSING" = "$OPERATION" ];
   then
