@@ -29,7 +29,7 @@ PROJECT_DIR="/root/stream-benchmarking"
 CLEAN_LOAD_RESULT_CMD="rm *.load; rm -rf $PROJECT_DIR/$STORM_DIR/logs/*;rm -rf $PROJECT_DIR/$STORM_DIR/logs/*; rm -rf $PROJECT_DIR/$SPARK_DIR/work/*; rm -rf /root/kafka-logs/*;"
 REBOOT_CMD="reboot;"
 SHUTDOWN_CMD="shutdown;"
-CLEAN_RESULT_CMD="cd $PROJECT_DIR; rm data/*.txt; rm -rf /root/zookeeper/version-2/*;"
+CLEAN_RESULT_CMD="cd $PROJECT_DIR; rm data/*.txt; rm -rf /root/zookeeper/version-2/*; rm -rf $PROJECT_DIR/$JSTORM_DIR/data/*"
 
 CLEAN_BUILD_BENCHMARK="cd $PROJECT_DIR; ./stream-bench.sh SETUP_BENCHMARK"
 SETUP_KAFKA="cd $PROJECT_DIR; ./stream-bench.sh SETUP_KAFKA"
@@ -466,13 +466,16 @@ function runSystem(){
         ;;
         jstorm)
             startJStorm
-            sleep ${SHORT_SLEEP}
+            sleep ${LONG_SLEEP}
             startJStormProcessing
+            sleep ${LONG_SLEEP}
             sleep ${LONG_SLEEP}
             benchmark $1
             stopJStormProcessing
-            sleep ${SHORT_SLEEP}
+            sleep ${LONG_SLEEP}
+            sleep ${LONG_SLEEP}
             stopJStorm
+            sleep ${LONG_SLEEP}
         ;;
         heron)
             startHeron
