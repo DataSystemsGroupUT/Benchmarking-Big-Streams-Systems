@@ -247,7 +247,7 @@ public class AdvertisingTopology {
         kafkaSpoutConfig.configure(kafkaConfMap);
         KafkaSpout kafkaSpout = new KafkaSpout(kafkaSpoutConfig);
 
-        builder.setSpout("ads", kafkaSpout, 1);
+        builder.setSpout("ads", kafkaSpout, parallel);
         builder.setBolt("event_deserializer", new DeserializeBolt(ackEnabled), parallel).shuffleGrouping("ads");
         builder.setBolt("event_filter", new EventFilterBolt(ackEnabled), parallel).shuffleGrouping("event_deserializer");
         builder.setBolt("event_projection", new EventProjectionBolt(ackEnabled), parallel).shuffleGrouping("event_filter");

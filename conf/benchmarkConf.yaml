@@ -17,14 +17,14 @@ kafka.port: 9092
 zookeeper.port: 2181
 redis.host: "redis"
 kafka.topic: "ad-events"
-kafka.partitions: 5
+kafka.partitions: 50
 
 process.hosts: 9
 process.cores: 16
 
 #STORM Specific
 storm.workers: 36
-storm.ackers: 9
+storm.ackers: 18
 storm.ack: "enabled"
 
 
