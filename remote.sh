@@ -19,8 +19,8 @@ WAIT_AFTER_REBOOT_SERVER=30
 SSH_USER="root"
 
 # Before running kafka stream benchmark comment the first line and uncomment the second line after this line.
-KAFKA_FOLDER="kafka_2.11-0.11.0.2"
-#KAFKA_FOLDER="kafka_2.11-1.1.0"
+#KAFKA_FOLDER="kafka_2.11-0.11.0.2"
+KAFKA_FOLDER="kafka_2.11-1.1.0"
 
 PROJECT_DIR="/root/stream-benchmarking"
 
