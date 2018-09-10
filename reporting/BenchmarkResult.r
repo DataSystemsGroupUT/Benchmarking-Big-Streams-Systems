@@ -17,7 +17,7 @@ generateBenchmarkReport <- function(engine, tps, duration, tps_count){
     SeenFiltered = c()
     UpdatedFiltered = c()
     for(c in 1:(length(Updated$V1)-1)) {
-      if(Seen$V1[c] != Seen$V1[c+1] && Updated$V1[c] != Updated$V1[c+1]){
+      if(Seen$V1[c] != Seen$V1[c+1] && Updated$V1[c] != Updated$V1[c+1] && Updated$V1[c] > 10000){
         SeenFiltered <- c(SeenFiltered, Seen$V1[c])
         UpdatedFiltered <- c(UpdatedFiltered, Updated$V1[c])
       }

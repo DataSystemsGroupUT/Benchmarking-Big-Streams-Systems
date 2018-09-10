@@ -8,8 +8,8 @@ args <- commandArgs(TRUE)
 tps <- as.numeric(args[2])
 duration <- as.numeric(args[3])
 tps_count <- as.numeric(args[4])
-engines_all <- c("flink","spark_dataset","spark_dstream", "kafka", "jet", "storm", "jstorm", "storm_no_ack")
-engines <- c("flink","spark_dataset","spark_dstream", "kafka", "jet", "jstorm")
+engines_all <- c("flink","spark_dataset","spark_dstream", "kafka", "jet", "storm")
+engines <- c("flink","spark_dataset","spark_dstream", "kafka", "jet")
 storms <- c("storm","storm_no_ack")
 source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/StreamServerReport.r')
 source('~/Desktop/EDU/THESIS/stream-benchmarking/reporting/KafkaServerReport.r')
@@ -25,7 +25,8 @@ generateBenchmarkPercentile(args[1], tps, duration, tps_count)
 
 
 tps_count = 15
-generateBenchmarkPercentile("kafka", tps, duration, tps_count)
+#generateBenchmarkPercentile("kafka", 1000, 600, 15)
+
 if(length(args) == 0){
   for (i in 1:length(engines_all)) { 
     generateBenchmarkReport(engines_all[i], 1000, 600, tps_count)

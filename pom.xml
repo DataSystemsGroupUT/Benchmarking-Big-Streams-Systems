@@ -131,6 +131,7 @@ Licensed under the terms of the Apache License 2.0. Please see LICENSE file in t
     <modules>
         <module>streaming-benchmark-common</module>
         <module>jstorm-kafka</module>
+
         <module>storm-benchmarks</module>
         <module>jstorm-benchmarks</module>
         <module>flink-benchmarks</module>

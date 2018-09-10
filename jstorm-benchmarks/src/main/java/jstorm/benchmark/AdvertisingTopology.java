@@ -9,6 +9,7 @@ import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.IRichSpout;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.topology.base.BaseRichBolt;
@@ -18,11 +19,13 @@ import backtype.storm.tuple.Values;
 import benchmark.common.Utils;
 import benchmark.common.advertising.CampaignProcessorCommon;
 import benchmark.common.advertising.RedisAdCampaignCache;
-import com.alibaba.jstorm.kafka.KafkaSpout;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
+import org.apache.storm.kafka.spout.KafkaSpout;
+import org.apache.storm.kafka.spout.KafkaSpoutConfig;
+
 import org.json.JSONObject;
 
 
@@ -236,9 +239,10 @@ public class AdvertisingTopology {
 
         out.println("Configuration loading  " + ackEnabled);
 
-        KafkaSpout kafkaSpout = new KafkaSpout(kafkaServerHosts, kafkaTopic);
+        KafkaSpout kafkaSpout = new KafkaSpout(KafkaSpoutConfig.builder(kafkaServerHosts, kafkaTopic).build());
+//        KafkaSpout kafkaSpout = new KafkaSpout(kafkaServerHosts, kafkaTopic);
 
-        builder.setSpout("ads", kafkaSpout, kafkaPartitions);
+        builder.setSpout("ads", (IRichSpout) kafkaSpout, kafkaPartitions);
         builder.setBolt("event_deserializer", new DeserializeBolt(ackEnabled), parallel).shuffleGrouping("ads");
         builder.setBolt("event_filter", new EventFilterBolt(ackEnabled), parallel).shuffleGrouping("event_deserializer");
         builder.setBolt("event_projection", new EventProjectionBolt(ackEnabled), parallel).shuffleGrouping("event_filter");
