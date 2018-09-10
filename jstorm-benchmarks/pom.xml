@@ -17,6 +17,10 @@
      <dependencies>
          <!--<dependency>-->
              <!--<groupId>org.apache.storm</groupId>-->
+             <!--<artifactId>storm-core</artifactId>-->
+         <!--</dependency>-->
+         <!--<dependency>-->
+             <!--<groupId>org.apache.storm</groupId>-->
              <!--<artifactId>storm-kafka-client</artifactId>-->
              <!--<version>${storm.version}</version>-->
          <!--</dependency>-->

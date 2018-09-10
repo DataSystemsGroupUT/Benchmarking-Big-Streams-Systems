@@ -31,7 +31,7 @@ ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
 PARTITIONS=${PARTITIONS:-5}
 
-CONF_FILE=./conf/localConf.yaml
+CONF_FILE=./conf/benchmarkConf.yaml
 
 TPS=${TPS:-1000}
 TEST_TIME=${TEST_TIME:-60}

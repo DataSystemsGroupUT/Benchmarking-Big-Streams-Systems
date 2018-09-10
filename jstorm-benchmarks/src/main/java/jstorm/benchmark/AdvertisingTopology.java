@@ -19,16 +19,16 @@ import backtype.storm.tuple.Values;
 import benchmark.common.Utils;
 import benchmark.common.advertising.CampaignProcessorCommon;
 import benchmark.common.advertising.RedisAdCampaignCache;
+import com.alibaba.jstorm.kafka.KafkaSpout;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
-import org.apache.storm.kafka.spout.KafkaSpout;
-import org.apache.storm.kafka.spout.KafkaSpoutConfig;
 
 import org.json.JSONObject;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -237,17 +237,15 @@ public class AdvertisingTopology {
         int timeDivisor = ((Number) commonConfig.get("time.divisor")).intValue();
         int parallel = Math.max(1, cores / 7);
 
-        out.println("Configuration loading  " + ackEnabled);
+        out.println("Configuration loading  "+ackEnabled);
+        KafkaSpout kafkaSpout = new KafkaSpout(kafkaServerHosts, kafkaTopic);
 
-        KafkaSpout kafkaSpout = new KafkaSpout(KafkaSpoutConfig.builder(kafkaServerHosts, kafkaTopic).build());
-//        KafkaSpout kafkaSpout = new KafkaSpout(kafkaServerHosts, kafkaTopic);
-
-        builder.setSpout("ads", (IRichSpout) kafkaSpout, kafkaPartitions);
+        builder.setSpout("ads", kafkaSpout, kafkaPartitions);
         builder.setBolt("event_deserializer", new DeserializeBolt(ackEnabled), parallel).shuffleGrouping("ads");
         builder.setBolt("event_filter", new EventFilterBolt(ackEnabled), parallel).shuffleGrouping("event_deserializer");
         builder.setBolt("event_projection", new EventProjectionBolt(ackEnabled), parallel).shuffleGrouping("event_filter");
         builder.setBolt("redis_join", new RedisJoinBolt(redisServerHost, ackEnabled), parallel).shuffleGrouping("event_projection");
-        builder.setBolt("campaign_processor", new CampaignProcessor(redisServerHost, Long.valueOf(timeDivisor), ackEnabled), parallel*2)
+        builder.setBolt("campaign_processor", new CampaignProcessor(redisServerHost, Long.valueOf(timeDivisor), ackEnabled), parallel)
                 .fieldsGrouping("redis_join", new Fields("campaign_id"));
 
         Config conf = new Config();
