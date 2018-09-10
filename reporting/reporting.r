@@ -43,3 +43,8 @@ if(length(args) == 0){
 }
   
 
+generateBenchmarkSpesificPercentile(engines, 1000, 600, 99, 10)
+generateBenchmarkSpesificPercentile(engines, 1000, 600, 95, 10)
+generateBenchmarkSpesificPercentile(engines, 1000, 600, 90, 10)
+
+
