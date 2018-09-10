@@ -25,7 +25,7 @@ generateBenchmarkPercentile(args[1], tps, duration, tps_count)
 
 
 tps_count = 15
-
+generateBenchmarkPercentile("kafka", tps, duration, tps_count)
 if(length(args) == 0){
   for (i in 1:length(engines_all)) { 
     generateBenchmarkReport(engines_all[i], 1000, 600, tps_count)
