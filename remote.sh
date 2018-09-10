@@ -10,17 +10,17 @@ TPS_RANGE=1000
 TPS_LIMIT=15000
 INITIAL_TPS=${TPS}
 
-SHORT_SLEEP=5
-LONG_SLEEP=10
+SHORT_SLEEP=3
+LONG_SLEEP=5
 
-WAIT_AFTER_STOP_PRODUCER=60
+WAIT_AFTER_STOP_PRODUCER=6
 WAIT_AFTER_REBOOT_SERVER=30
 
 SSH_USER="root"
 
 # Before running kafka stream benchmark comment the first line and uncomment the second line after this line.
-#KAFKA_FOLDER="kafka_2.11-0.11.0.2"
-KAFKA_FOLDER="kafka_2.11-1.1.0"
+KAFKA_FOLDER="kafka_2.11-0.11.0.2"
+#KAFKA_FOLDER="kafka_2.11-1.1.0"
 
 PROJECT_DIR="/root/stream-benchmarking"
 
