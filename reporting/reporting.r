@@ -42,5 +42,6 @@ if(length(args) == 0){
   
 }
   
+generateResourceConsumptionReport(engines_all, 1000, 600, 15)
 
 
