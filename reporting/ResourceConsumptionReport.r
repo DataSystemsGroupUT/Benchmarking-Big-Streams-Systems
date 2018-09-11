@@ -101,6 +101,7 @@ generateResourceConsumptionReport <- function(engines, tps, duration, tps_count)
              plot.subtitle = element_text(size = 7, face = "plain"),
              text = element_text(size = 6, face = "plain"),
              legend.justification = c(1, 0), 
+             legend.background = element_rect(fill=alpha('white', 0.4)),
              legend.position = c(1, 0),
              legend.key.height=unit(0.7,"line"),
              legend.key.width=unit(0.5,"line"),

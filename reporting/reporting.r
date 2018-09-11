@@ -35,7 +35,7 @@ if(length(args) == 0){
     generateBenchmarkPercentile(engines_all[i], 1000, 600, tps_count)
     generateResourceConsumptionReportByTps(engines_all[i], 1000, 600, tps_count)
   }
-  generateResourceConsumptionReport(engines, 1000, 600, tps_count)
+  generateResourceConsumptionReport(engines_all, 1000, 600, tps_count)
   generateBenchmarkSpesificPercentile(engines, 1000, 600, 99, tps_count)
   generateBenchmarkSpesificPercentile(engines, 1000, 600, 95, tps_count)
   generateBenchmarkSpesificPercentile(engines, 1000, 600, 90, tps_count)
