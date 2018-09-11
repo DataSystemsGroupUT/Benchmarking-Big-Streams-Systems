@@ -8,7 +8,7 @@ kafka.port: 9092
 zookeeper.port: 2181
 redis.host: "localhost"
 kafka.topic: "ad-events"
-kafka.partitions: 5
+kafka.partitions: 1
 process.hosts: 1
 process.cores: 4
 storm.workers: 4

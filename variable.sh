@@ -29,9 +29,9 @@ ZK_HOST="localhost"
 ZK_PORT="2181"
 ZK_CONNECTIONS="$ZK_HOST:$ZK_PORT"
     TOPIC=${TOPIC:-"ad-events"}
-PARTITIONS=${PARTITIONS:-5}
+PARTITIONS=${PARTITIONS:-1}
 
-CONF_FILE=./conf/benchmarkConf.yaml
+CONF_FILE=./conf/localConf.yaml
 
 TPS=${TPS:-1000}
 TEST_TIME=${TEST_TIME:-60}
